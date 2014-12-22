@@ -3,3 +3,5 @@ ACLOCAL_AMFLAGS = -I m4
 
 bin_PROGRAMS=descendu/gbt
 descendu_gbt_SOURCES=descendu/gbt.cc
+
+@INC_AMINCLUDE@
