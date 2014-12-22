@@ -1,6 +1,6 @@
 language: cpp
 before_script:
   - sudo apt-get -qq update
-  - sudo apt-get -qq install autotools-dev autoconf-archive
+  - sudo apt-get -qq install autotools-dev
 script:
   - ./bootstrap && ./configure && make all && make check
