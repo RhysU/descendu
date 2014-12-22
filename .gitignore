@@ -1,3 +1,16 @@
+# Miscellaneous
+aclocal.m4
+autom4te.cache
+build-aux
+config.cache
+config.log
+config.status
+configure
+**/.deps
+**/.dirstamp
+**/Makefile
+**/Makefile.in
+
 # Compiled Object files
 *.slo
 *.lo
