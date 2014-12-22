@@ -3,4 +3,4 @@ before_script:
   - sudo apt-get -qq update
   - sudo apt-get -qq install autotools-dev autoconf-archive
 script:
-  - autoreconf -i && ./configure && make all && make check
+  - ./bootstrap && ./configure && make all && make check
