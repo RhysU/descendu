@@ -1,5 +1,6 @@
 # Miscellaneous
 aclocal.m4
+aminclude.am
 autom4te.cache
 build-aux
 config.cache
@@ -36,6 +37,7 @@ configure
 *.lib
 
 # Executables
+descendu/gbt
 *.exe
 *.out
 *.app
