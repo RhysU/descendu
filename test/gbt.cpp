@@ -7,11 +7,12 @@
  */
 
 #include <iostream>
-#include <descendu/gbt.h>
+#include "catch.hpp"
+#include <descendu/gbt.hpp>
 
 int
 main(int argc, char *argv[])
 {
-    std::puts("Hello, world!");
+    std::cout << "Hello, world!" << std::endl;
     return 0;
 }

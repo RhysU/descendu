@@ -37,7 +37,12 @@ configure
 *.lib
 
 # Executables
-descendu/gbt
+test/gbt
 *.exe
 *.out
 *.app
+
+# Test artifacts
+test-suite.log
+test/*.log
+test/*.trs

@@ -20,6 +20,21 @@ namespace descendu
 namespace gbt2
 {
 
+//! Base case for base-N constants
+template<int N, typename T>
+constexpr T base(const T a)
+{
+    return a;
+}
+
+//! Recursive case for base-N constants
+template<int N, typename T, typename... Args>
+constexpr T base(const T a, Args... args)
+{
+    return N*a + base<N>(args...);
+}
+
+
 //! Remainder with two GBT2 digits in {0, 1, 2, 3, 4, 5, 6} are added.
 template<typename T>
 T add_remainder(const T a, const T b)
