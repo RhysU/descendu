@@ -9,6 +9,7 @@
 #ifndef DESCENDU_D_H
 #define DESCENDU_D_H
 
+#include <array>
 #include <ostream>
 
 namespace descendu
@@ -16,8 +17,9 @@ namespace descendu
 
 enum struct spec { absolute, relative };
 
-std::ostream& operator<<(std::ostream& os, spec p) {
-    switch (p) {
+template<class CharT, class Traits>
+auto& operator<<(std::basic_ostream<CharT,Traits>& os, spec s) {
+    switch (s) {
         case spec::absolute: os << "absolute"; break;
         case spec::relative: os << "relative"; break;
         default:             os.setstate(std::ios_base::failbit);
@@ -25,14 +27,15 @@ std::ostream& operator<<(std::ostream& os, spec p) {
     return os;
 }
 
-template <typename Number, spec Spec>
+template <typename N, spec S>
 struct d2 {
     union {
-        const Number v[2];
-        struct { const Number x, y; };
+        const std::array<N,2> v;
+        struct { const N x, y; };
     };
 
-    d2(Number x, Number y): x(x), y(y) {}
+    d2(N x, N y): x(x), y(y) {}
+    d2(const std::array<N,2>& o) : v(o.v) {}
 
     bool operator==(const d2& o) { return x == o.x && y == o.y; }
 
@@ -51,8 +54,8 @@ auto operator-(const d2<N1,spec::absolute>& a, const d2<N2,spec::relative>& b
     return d2<decltype(a.x-b.x),spec::absolute>(a.x-b.x, a.y-b.y);
 }
 
-template <typename Number, spec Spec>
-std::ostream& operator<<(std::ostream& os, const d2<Number,Spec>& p)
+template<class CharT, class Traits, typename N, spec Spec>
+auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p)
 {
     return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
 };
