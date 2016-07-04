@@ -12,8 +12,6 @@
 #include <array>
 #include <ostream>
 
-#include "hash.hpp"
-
 namespace descendu
 {
 
@@ -78,7 +76,8 @@ struct hash<descendu::d2<T,S>>
     typedef size_t result_type;
 
     result_type operator()(const argument_type& a) const {
-        return hash<decltype(a.v)>()(a.v);
+        std::hash<T> hasher;
+        return 31*hasher(a.x) + hasher(a.y);
     }
 };
 
