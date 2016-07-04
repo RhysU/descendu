@@ -12,6 +12,7 @@ dnl ------------------------------------------------
 dnl Initialization macros
 dnl ------------------------------------------------
 AC_CONFIG_SRCDIR([descendu/hex.hpp])
+AM_CONFIG_HEADER([descendu/config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE(1.11 no-define color-tests -Wall foreign subdir-objects)

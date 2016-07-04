@@ -8,6 +8,10 @@ config.log
 config.status
 configure
 **/.deps
+descendu/config.h
+descendu/config.h.in
+descendu/descendu-config.h
+descendu/stamp-h1
 **/.dirstamp
 **/Makefile
 **/Makefile.in
@@ -38,6 +42,7 @@ configure
 *.lib
 
 # Executables
+test/d
 test/hello
 test/redblob
 *.exe
