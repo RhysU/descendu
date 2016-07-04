@@ -12,6 +12,8 @@
 #include <array>
 #include <ostream>
 
+#include "hash.hpp"
+
 namespace descendu
 {
 
@@ -63,8 +65,24 @@ auto operator-(const d2<N1,Result>& a, const d2<N2,spec::relative>& b) {
 template<class CharT, class Traits, typename N, spec Spec>
 auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p) {
     return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
+}
+
+} // namespace
+
+namespace std {
+
+template <typename N, descendu::spec S>
+struct hash<descendu::d2<N,S>>
+{
+    typedef descendu::d2<N,S> argument_type;
+    typedef size_t result_type;
+
+    result_type operator()(const argument_type& a) const {
+        return hash<decltype(a.v)>()(a.v);
+    }
 };
 
 }
+
 
 #endif

@@ -11,8 +11,7 @@
 
 #include "d.hpp"
 
-namespace descendu
-{
+namespace descendu {
 
 // Point
 
@@ -22,7 +21,7 @@ namespace descendu
 //         const Number v[3];
 //         struct { const Number q, r, s; };
 //     };
-// 
+//
 //     Hex(Number q_, Number r_): v{q_, r_, -q_ - r_} {}
 //     Hex(Number q_, Number r_, Number s_): v{q_, r_, s_} {}
 // };
