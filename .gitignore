@@ -10,7 +10,6 @@ configure
 **/.deps
 descendu/config.h
 descendu/config.h.in
-descendu/descendu-config.h
 descendu/stamp-h1
 **/.dirstamp
 **/Makefile

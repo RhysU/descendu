@@ -25,6 +25,12 @@ TEST_CASE( "spec", "[spec]" ) {
 
     SECTION( "absolute" ) {
         oss << spec::absolute;
+        REQUIRE( oss.str() == "absolute" );
+    }
+
+    SECTION( "relative" ) {
+        oss << spec::relative;
+        REQUIRE( oss.str() == "relative" );
     }
 
 }

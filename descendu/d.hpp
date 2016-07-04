@@ -29,41 +29,41 @@ auto& operator<<(std::basic_ostream<CharT,Traits>& os, spec s) {
     return os;
 }
 
-template <typename N, spec S>
+template <typename T, spec S>
 struct d2 {
     union {
-        const std::array<N,2> v;
-        struct { const N x, y; };
+        const std::array<T,2> v;
+        struct { const T x, y; };
     };
 
-    d2(N x, N y): x(x), y(y) {}
-    d2(const std::array<N,2>& o) : v(o.v) {}
+    d2(T x, T y): x(x), y(y) {}
+    d2(const std::array<T,2>& o) : v(o.v) {}
 };
 
-template <typename N1, typename N2, spec S>
-bool operator==(const d2<N1,S>& a, const d2<N2,S>& b) {
+template <typename T1, typename T2, spec S>
+bool operator==(const d2<T1,S>& a, const d2<T2,S>& b) {
     return a.x == b.x && a.y == b.y;
 }
 
-template <typename N1, typename N2, spec S>
-bool operator!=(const d2<N1,S>& a, const d2<N2,S>& b) {
+template <typename T1, typename T2, spec S>
+bool operator!=(const d2<T1,S>& a, const d2<T2,S>& b) {
     return !(a == b);
 }
 
 // At least one operand must be spec::relative
-template <typename N1, typename N2, spec Result>
-auto operator+(const d2<N1,Result>& a, const d2<N2,spec::relative>& b) {
+template <typename T1, typename T2, spec Result>
+auto operator+(const d2<T1,Result>& a, const d2<T2,spec::relative>& b) {
     return d2<decltype(a.x+b.x),Result>(a.x+b.x, a.y+b.y);
 }
 
 // At least one operand must be spec::relative
-template <typename N1, typename N2, spec Result>
-auto operator-(const d2<N1,Result>& a, const d2<N2,spec::relative>& b) {
+template <typename T1, typename T2, spec Result>
+auto operator-(const d2<T1,Result>& a, const d2<T2,spec::relative>& b) {
     return d2<decltype(a.x-b.x),Result>(a.x-b.x, a.y-b.y);
 }
 
-template<class CharT, class Traits, typename N, spec Spec>
-auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p) {
+template<class CharT, class Traits, typename T, spec Spec>
+auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<T,Spec>& p) {
     return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
 }
 
@@ -71,10 +71,10 @@ auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p) {
 
 namespace std {
 
-template <typename N, descendu::spec S>
-struct hash<descendu::d2<N,S>>
+template <typename T, descendu::spec S>
+struct hash<descendu::d2<T,S>>
 {
-    typedef descendu::d2<N,S> argument_type;
+    typedef descendu::d2<T,S> argument_type;
     typedef size_t result_type;
 
     result_type operator()(const argument_type& a) const {
