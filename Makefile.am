@@ -8,4 +8,8 @@ TESTS            += test/gbt
 check_PROGRAMS   += test/gbt
 test_gbt_SOURCES  = test/gbt.cpp
 
+TESTS                += test/redblob
+check_PROGRAMS       += test/redblob
+test_redblob_SOURCES  = test/redblob.cpp
+
 @INC_AMINCLUDE@
