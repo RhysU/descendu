@@ -42,21 +42,20 @@ struct d2 {
     bool operator!=(const d2& o) { return !(operator==(o)); }
 };
 
-template <typename N1, typename N2>
-auto operator+(const d2<N1,spec::absolute>& a, const d2<N2,spec::relative>& b
-) {
-    return d2<decltype(a.x+b.x),spec::absolute>(a.x+b.x, a.y+b.y);
+// At least one operand must be spec::relative
+template <typename N1, typename N2, spec Result>
+auto operator+(const d2<N1,Result>& a, const d2<N2,spec::relative>& b) {
+    return d2<decltype(a.x+b.x),Result>(a.x+b.x, a.y+b.y);
 }
 
-template <typename N1, typename N2>
-auto operator-(const d2<N1,spec::absolute>& a, const d2<N2,spec::relative>& b
-) {
-    return d2<decltype(a.x-b.x),spec::absolute>(a.x-b.x, a.y-b.y);
+// At least one operand must be spec::relative
+template <typename N1, typename N2, spec Result>
+auto operator-(const d2<N1,Result>& a, const d2<N2,spec::relative>& b) {
+    return d2<decltype(a.x-b.x),Result>(a.x-b.x, a.y-b.y);
 }
 
 template<class CharT, class Traits, typename N, spec Spec>
-auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p)
-{
+auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<N,Spec>& p) {
     return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
 };
 
