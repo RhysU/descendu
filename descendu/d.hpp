@@ -36,11 +36,17 @@ struct d2 {
 
     d2(N x, N y): x(x), y(y) {}
     d2(const std::array<N,2>& o) : v(o.v) {}
-
-    bool operator==(const d2& o) { return x == o.x && y == o.y; }
-
-    bool operator!=(const d2& o) { return !(operator==(o)); }
 };
+
+template <typename N1, typename N2, spec S>
+bool operator==(const d2<N1,S>& a, const d2<N2,S>& b) {
+    return a.x == b.x && a.y == b.y;
+}
+
+template <typename N1, typename N2, spec S>
+bool operator!=(const d2<N1,S>& a, const d2<N2,S>& b) {
+    return !(a == b);
+}
 
 // At least one operand must be spec::relative
 template <typename N1, typename N2, spec Result>
