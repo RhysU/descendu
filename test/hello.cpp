@@ -7,12 +7,20 @@
  */
 
 #include <iostream>
-#include "catch.hpp"
 #include <descendu/hex.hpp>
+
+#include "catch.hpp"
 
 int
 main(int argc, char *argv[])
 {
-    std::cout << "Hello, world!" << std::endl;
+    using namespace std;
+    using namespace descendu;
+
+    descendu::d2<double,position::absolute> p {1,2};
+    descendu::d2<double,position::relative> q {3,4};
+    cout << p << endl;
+    cout << q << endl;
+    cout << p+q << endl;
     return 0;
 }
