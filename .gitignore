@@ -38,6 +38,7 @@ configure
 
 # Executables
 test/gbt
+test/redblob
 *.exe
 *.out
 *.app
