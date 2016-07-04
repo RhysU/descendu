@@ -21,7 +21,7 @@ dnl -------------------------------
 dnl Manipulate compilation settings
 dnl -------------------------------
 AX_CHECK_ENABLE_DEBUG([info])
-AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
+AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
 AX_CXXFLAGS_WARN_ALL
 
 dnl ------------------------------------------------

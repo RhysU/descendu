@@ -14,18 +14,18 @@
 namespace descendu
 {
 
-enum struct position { absolute, relative };
+enum struct spec { absolute, relative };
 
-std::ostream& operator<<(std::ostream& os, position p) {
+std::ostream& operator<<(std::ostream& os, spec p) {
     switch (p) {
-        case position::absolute: os << "absolute"; break;
-        case position::relative: os << "relative"; break;
-        default:       os.setstate(std::ios_base::failbit);
+        case spec::absolute: os << "absolute"; break;
+        case spec::relative: os << "relative"; break;
+        default:             os.setstate(std::ios_base::failbit);
     }
     return os;
 }
 
-template <typename Number, position Position>
+template <typename Number, spec Spec>
 struct d2 {
     union {
         const Number v[2];
@@ -39,31 +39,25 @@ struct d2 {
     bool operator!=(const d2& o) { return !(operator==(o)); }
 };
 
-template <typename Number1, typename Number2>
-auto operator+(
-    const d2<Number1,position::absolute> a,
-    const d2<Number2,position::relative> b
-) -> d2<decltype(a.x+b.x),position::absolute>
-{
-    return d2<decltype(a.x+b.x),position::absolute>(a.x+b.x, a.y+b.y);
+template <typename N1, typename N2>
+auto operator+(const d2<N1,spec::absolute>& a, const d2<N2,spec::relative>& b
+) {
+    return d2<decltype(a.x+b.x),spec::absolute>(a.x+b.x, a.y+b.y);
 }
 
-template <typename Number1, typename Number2>
-auto operator-(
-    const d2<Number1,position::absolute> a,
-    const d2<Number2,position::relative> b
-) -> d2<decltype(a.x-b.x),position::absolute>
-{
-    return d2<decltype(a.x-b.x),position::absolute>(a.x-b.x, a.y-b.y);
+template <typename N1, typename N2>
+auto operator-(const d2<N1,spec::absolute>& a, const d2<N2,spec::relative>& b
+) {
+    return d2<decltype(a.x-b.x),spec::absolute>(a.x-b.x, a.y-b.y);
 }
 
-template <typename Number, position Position>
-std::ostream& operator<<(std::ostream& os, const d2<Number,Position>& p)
+template <typename Number, spec Spec>
+std::ostream& operator<<(std::ostream& os, const d2<Number,Spec>& p)
 {
-    return os << '[' << Position << ':' << p.x << ',' << p.y << ']';
+    return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
 };
 
-// template <typename Number, position Position>
+// template <typename Number, spec Spec>
 // struct d3 {
 //     union {
 //         const Number v[3];
