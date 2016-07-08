@@ -1,20 +1,17 @@
 ## Process this file with automake to produce Makefile.in
+AM_DEFAULT_SOURCE_EXT = .cpp
 ACLOCAL_AMFLAGS = -I m4
 bin_PROGRAMS    =
 check_PROGRAMS  =
-TESTS           =
 
-TESTS          += test/d
+pkginclude_HEADERS  = descendu/d.hpp
+pkginclude_HEADERS += descendu/hex.hpp
+
+noinst_HEADERS  = test/catch.hpp
 check_PROGRAMS += test/d
-test_d_SOURCES  = test/d.cpp
-
-TESTS              += test/hello
-check_PROGRAMS     += test/hello
-test_hello_SOURCES  = test/hello.cpp
-
-TESTS                += test/redblob
-check_PROGRAMS       += test/redblob
-test_redblob_SOURCES  = test/redblob.cpp
+check_PROGRAMS += test/hello
+check_PROGRAMS += test/redblob
+TESTS = $(check_PROGRAMS)
 
 DISTCLEANFILES = aminclude.am
 
