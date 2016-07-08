@@ -1,9 +1,25 @@
-language: cpp
-before_script:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get -qq update
-  - sudo apt-get -qq install autotools-dev gcc-4.8 g++-4.8
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
+language: generic
+os: linux
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - autotools-dev
+            - g++-5
+      env: COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+#   - compiler: clang
+#     addons:
+#       apt:
+#         sources:
+#           - ubuntu-toolchain-r-test
+#           - llvm-toolchain-precise-3.8
+#         packages:
+#           - autotools-dev
+#           - clang-3.8
+#     env: COMPILER_NAME=clang CXX=clang++-3.8 CC=clang-3.8
 script:
   - ./bootstrap && ./configure && make all && make check && make distcheck
