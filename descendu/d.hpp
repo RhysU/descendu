@@ -10,7 +10,9 @@
 #define DESCENDU_D_H
 
 #include <array>
+#include <initializer_list>
 #include <ostream>
+#include <utility>
 
 namespace descendu
 {
@@ -27,57 +29,78 @@ auto& operator<<(std::basic_ostream<CharT,Traits>& os, spec s) {
     return os;
 }
 
-template <typename T, spec S>
-struct d2 {
-    union {
-        const std::array<T,2> v;
-        struct { const T x, y; };
-    };
-
-    d2(T x, T y): x(x), y(y) {}
-    d2(const std::array<T,2>& o) : v(o.v) {}
+template <typename T, std::size_t N, spec S>
+struct d : std::array<T,N>
+{
+    // FIXME Require exactly N arguments
+    template<typename ...U>
+    d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
 };
 
-template <typename T1, typename T2, spec S>
-bool operator==(const d2<T1,S>& a, const d2<T2,S>& b) {
-    return a.x == b.x && a.y == b.y;
+template <typename T1, typename T2, std::size_t N, spec S>
+bool operator==(const d<T1,N,S>& a, const d<T2,N,S>& b) {
+    return std::equal(a.begin(), a.end(), b.begin());
 }
 
-template <typename T1, typename T2, spec S>
-bool operator!=(const d2<T1,S>& a, const d2<T2,S>& b) {
+template <typename T1, typename T2, std::size_t N, spec S>
+bool operator!=(const d<T1,N,S>& a, const d<T2,N,S>& b) {
     return !(a == b);
 }
 
 // At least one operand must be spec::relative
-template <typename T1, typename T2, spec Result>
-auto operator+(const d2<T1,Result>& a, const d2<T2,spec::relative>& b) {
-    return d2<decltype(a.x+b.x),Result>(a.x+b.x, a.y+b.y);
+template <typename T1, typename T2, std::size_t N, spec Result>
+auto operator+(const d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
+{
+    d<decltype(a[0]+b[0]),N,Result> r;
+    for (std::size_t i = 0; i < N; ++i) {
+        r[i] = a[i]+b[i];
+    }
+    return r;
 }
 
 // At least one operand must be spec::relative
-template <typename T1, typename T2, spec Result>
-auto operator-(const d2<T1,Result>& a, const d2<T2,spec::relative>& b) {
-    return d2<decltype(a.x-b.x),Result>(a.x-b.x, a.y-b.y);
+template <typename T1, typename T2, std::size_t N, spec Result>
+auto operator-(const d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
+{
+    d<decltype(a[0]+b[0]),N,Result> r;
+    for (std::size_t i = 0; i < N; ++i) {
+        r[i] = a[i]-b[i];
+    }
+    return r;
 }
 
-template<class CharT, class Traits, typename T, spec Spec>
-auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d2<T,Spec>& p) {
-    return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
+template<class CharT, class Traits, typename T, std::size_t N, spec Spec>
+auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d<T,N,Spec>& p)
+{
+    // return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
+    os << '[' << Spec << ':';
+    for (std::size_t i = 0; i < N-1; ++i) {
+        os << p[i] << ',';
+    }
+    if (N > 0) {
+        os << p[N-1];
+    }
+    os << ']';
+    return os;
 }
 
 } // namespace
 
 namespace std {
 
-template <typename T, descendu::spec S>
-struct hash<descendu::d2<T,S>>
+template <typename T, std::size_t N, descendu::spec S>
+struct hash<descendu::d<T,N,S>>
 {
-    typedef descendu::d2<T,S> argument_type;
+    typedef descendu::d<T,N,S> argument_type;
     typedef size_t result_type;
 
     result_type operator()(const argument_type& a) const {
+        result_type r = 0;
         std::hash<T> hasher;
-        return 31*hasher(a.x) + hasher(a.y);
+        for (std::size_t i = 0; i < N; ++i) {
+            r += 31*r + hasher(a[i]);
+        }
+        return r;
     }
 };
 

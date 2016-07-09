@@ -21,8 +21,8 @@ main(int argc, char *argv[])
     using namespace std;
     using namespace descendu;
 
-    descendu::d2<double,spec::absolute> p {1,2};
-    descendu::d2<double,spec::relative> q {3,4};
+    descendu::d<int,2,spec::absolute> p {1,2};
+    descendu::d<int,2,spec::relative> q {3,4};
     cout << p << endl;
     cout << q << endl;
     cout << p+q << endl;

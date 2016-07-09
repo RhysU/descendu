@@ -38,11 +38,11 @@ TEST_CASE( "spec", "[spec]" ) {
 TEST_CASE( "equality", "[d2]" ) {
 
     SECTION( "relative" ) {
-        typedef d2<double,spec::relative> tested_type;
-        tested_type a {1,2};
-        tested_type b {1,3};
-        tested_type c {3,2};
-        tested_type d {1,2};
+        typedef d<double,2,spec::relative> tested_type;
+        tested_type a {1.0, 2.0};
+        tested_type b {1.0, 3.0};
+        tested_type c {3.0, 2.0};
+        tested_type d {1.0, 2.0};
 
         REQUIRE( a == a );
         REQUIRE( a != b );
@@ -57,11 +57,11 @@ TEST_CASE( "equality", "[d2]" ) {
     }
 
     SECTION( "absolute" ) {
-        typedef d2<double,spec::absolute> tested_type;
-        tested_type a {1,2};
-        tested_type b {1,3};
-        tested_type c {3,2};
-        tested_type d {1,2};
+        typedef d<double,2,spec::absolute> tested_type;
+        tested_type a {1.0, 2.0};
+        tested_type b {1.0, 3.0};
+        tested_type c {3.0, 2.0};
+        tested_type d {1.0, 2.0};
 
         REQUIRE( a == a );
         REQUIRE( a != b );
@@ -77,52 +77,52 @@ TEST_CASE( "equality", "[d2]" ) {
 
 }
 
-TEST_CASE( "addition", "[d2]" ) {
+TEST_CASE( "addition", "[d]" ) {
 
     SECTION( "absolute" ) {
-        d2<int,spec::absolute> a {1,2};
-        d2<int,spec::relative> b {2,3};
+        d<int,2,spec::absolute> a {1,2};
+        d<int,2,spec::relative> b {2,3};
         auto c = a + b;
-        REQUIRE ( c.x == 3 );
-        REQUIRE ( c.y == 5 );
+        REQUIRE ( c[0] == 3 );
+        REQUIRE ( c[1] == 5 );
     }
 
     SECTION( "relative" ) {
-        d2<int,spec::relative> a {1,2};
-        d2<int,spec::relative> b {2,3};
+        d<int,2,spec::relative> a {1,2};
+        d<int,2,spec::relative> b {2,3};
         auto c = a + b;
-        REQUIRE ( c.x == 3 );
-        REQUIRE ( c.y == 5 );
+        REQUIRE ( c[0] == 3 );
+        REQUIRE ( c[1] == 5 );
     }
 
 }
 
-TEST_CASE( "subtraction", "[d2]" ) {
+TEST_CASE( "subtraction", "[d]" ) {
 
     SECTION( "absolute" ) {
-        d2<int,spec::absolute> a {1,2};
-        d2<int,spec::relative> b {2,4};
+        d<int,2,spec::absolute> a {1,2};
+        d<int,2,spec::relative> b {2,4};
         auto c = a - b;
-        REQUIRE ( c.x == -1 );
-        REQUIRE ( c.y == -2 );
+        REQUIRE ( c[0] == -1 );
+        REQUIRE ( c[1] == -2 );
     }
 
     SECTION( "relative" ) {
-        d2<int,spec::relative> a {1,2};
-        d2<int,spec::relative> b {2,4};
+        d<int,2,spec::relative> a {1,2};
+        d<int,2,spec::relative> b {2,4};
         auto c = a - b;
-        REQUIRE ( c.x == -1 );
-        REQUIRE ( c.y == -2 );
+        REQUIRE ( c[0] == -1 );
+        REQUIRE ( c[1] == -2 );
     }
 
 }
 
-TEST_CASE( "output", "[d2]" ) {
+TEST_CASE( "output", "[d]" ) {
 
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
-        oss << d2<int,spec::relative>{1,2};
+        oss << d<int,2,spec::relative>{1,2};
         REQUIRE( oss.str() == "[relative:1,2]" );
     }
 
