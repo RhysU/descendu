@@ -14,17 +14,41 @@
 namespace descendu {
 
 template <typename T, spec S>
-class hex : private d<T,3,S>
+class hex : private d<T,2,S>
 {
 public:
-    hex(T q, T r) : d<T,3,S>{q, r, -q-r} {}
+    hex(T q, T r) : d<T,2,S>{q, r} {}
 
     T q() const { return this->operator[](0); }
     T r() const { return this->operator[](1); }
-    T s() const { return this->operator[](2); }
+    T s() const { return - (q() + r()); }
+
+    // TODO Test
+    bool operator==(const hex& o) const {
+        return d<T,2,S>::operator==(this, o);
+    }
+
+    // TODO Test
+    bool operator!=(const hex& o) const {
+        return d<T,2,S>::operator!=(this, o);
+    }
+
+    // TODO Test
+    template <typename U, spec R>
+    auto operator+(const hex<U,R>& o) const {
+        return hex(d<T,2,S>::operator+(this, o));
+    }
+
+    // TODO Test
+    template <typename U, spec R>
+    auto operator-(const hex<U,R>& o) const {
+        return hex(d<T,2,S>::operator-(this, o));
+    }
+
+    // TODO operator<<
 
 private:
-    hex(d<T,3,S>& src) : d<T,3,S>(src) {}
+    hex(d<T,2,S>& src) : d<T,2,S>(src) {}
 };
 
 }

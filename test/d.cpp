@@ -119,26 +119,6 @@ TEST_CASE( "addition", "[d]" ) {
 
 }
 
-TEST_CASE( "subtraction", "[d]" ) {
-
-    SECTION( "absolute" ) {
-        d<int,2,spec::absolute> a {1,2};
-        d<int,2,spec::relative> b {2,4};
-        auto c = a - b;
-        REQUIRE ( c[0] == -1 );
-        REQUIRE ( c[1] == -2 );
-    }
-
-    SECTION( "relative" ) {
-        d<int,2,spec::relative> a {1,2};
-        d<int,2,spec::relative> b {2,4};
-        auto c = a - b;
-        REQUIRE ( c[0] == -1 );
-        REQUIRE ( c[1] == -2 );
-    }
-
-}
-
 TEST_CASE( "output", "[d]" ) {
 
     std::ostringstream oss;

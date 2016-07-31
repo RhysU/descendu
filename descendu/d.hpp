@@ -68,10 +68,10 @@ auto operator-(const d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
     return r;
 }
 
-template<class CharT, class Traits, typename T, std::size_t N, spec Spec>
-auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d<T,N,Spec>& p)
+template<class chart, class traits, typename T, std::size_t N, spec S>
+auto& operator<<(std::basic_ostream<chart,traits>& os, const d<T,N,S>& p)
 {
-    os << '[' << Spec << ':';
+    os << '[' << S << ':';
     for (std::size_t i = 0; i < N-1; ++i) {
         os << p[i] << ',';
     }
