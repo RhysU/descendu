@@ -72,7 +72,6 @@ auto operator-(const d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
 template<class CharT, class Traits, typename T, std::size_t N, spec Spec>
 auto& operator<<(std::basic_ostream<CharT,Traits>& os, const d<T,N,Spec>& p)
 {
-    // return os << '[' << Spec << ':' << p.x << ',' << p.y << ']';
     os << '[' << Spec << ':';
     for (std::size_t i = 0; i < N-1; ++i) {
         os << p[i] << ',';
