@@ -77,6 +77,28 @@ TEST_CASE( "equality", "[d2]" ) {
 
 }
 
+TEST_CASE( "initializers", "[d]" ) {
+
+    SECTION( "omitted" ) {
+        d<int,2,spec::relative> a;
+        REQUIRE ( a[0] == 0 );
+        REQUIRE ( a[1] == 0 );
+    }
+
+    SECTION( "none" ) {
+        d<int,2,spec::relative> a {};
+        REQUIRE ( a[0] == 0 );
+        REQUIRE ( a[1] == 0 );
+    }
+
+    SECTION( "too few" ) {
+        d<int,2,spec::relative> a { 1 };
+        REQUIRE ( a[0] == 1 );
+        REQUIRE ( a[1] == 0 );
+    }
+
+}
+
 TEST_CASE( "addition", "[d]" ) {
 
     SECTION( "absolute" ) {

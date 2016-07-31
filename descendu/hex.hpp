@@ -13,18 +13,19 @@
 
 namespace descendu {
 
-// Point
+template <typename T, spec S>
+class hex : private d<T,3,S>
+{
+public:
+    hex(T q, T r) : d<T,3,S>{q, r, -q-r} {}
 
-// template <typename Number, int w>
-// struct _Hex { // Both storage types, both constructors
-//     union {
-//         const Number v[3];
-//         struct { const Number q, r, s; };
-//     };
-//
-//     Hex(Number q_, Number r_): v{q_, r_, -q_ - r_} {}
-//     Hex(Number q_, Number r_, Number s_): v{q_, r_, s_} {}
-// };
+    T q() const { return this->operator[](0); }
+    T r() const { return this->operator[](1); }
+    T s() const { return this->operator[](2); }
+
+private:
+    hex(d<T,3,S>& src) : d<T,3,S>(src) {}
+};
 
 }
 

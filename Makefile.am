@@ -10,6 +10,7 @@ pkginclude_HEADERS += descendu/hex.hpp
 noinst_HEADERS  = test/catch.hpp
 check_PROGRAMS += test/d
 check_PROGRAMS += test/hello
+check_PROGRAMS += test/hex
 check_PROGRAMS += test/redblob
 TESTS = $(check_PROGRAMS)
 

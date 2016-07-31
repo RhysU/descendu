@@ -32,7 +32,6 @@ auto& operator<<(std::basic_ostream<CharT,Traits>& os, spec s) {
 template <typename T, std::size_t N, spec S>
 struct d : std::array<T,N>
 {
-    // FIXME Require exactly N arguments
     template<typename ...U>
     d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
 };

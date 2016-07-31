@@ -43,6 +43,7 @@ descendu/stamp-h1
 # Executables
 test/d
 test/hello
+test/hex
 test/redblob
 *.exe
 *.out
