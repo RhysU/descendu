@@ -25,7 +25,7 @@ class hex : d<T,2,S>
 
 public:
 
-    hex(const T& q, const T& r) : base_type{q, r} {}
+    constexpr hex(const T& q, const T& r) : base_type{q, r} {}
 
     T q() const { return this->operator[](0); }
     T r() const { return this->operator[](1); }
@@ -60,6 +60,21 @@ auto& operator<<(std::basic_ostream<chart,traits>& os, const hex<T,S>& p)
        << ']';
     return os;
 }
+
+} // namespace
+
+namespace std {
+
+template <typename T, descendu::spec S>
+struct hash<descendu::hex<T,S>>
+{
+    typedef descendu::hex<T,S> argument_type;
+    typedef size_t result_type;
+
+    result_type operator()(const argument_type& a) const {
+        return static_cast<result_type>(S) + 31*(a.q() + 31*a.r());
+    }
+};
 
 }
 

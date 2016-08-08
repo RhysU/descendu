@@ -75,6 +75,18 @@ TEST_CASE( "equality" ) {
         REQUIRE( hasher(a) == hasher(d) );
     }
 
+    SECTION( "mixed" ) {
+        typedef d<double,2,spec::absolute> abs_type;
+        const abs_type a { 1.0, 2.0 };
+
+        typedef d<double,2,spec::relative> rel_type;
+        const rel_type b { 1.0, 2.0 };
+
+        // FIXME REQUIRE( a != b );
+
+        REQUIRE( std::hash<abs_type>()(a) != std::hash<rel_type>()(b));
+    }
+
 }
 
 TEST_CASE( "initializers" ) {

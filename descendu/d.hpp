@@ -33,7 +33,7 @@ template <typename T, std::size_t N, spec S>
 struct d : std::array<T,N>
 {
     template<typename ...U>
-    d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
+    constexpr d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
 };
 
 template <typename T1, typename T2, std::size_t N, spec S>
@@ -93,7 +93,7 @@ struct hash<descendu::d<T,N,S>>
     typedef size_t result_type;
 
     result_type operator()(const argument_type& a) const {
-        result_type r = 0;
+        result_type r = static_cast<result_type>(S);
         std::hash<T> hasher;
         for (std::size_t i = 0; i < N; ++i) {
             r += 31*r + hasher(a[i]);

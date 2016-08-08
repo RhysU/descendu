@@ -40,25 +40,51 @@ TEST_CASE( "construct" ) {
 TEST_CASE( "equality" ) {
 
     SECTION( "absolute" ) {
-        const hex<int,spec::absolute> a {1,2};
-        const hex<int,spec::absolute> b {1,2};
-        const hex<int,spec::absolute> c {1,3};
-        const hex<int,spec::absolute> d {4,2};
+        typedef hex<int,spec::absolute> tested_type;
+        tested_type a {1,2};
+        tested_type b {1,2};
+        tested_type c {1,3};
+        tested_type d {4,2};
+
         REQUIRE ( a == a );
         REQUIRE ( a == b );
         REQUIRE ( a != c );
         REQUIRE ( a != d );
+
+        std::hash<tested_type> hasher;
+        REQUIRE( hasher(a) == hasher(a) );
+        REQUIRE( hasher(a) == hasher(b) );
+        REQUIRE( hasher(a) != hasher(c) );
+        REQUIRE( hasher(a) != hasher(d) );
     }
 
     SECTION( "relative" ) {
-        const hex<int,spec::relative> a {1,2};
-        const hex<int,spec::relative> b {1,2};
-        const hex<int,spec::relative> c {1,3};
-        const hex<int,spec::relative> d {4,2};
+        typedef hex<int,spec::relative> tested_type;
+        tested_type a {1,2};
+        tested_type b {1,2};
+        tested_type c {1,3};
+        tested_type d {4,2};
+
         REQUIRE ( a == a );
         REQUIRE ( a == b );
         REQUIRE ( a != c );
         REQUIRE ( a != d );
+
+        std::hash<tested_type> hasher;
+        REQUIRE( hasher(a) == hasher(a) );
+        REQUIRE( hasher(a) == hasher(b) );
+        REQUIRE( hasher(a) != hasher(c) );
+        REQUIRE( hasher(a) != hasher(d) );
+    }
+
+    SECTION( "mixed" ) {
+        typedef hex<int,spec::absolute> abs_type;
+        const abs_type a { 1, 2 };
+
+        typedef hex<int,spec::relative> rel_type;
+        const rel_type b { 1, 2 };
+
+        REQUIRE( std::hash<abs_type>()(a) != std::hash<rel_type>()(b));
     }
 
 }
