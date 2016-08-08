@@ -63,6 +63,52 @@ TEST_CASE( "equality" ) {
 
 }
 
+TEST_CASE( "addition" ) {
+
+    SECTION( "absolute" ) {
+        const hex<int,spec::absolute> a {1,2};
+        const hex<int,spec::relative> b {3,4};
+        const hex<int,spec::absolute> c = a + b;
+        REQUIRE( c.q() == + 4 );
+        REQUIRE( c.r() == + 6 );
+        REQUIRE( c.s() == -10 );
+
+    }
+
+    SECTION( "relative" ) {
+        const hex<int,spec::relative> a {1,2};
+        const hex<int,spec::relative> b {3,4};
+        const hex<int,spec::relative> c = a + b;
+        REQUIRE( c.q() == + 4 );
+        REQUIRE( c.r() == + 6 );
+        REQUIRE( c.s() == -10 );
+    }
+
+}
+
+TEST_CASE( "subtraction" ) {
+
+    SECTION( "absolute" ) {
+        const hex<int,spec::absolute> a {3,4};
+        const hex<int,spec::relative> b {1,5};
+        const hex<int,spec::absolute> c = a - b;
+        REQUIRE( c.q() == + 2 );
+        REQUIRE( c.r() == - 1 );
+        REQUIRE( c.s() == - 1 );
+
+    }
+
+    SECTION( "relative" ) {
+        const hex<int,spec::relative> a {3,4};
+        const hex<int,spec::relative> b {1,5};
+        const hex<int,spec::relative> c = a - b;
+        REQUIRE( c.q() == + 2 );
+        REQUIRE( c.r() == - 1 );
+        REQUIRE( c.s() == - 1 );
+    }
+
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;

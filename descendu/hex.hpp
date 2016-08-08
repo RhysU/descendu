@@ -16,6 +16,13 @@ namespace descendu {
 template <typename T, spec S>
 class hex : d<T,2,S>
 {
+    typedef d<T,2,S> base_type;
+
+    hex(const base_type& src) : base_type(src) {}
+
+    const base_type& base() const { return *this; }
+          base_type& base()       { return *this; }
+
 public:
 
     hex(const T& q, const T& r) : base_type{q, r} {}
@@ -27,26 +34,18 @@ public:
     bool operator==(const hex& o) const { return base() == o.base(); }
     bool operator!=(const hex& o) const { return base() != o.base(); }
 
-    // TODO Test
+    template <typename U, spec R>
+    friend class hex;
+
     template <typename U, spec R>
     auto operator+(const hex<U,R>& o) const {
         return hex(base() + o.base());
     }
 
-    // TODO Test
     template <typename U, spec R>
     auto operator-(const hex<U,R>& o) const {
         return hex(base() - o.base());
     }
-
-private:
-
-    typedef d<T,2,S> base_type;
-
-    hex(const base_type& src) : base_type(src) {}
-
-    const base_type& base() const { return *this; }
-          base_type& base()       { return *this; }
 
 };
 
