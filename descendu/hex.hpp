@@ -14,42 +14,54 @@
 namespace descendu {
 
 template <typename T, spec S>
-class hex : private d<T,2,S>
+class hex : d<T,2,S>
 {
 public:
-    hex(T q, T r) : d<T,2,S>{q, r} {}
+
+    hex(const T& q, const T& r) : base_type{q, r} {}
 
     T q() const { return this->operator[](0); }
     T r() const { return this->operator[](1); }
     T s() const { return - (q() + r()); }
 
-    // TODO Test
-    bool operator==(const hex& o) const {
-        return d<T,2,S>::operator==(this, o);
-    }
-
-    // TODO Test
-    bool operator!=(const hex& o) const {
-        return d<T,2,S>::operator!=(this, o);
-    }
+    bool operator==(const hex& o) const { return base() == o.base(); }
+    bool operator!=(const hex& o) const { return base() != o.base(); }
 
     // TODO Test
     template <typename U, spec R>
     auto operator+(const hex<U,R>& o) const {
-        return hex(d<T,2,S>::operator+(this, o));
+        return hex(base() + o.base());
     }
 
     // TODO Test
     template <typename U, spec R>
     auto operator-(const hex<U,R>& o) const {
-        return hex(d<T,2,S>::operator-(this, o));
+        return hex(base() - o.base());
     }
 
-    // TODO operator<<
-
 private:
-    hex(d<T,2,S>& src) : d<T,2,S>(src) {}
+
+    typedef d<T,2,S> base_type;
+
+    hex(const base_type& src) : base_type(src) {}
+
+    const base_type& base() const { return *this; }
+          base_type& base()       { return *this; }
+
 };
+
+// TODO Test
+template<class chart, class traits, typename T, spec S>
+auto& operator<<(std::basic_ostream<chart,traits>& os, const hex<T,S>& p)
+{
+    os << '['
+       << S << ':'
+       << p.q() << ','
+       << p.r() << ','
+       << p.s()
+       << ']';
+    return os;
+}
 
 }
 
