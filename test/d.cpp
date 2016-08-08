@@ -19,7 +19,7 @@
 
 using namespace descendu;
 
-TEST_CASE( "spec", "[spec]" ) {
+TEST_CASE( "spec" ) {
 
     std::ostringstream oss;
 
@@ -35,7 +35,7 @@ TEST_CASE( "spec", "[spec]" ) {
 
 }
 
-TEST_CASE( "equality", "[d2]" ) {
+TEST_CASE( "equality" ) {
 
     SECTION( "relative" ) {
         typedef d<double,2,spec::relative> tested_type;
@@ -77,7 +77,7 @@ TEST_CASE( "equality", "[d2]" ) {
 
 }
 
-TEST_CASE( "initializers", "[d]" ) {
+TEST_CASE( "initializers" ) {
 
     SECTION( "omitted" ) {
         d<int,2,spec::relative> a;
@@ -99,7 +99,7 @@ TEST_CASE( "initializers", "[d]" ) {
 
 }
 
-TEST_CASE( "addition", "[d]" ) {
+TEST_CASE( "addition" ) {
 
     SECTION( "absolute" ) {
         d<int,2,spec::absolute> a {1,2};
@@ -119,13 +119,13 @@ TEST_CASE( "addition", "[d]" ) {
 
 }
 
-TEST_CASE( "output", "[d]" ) {
+TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
-        oss << d<int,2,spec::relative>{1,2};
-        REQUIRE( oss.str() == "[relative:1,2]" );
+        oss << d<int,2,spec::absolute>{1,2};
+        REQUIRE( oss.str() == "[absolute:1,2]" );
     }
 
 }

@@ -19,7 +19,7 @@
 
 using namespace descendu;
 
-TEST_CASE( "construct", "construct" ) {
+TEST_CASE( "construct" ) {
 
     SECTION( "absolute" ) {
         const hex<int,spec::absolute> a {1,2};
@@ -37,7 +37,7 @@ TEST_CASE( "construct", "construct" ) {
 
 }
 
-TEST_CASE( "equality", "equality" ) {
+TEST_CASE( "equality" ) {
 
     SECTION( "absolute" ) {
         const hex<int,spec::absolute> a {1,2};
@@ -59,6 +59,17 @@ TEST_CASE( "equality", "equality" ) {
         REQUIRE ( a == b );
         REQUIRE ( a != c );
         REQUIRE ( a != d );
+    }
+
+}
+
+TEST_CASE( "operator<<" ) {
+
+    std::ostringstream oss;
+
+    SECTION( "absolute" ) {
+        oss << hex<int,spec::absolute>{1,2};
+        REQUIRE( oss.str() == "[absolute:1,2,-3]" );
     }
 
 }

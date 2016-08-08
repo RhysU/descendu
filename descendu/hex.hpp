@@ -50,7 +50,6 @@ private:
 
 };
 
-// TODO Test
 template<class chart, class traits, typename T, spec S>
 auto& operator<<(std::basic_ostream<chart,traits>& os, const hex<T,S>& p)
 {
