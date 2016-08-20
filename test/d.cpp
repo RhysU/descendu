@@ -82,8 +82,6 @@ TEST_CASE( "equality" ) {
         typedef d<double,2,spec::relative> rel_type;
         const rel_type b { 1.0, 2.0 };
 
-        // FIXME REQUIRE( a != b );
-
         REQUIRE( std::hash<abs_type>()(a) != std::hash<rel_type>()(b));
     }
 
@@ -95,38 +93,41 @@ TEST_CASE( "initializers" ) {
         d<int,2,spec::relative> a;
         REQUIRE ( a[0] == 0 );
         REQUIRE ( a[1] == 0 );
+        REQUIRE ( a.size() == 2);
+
+        a.fill(5);
+        REQUIRE ( a[0] == 5 );
+        REQUIRE ( a[1] == 5 );
     }
 
     SECTION( "none" ) {
-        d<int,2,spec::relative> a {};
+        const d<int,2,spec::relative> a {};
         REQUIRE ( a[0] == 0 );
         REQUIRE ( a[1] == 0 );
+        REQUIRE ( a.size() == 2);
     }
 
     SECTION( "too few" ) {
-        d<int,2,spec::relative> a { 1 };
+        const d<int,2,spec::relative> a { 1 };
         REQUIRE ( a[0] == 1 );
         REQUIRE ( a[1] == 0 );
+        REQUIRE ( a.size() == 2);
     }
 
 }
 
-TEST_CASE( "addition" ) {
+TEST_CASE( "front_back" ) {
 
     SECTION( "absolute" ) {
-        d<int,2,spec::absolute> a {1,2};
-        d<int,2,spec::relative> b {2,3};
-        auto c = a + b;
-        REQUIRE ( c[0] == 3 );
-        REQUIRE ( c[1] == 5 );
+        const d<int,2,spec::absolute> a {1,2};
+        REQUIRE ( a.front() == 1 );
+        REQUIRE ( a.back()  == 2 );
     }
 
     SECTION( "relative" ) {
-        d<int,2,spec::relative> a {1,2};
-        d<int,2,spec::relative> b {2,3};
-        auto c = a + b;
-        REQUIRE ( c[0] == 3 );
-        REQUIRE ( c[1] == 5 );
+        const d<int,2,spec::relative> a {1,2};
+        REQUIRE ( a.front() == 1 );
+        REQUIRE ( a.back()  == 2 );
     }
 
 }

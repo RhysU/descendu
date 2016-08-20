@@ -29,16 +29,27 @@ auto& operator<<(std::basic_ostream<CharT,Traits>& os, spec s) {
     return os;
 }
 
+// TODO swap
 template <typename T, std::size_t N, spec S>
-struct d : std::array<T,N>
+struct d : private std::array<T,N>
 {
     template<typename ...U>
     constexpr d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
+
+    using std::array<T,N>::back;
+    using std::array<T,N>::begin;
+    using std::array<T,N>::cbegin;
+    using std::array<T,N>::cend;
+    using std::array<T,N>::end;
+    using std::array<T,N>::fill;
+    using std::array<T,N>::front;
+    using std::array<T,N>::operator[];
+    using std::array<T,N>::size;
 };
 
 template <typename T1, typename T2, std::size_t N, spec S>
 bool operator==(const d<T1,N,S>& a, const d<T2,N,S>& b) {
-    return std::equal(a.begin(), a.end(), b.begin());
+    return std::equal(a.cbegin(), a.cend(), b.cbegin());
 }
 
 template <typename T1, typename T2, std::size_t N, spec S>
