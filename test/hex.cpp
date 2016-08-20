@@ -138,7 +138,7 @@ TEST_CASE( "subtraction" ) {
 TEST_CASE( "neighbor" ) {
 
     SECTION( "result about zero" ) {
-        const hex<int,spec::absolute> a {0, 0};
+        const hex<int,spec::absolute> a {+0, +0};
         REQUIRE(( a.neighbor(0) == hex<int,spec::absolute>( 1, +0) ));
         REQUIRE(( a.neighbor(1) == hex<int,spec::absolute>( 1, -1) ));
         REQUIRE(( a.neighbor(2) == hex<int,spec::absolute>( 0, -1) ));
@@ -148,7 +148,7 @@ TEST_CASE( "neighbor" ) {
     }
 
     SECTION( "modulo handling" ) {
-        const hex<int,spec::relative> a {3,4};
+        const hex<int,spec::relative> a {+3, +4};
         REQUIRE( a.neighbor(-6) == a.neighbor(+ 0) );
         REQUIRE( a.neighbor(-5) == a.neighbor(+ 1) );
         REQUIRE( a.neighbor(-4) == a.neighbor(+ 2) );
@@ -162,8 +162,35 @@ TEST_CASE( "neighbor" ) {
         REQUIRE( a.neighbor(+4) == a.neighbor(+10) );
         REQUIRE( a.neighbor(+5) == a.neighbor(+11) );
     }
+}
 
+TEST_CASE( "diagonal" ) {
 
+    SECTION( "result about zero" ) {
+        const hex<int,spec::relative> a {+0, +0};
+        REQUIRE(( a.diagonal(0) == hex<int,spec::relative>( 2, -1) ));
+        REQUIRE(( a.diagonal(1) == hex<int,spec::relative>( 1, -2) ));
+        REQUIRE(( a.diagonal(2) == hex<int,spec::relative>(-1, -1) ));
+        REQUIRE(( a.diagonal(3) == hex<int,spec::relative>(-2, +1) ));
+        REQUIRE(( a.diagonal(4) == hex<int,spec::relative>(-1, +2) ));
+        REQUIRE(( a.diagonal(5) == hex<int,spec::relative>( 1, +1) ));
+    }
+
+    SECTION( "modulo handling" ) {
+        const hex<int,spec::absolute> a {-3, -4};
+        REQUIRE( a.diagonal(-6) == a.diagonal(+ 0) );
+        REQUIRE( a.diagonal(-5) == a.diagonal(+ 1) );
+        REQUIRE( a.diagonal(-4) == a.diagonal(+ 2) );
+        REQUIRE( a.diagonal(-3) == a.diagonal(+ 3) );
+        REQUIRE( a.diagonal(-2) == a.diagonal(+ 4) );
+        REQUIRE( a.diagonal(-1) == a.diagonal(+ 5) );
+        REQUIRE( a.diagonal(+0) == a.diagonal(+ 6) );
+        REQUIRE( a.diagonal(+1) == a.diagonal(+ 7) );
+        REQUIRE( a.diagonal(+2) == a.diagonal(+ 8) );
+        REQUIRE( a.diagonal(+3) == a.diagonal(+ 9) );
+        REQUIRE( a.diagonal(+4) == a.diagonal(+10) );
+        REQUIRE( a.diagonal(+5) == a.diagonal(+11) );
+    }
 }
 
 TEST_CASE( "operator<<" ) {
