@@ -135,6 +135,42 @@ TEST_CASE( "subtraction" ) {
 
 }
 
+TEST_CASE( "neighbor" ) {
+
+    SECTION( "absolute" ) {
+        const hex<int,spec::absolute> a {3,4};
+        REQUIRE ( a.neighbor(-6) == a.neighbor(+ 0) );
+        REQUIRE ( a.neighbor(-5) == a.neighbor(+ 1) );
+        REQUIRE ( a.neighbor(-4) == a.neighbor(+ 2) );
+        REQUIRE ( a.neighbor(-3) == a.neighbor(+ 3) );
+        REQUIRE ( a.neighbor(-2) == a.neighbor(+ 4) );
+        REQUIRE ( a.neighbor(-1) == a.neighbor(+ 5) );
+        REQUIRE ( a.neighbor(+0) == a.neighbor(+ 6) );
+        REQUIRE ( a.neighbor(+1) == a.neighbor(+ 7) );
+        REQUIRE ( a.neighbor(+2) == a.neighbor(+ 8) );
+        REQUIRE ( a.neighbor(+3) == a.neighbor(+ 9) );
+        REQUIRE ( a.neighbor(+4) == a.neighbor(+10) );
+        REQUIRE ( a.neighbor(+5) == a.neighbor(+11) );
+    }
+
+    SECTION( "relative" ) {
+        const hex<int,spec::relative> a {3,4};
+        REQUIRE ( a.neighbor(-6) == a.neighbor(+ 0) );
+        REQUIRE ( a.neighbor(-5) == a.neighbor(+ 1) );
+        REQUIRE ( a.neighbor(-4) == a.neighbor(+ 2) );
+        REQUIRE ( a.neighbor(-3) == a.neighbor(+ 3) );
+        REQUIRE ( a.neighbor(-2) == a.neighbor(+ 4) );
+        REQUIRE ( a.neighbor(-1) == a.neighbor(+ 5) );
+        REQUIRE ( a.neighbor(+0) == a.neighbor(+ 6) );
+        REQUIRE ( a.neighbor(+1) == a.neighbor(+ 7) );
+        REQUIRE ( a.neighbor(+2) == a.neighbor(+ 8) );
+        REQUIRE ( a.neighbor(+3) == a.neighbor(+ 9) );
+        REQUIRE ( a.neighbor(+4) == a.neighbor(+10) );
+        REQUIRE ( a.neighbor(+5) == a.neighbor(+11) );
+    }
+
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;

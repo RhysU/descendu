@@ -47,6 +47,17 @@ public:
         return hex(base() - o.base());
     }
 
+    hex neighbor(int i) const {
+        switch (i % 6) {  // C++11 modulo semantics
+        case +0: default: return hex(q()+1, r()  );
+        case +1: case -5: return hex(q()+1, r()-1);
+        case +2: case -4: return hex(q()  , r()-1);
+        case +3: case -3: return hex(q()-1, r()  );
+        case +4: case -2: return hex(q()-1, r()+1);
+        case +5: case -1: return hex(q()  , r()+1);
+        }
+    }
+
 };
 
 template<class chart, class traits, typename T, spec S>
