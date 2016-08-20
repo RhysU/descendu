@@ -191,6 +191,22 @@ TEST_CASE( "diagonal" ) {
         REQUIRE( a.diagonal(+4) == a.diagonal(+10) );
         REQUIRE( a.diagonal(+5) == a.diagonal(+11) );
     }
+
+    SECTION( "neighbor consistency" ) {
+        const hex<int,spec::absolute> a {+0, +0};
+        REQUIRE( a.diagonal(+0) == a.neighbor(0).neighbor(1) );
+        REQUIRE( a.diagonal(+0) == a.neighbor(1).neighbor(0) );
+        REQUIRE( a.diagonal(+1) == a.neighbor(1).neighbor(2) );
+        REQUIRE( a.diagonal(+1) == a.neighbor(2).neighbor(1) );
+        REQUIRE( a.diagonal(+2) == a.neighbor(2).neighbor(3) );
+        REQUIRE( a.diagonal(+2) == a.neighbor(3).neighbor(2) );
+        REQUIRE( a.diagonal(+3) == a.neighbor(3).neighbor(4) );
+        REQUIRE( a.diagonal(+3) == a.neighbor(4).neighbor(3) );
+        REQUIRE( a.diagonal(+4) == a.neighbor(4).neighbor(5) );
+        REQUIRE( a.diagonal(+4) == a.neighbor(5).neighbor(4) );
+        REQUIRE( a.diagonal(+5) == a.neighbor(0).neighbor(5) );
+        REQUIRE( a.diagonal(+5) == a.neighbor(5).neighbor(0) );
+    }
 }
 
 TEST_CASE( "operator<<" ) {
