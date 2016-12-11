@@ -20,5 +20,3 @@ matrix:
           packages:
             - autotools-dev
             - clang-3.8
-  exclude:
-    - env:
