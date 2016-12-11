@@ -135,6 +135,22 @@ TEST_CASE( "subtraction" ) {
 
 }
 
+TEST_CASE( "distance" ) {
+
+    SECTION( "absolute" ) {
+        const hex<int, spec::absolute> a {3,-7};
+        const hex<long,spec::absolute> b {0, 0};
+        REQUIRE( a.distance(b) == 7 );
+    }
+
+    SECTION( "relative" ) {
+        const hex<long,spec::relative> a {3,-7};
+        const hex<int, spec::relative> b {0, 0};
+        REQUIRE( a.distance(b) == 7 );
+    }
+
+}
+
 TEST_CASE( "neighbor" ) {
 
     SECTION( "result about zero" ) {

@@ -9,6 +9,8 @@
 #ifndef DESCENDU_HEX_H
 #define DESCENDU_HEX_H
 
+#include <cstdlib>
+
 #include "d.hpp"
 
 namespace descendu {
@@ -45,6 +47,13 @@ public:
     template <typename U, spec R>
     auto operator-(const hex<U,R>& o) const {
         return hex(base() - o.base());
+    }
+
+    template <typename U>
+    auto distance(const hex<U,S>& o) const {
+        // Does not use operator- on account of spec compatibility
+        using namespace std;
+        return (abs(q()-o.q()) + abs(r()-o.r()) + abs(s()-o.s())) / 2;
     }
 
     hex neighbor(int i) const {
