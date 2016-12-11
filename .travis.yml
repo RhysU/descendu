@@ -1,9 +1,9 @@
-language: generic
-os: linux
 script: ./bootstrap && ./configure && make all && make check && make distcheck
 matrix:
   include:
     - env: COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+      language: generic
+      os: linux
       addons:
         apt:
           sources:
@@ -12,6 +12,8 @@ matrix:
             - autotools-dev
             - g++-5
     - env: COMPILER_NAME=clang CXX=clang++-3.8 CC=clang-3.8
+      language: generic
+      os: linux
       addons:
         apt:
           sources:
