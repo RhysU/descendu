@@ -47,6 +47,7 @@ test/hex
 test/player
 test/redblob
 test/tile
+test/world
 *.exe
 *.out
 *.app
