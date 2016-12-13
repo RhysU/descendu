@@ -39,6 +39,16 @@ public:
         return resource(base() - o.base());
     }
 
+    auto& operator+=(const resource& o) {
+        base() += o.base();
+        return *this;
+    }
+
+    auto& operator-=(const resource& o) {
+        base() -= o.base();
+        return *this;
+    }
+
 };
 
 } // namespace
