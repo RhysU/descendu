@@ -7,8 +7,6 @@ Status](https://travis-ci.org/RhysU/descendu.svg?branch=master)](https://travis-
 Work remaining
 --------------
 
- * Type describing the state of a given world (e.g. number of players, turn)
- * Type describing the state of a given player (e.g. resources)
  * Type specifying the state of a given hex tile (e.g. if owned, height, units)
  * Array of such types, accessed row-major, with zero edges providing the board
  * Arrangement of above types into a game state concept
