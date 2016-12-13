@@ -132,6 +132,58 @@ TEST_CASE( "front_back" ) {
 
 }
 
+TEST_CASE( "addition" ) {
+
+    SECTION( "absolute_lhs" ) {
+        const d<int,2,spec::absolute> a {1,2};
+        const d<int,2,spec::relative> b {3,4};
+        auto c = a + b;
+        REQUIRE ( c[0] ==  4 );
+        REQUIRE ( c[1] ==  6 );
+        c += b;
+        REQUIRE ( c[0] ==  7 );
+        REQUIRE ( c[1] == 10 );
+
+    }
+
+    SECTION( "relative_lhs" ) {
+        const d<int,2,spec::relative> a {1,2};
+        const d<int,2,spec::relative> b {3,4};
+        auto c = a + b;
+        REQUIRE ( c[0] ==  4 );
+        REQUIRE ( c[1] ==  6 );
+        c += b;
+        REQUIRE ( c[0] ==  7 );
+        REQUIRE ( c[1] == 10 );
+    }
+}
+
+TEST_CASE( "subtraction" ) {
+
+    SECTION( "absolute_lhs" ) {
+        const d<int,2,spec::absolute> a {1,2};
+        const d<int,2,spec::relative> b {4,3};
+        auto c = a - b;
+        REQUIRE ( c[0] == -3 );
+        REQUIRE ( c[1] == -1 );
+        c -= b;
+        REQUIRE ( c[0] == -7 );
+        REQUIRE ( c[1] == -4 );
+
+    }
+
+    SECTION( "relative_lhs" ) {
+        const d<int,2,spec::relative> a {1,2};
+        const d<int,2,spec::relative> b {4,3};
+        auto c = a - b;
+        REQUIRE ( c[0] == -3 );
+        REQUIRE ( c[1] == -1 );
+        c -= b;
+        REQUIRE ( c[0] == -7 );
+        REQUIRE ( c[1] == -4 );
+    }
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;

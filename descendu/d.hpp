@@ -79,6 +79,27 @@ auto operator-(const d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
     return r;
 }
 
+// Right operand must be spec::relative
+template <typename T1, typename T2, std::size_t N, spec Result>
+auto& operator+=(d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
+{
+    for (std::size_t i = 0; i < N; ++i) {
+        a[i] += b[i];
+    }
+    return a;
+}
+
+// Right operand must be spec::relative
+template <typename T1, typename T2, std::size_t N, spec Result>
+auto& operator-=(d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
+{
+    for (std::size_t i = 0; i < N; ++i) {
+        a[i] -= b[i];
+    }
+    return a;
+}
+
+
 template<class chart, class traits, typename T, std::size_t N, spec S>
 auto& operator<<(std::basic_ostream<chart,traits>& os, const d<T,N,S>& p)
 {
