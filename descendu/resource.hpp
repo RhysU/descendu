@@ -9,11 +9,35 @@
 #ifndef DESCENDU_RESOURCE_H
 #define DESCENDU_RESOURCE_H
 
+#include "d.hpp"
+
 namespace descendu {
 
-class resource
+class resource : d<int,1,spec::relative>
 {
+    typedef d<int,1,spec::relative> base_type;
+
+    resource(const base_type& src) : base_type(src) {}
+
+    const base_type& base() const { return *this; }
+          base_type& base()       { return *this; }
+
 public:
+
+    constexpr resource(const int& gold) : base_type{gold} {}
+
+    int gold() const { return this->operator[](0); }
+
+    bool operator==(const resource& o) const { return base() == o.base(); }
+    bool operator!=(const resource& o) const { return base() != o.base(); }
+
+    auto operator+(const resource& o) const {
+        return resource(base() + o.base());
+    }
+
+    auto operator-(const resource& o) const {
+        return resource(base() - o.base());
+    }
 
 };
 

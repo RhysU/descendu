@@ -9,11 +9,17 @@
 #ifndef DESCENDU_PLAYER_H
 #define DESCENDU_PLAYER_H
 
+#include "resource.hpp"
+
 namespace descendu {
 
 class player
 {
 public:
+
+    resource resources;
+
+    player() : resources(0) {}
 
 };
 
