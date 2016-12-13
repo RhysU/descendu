@@ -19,8 +19,6 @@ public:
 
     resource resources;
 
-    player() : resources(0) {}
-
 };
 
 } // namespace

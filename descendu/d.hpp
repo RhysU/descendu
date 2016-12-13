@@ -45,6 +45,7 @@ struct d : private std::array<T,N>
     using std::array<T,N>::front;
     using std::array<T,N>::operator[];
     using std::array<T,N>::size;
+    using std::array<T,N>::value_type;
 };
 
 template <typename T1, typename T2, std::size_t N, spec S>

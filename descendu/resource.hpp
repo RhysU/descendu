@@ -9,6 +9,8 @@
 #ifndef DESCENDU_RESOURCE_H
 #define DESCENDU_RESOURCE_H
 
+#include <algorithm>
+
 #include "d.hpp"
 
 namespace descendu {
@@ -25,6 +27,7 @@ class resource : d<int,1,spec::relative>
 public:
 
     constexpr resource(const int& gold) : base_type{gold} {}
+    constexpr resource() : resource(0) {}
 
     int gold() const { return this->operator[](0); }
 
@@ -47,6 +50,18 @@ public:
     auto& operator-=(const resource& o) {
         base() -= o.base();
         return *this;
+    }
+
+    // Check if resources sufficient for some purpose
+    bool operator>=(const resource& o) const {
+        using namespace std;
+        return cend() == find_first_of(
+            cbegin(), cend(), o.cbegin(), o.cend(),
+            greater_equal<base_type::value_type>());
+    }
+
+    bool nonnegative() const {
+        return operator>=(resource());
     }
 
 };
