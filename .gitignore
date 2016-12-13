@@ -44,6 +44,7 @@ descendu/stamp-h1
 test/d
 test/hello
 test/hex
+test/player
 test/redblob
 test/tile
 *.exe

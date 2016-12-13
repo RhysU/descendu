@@ -6,11 +6,13 @@ check_PROGRAMS  =
 
 pkginclude_HEADERS  = descendu/d.hpp
 pkginclude_HEADERS += descendu/hex.hpp
+pkginclude_HEADERS += descendu/player.hpp
 pkginclude_HEADERS += descendu/tile.hpp
 
 noinst_HEADERS  = test/catch.hpp
 check_PROGRAMS += test/d
 check_PROGRAMS += test/hex
+check_PROGRAMS += test/player
 check_PROGRAMS += test/redblob
 check_PROGRAMS += test/tile
 TESTS = $(check_PROGRAMS)
