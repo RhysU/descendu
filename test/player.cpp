@@ -17,10 +17,11 @@
 
 using namespace descendu;
 
-TEST_CASE( "placeholder" ) {
+TEST_CASE( "player" ) {
 
-    SECTION( "placeholder" ) {
-        REQUIRE( 1 == 1 );
+    SECTION( "construct" ) {
+        player p;
+        REQUIRE( p.resources.gold() == 0 );
     }
 
 }

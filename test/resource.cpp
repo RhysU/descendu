@@ -17,10 +17,43 @@
 
 using namespace descendu;
 
-TEST_CASE( "placeholder" ) {
+TEST_CASE( "resource" ) {
 
-    SECTION( "placeholder" ) {
-        REQUIRE( 1 == 1 );
+    SECTION( "construct" ) {
+        resource r;
+        REQUIRE( r.gold() == 0 );
+    }
+
+    SECTION( "add" ) {
+        REQUIRE( (resource(1) + resource(2)).gold() == 3 );
+    }
+
+    SECTION( "add_mutate" ) {
+        resource r(1);
+        r += resource(3);
+        REQUIRE( r.gold() == 4 );
+    }
+
+    SECTION( "subtract" ) {
+        REQUIRE( (resource(1) - resource(2)).gold() == -1 );
+    }
+
+    SECTION( "subtract_mutate" ) {
+        resource r(1);
+        r -= resource(3);
+        REQUIRE( r.gold() == -2 );
+    }
+
+    SECTION( "greater_than" ) {
+        REQUIRE(   resource(+3) >= resource(+2)  );
+        REQUIRE(   resource(+1) >= resource(+1)  );
+        REQUIRE( !(resource(-3) >= resource(-2)) );
+    }
+
+    SECTION( "nonnegative" ) {
+        REQUIRE(  resource(+3).nonnegative() );
+        REQUIRE(  resource(+0).nonnegative() );
+        REQUIRE( !resource(-3).nonnegative() );
     }
 
 }

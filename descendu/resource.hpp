@@ -10,6 +10,7 @@
 #define DESCENDU_RESOURCE_H
 
 #include <algorithm>
+#include <utility>
 
 #include "d.hpp"
 
@@ -55,7 +56,7 @@ public:
     // Check if resources sufficient for some purpose
     bool operator>=(const resource& o) const {
         using namespace std;
-        return cend() == find_first_of(
+        return make_pair(cend(), o.cend()) == mismatch(
             cbegin(), cend(), o.cbegin(), o.cend(),
             greater_equal<base_type::value_type>());
     }
@@ -64,7 +65,19 @@ public:
         return operator>=(resource());
     }
 
+    template<class chart, class traits> friend
+    auto& operator<<(std::basic_ostream<chart,traits>& os, const resource& r);
+
 };
+
+template<class chart, class traits>
+auto& operator<<(std::basic_ostream<chart,traits>& os, const resource& r)
+{
+    os << "[resource:";
+    components(os, r.base(), ',');
+    os << ']';
+    return os;
+}
 
 } // namespace
 
