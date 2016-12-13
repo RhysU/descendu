@@ -9,11 +9,22 @@
 #ifndef DESCENDU_WORLD_H
 #define DESCENDU_WORLD_H
 
+#include <vector>
+
+#include "player.hpp"
+
 namespace descendu {
+
 
 class world
 {
 public:
+
+    world(int nplayers)
+        : players(nplayers)
+    {}
+
+    const std::vector<player> players;
 
 };
 
