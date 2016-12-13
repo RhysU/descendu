@@ -45,6 +45,7 @@ test/d
 test/hello
 test/hex
 test/redblob
+test/tile
 *.exe
 *.out
 *.app
