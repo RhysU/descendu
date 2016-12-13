@@ -46,6 +46,7 @@ test/hello
 test/hex
 test/player
 test/redblob
+test/resource
 test/tile
 test/world
 *.exe
