@@ -15,6 +15,7 @@
 
 namespace descendu {
 
+// Based upon http://www.redblobgames.com/grids/hexagons/
 template <typename T, spec S>
 class hex : d<T,2,S>
 {
