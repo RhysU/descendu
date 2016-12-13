@@ -100,17 +100,29 @@ auto& operator-=(d<T1,N,Result>& a, const d<T2,N,spec::relative>& b)
     return a;
 }
 
+template<
+    class chart, class traits, class Delimiter,
+    typename T, std::size_t N, spec S
+>
+auto& components(
+    std::basic_ostream<chart,traits>& os,
+    const d<T,N,S>& p,
+    const Delimiter& delimiter)
+{
+    for (std::size_t i = 0; i < N-1; ++i) {
+        os << p[i] << delimiter;
+    }
+    if (N > 0) {
+        os << p[N-1];
+    }
+    return os;
+}
 
 template<class chart, class traits, typename T, std::size_t N, spec S>
 auto& operator<<(std::basic_ostream<chart,traits>& os, const d<T,N,S>& p)
 {
     os << '[' << S << ':';
-    for (std::size_t i = 0; i < N-1; ++i) {
-        os << p[i] << ',';
-    }
-    if (N > 0) {
-        os << p[N-1];
-    }
+    components(os, p, ',');
     os << ']';
     return os;
 }
