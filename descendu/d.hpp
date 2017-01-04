@@ -149,5 +149,4 @@ struct hash<descendu::d<T,N,S>>
 
 }
 
-
 #endif

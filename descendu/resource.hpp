@@ -16,6 +16,7 @@
 
 namespace descendu {
 
+// TODO Airlift?
 class resource : d<int,1,spec::relative>
 {
     typedef d<int,1,spec::relative> base_type;

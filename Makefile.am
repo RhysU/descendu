@@ -4,7 +4,8 @@ ACLOCAL_AMFLAGS = -I m4
 bin_PROGRAMS    =
 check_PROGRAMS  =
 
-pkginclude_HEADERS  = descendu/d.hpp
+pkginclude_HEADERS  = descendu/consumable.hpp
+pkginclude_HEADERS += descendu/d.hpp
 pkginclude_HEADERS += descendu/hex.hpp
 pkginclude_HEADERS += descendu/player.hpp
 pkginclude_HEADERS += descendu/resource.hpp
@@ -12,6 +13,7 @@ pkginclude_HEADERS += descendu/tile.hpp
 pkginclude_HEADERS += descendu/world.hpp
 
 noinst_HEADERS  = test/catch.hpp
+check_PROGRAMS += test/consumable
 check_PROGRAMS += test/d
 check_PROGRAMS += test/hex
 check_PROGRAMS += test/player

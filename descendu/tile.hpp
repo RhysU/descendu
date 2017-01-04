@@ -15,6 +15,18 @@ class tile
 {
 public:
 
+    // TODO Better names!  Documentation!
+    int height;
+    // TODO index or pointer to player owning the tile?
+    // units
+    // TODO Notion of already moved?
+    int walkers;
+    // TODO Notion of age or "consumed"?
+    bool barracks;
+    bool cannon;
+    int rounds;
+    bool harvester;
+
 };
 
 } // namespace
