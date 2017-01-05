@@ -12,26 +12,70 @@
 #include <array>
 #include <initializer_list>
 #include <ostream>
+#include <sstream>
+#include <stdexcept>
 #include <utility>
 
 namespace descendu
 {
 
 template<typename T>
-struct consumable {
+class consumable {
 
-    typedef T value_type;
+    T _total;
+    T _spent;
 
-    T total;
-    T spent;
+public:
 
-    explicit consumable(value_type total = 0, value_type spent = 0)
-        : total(total)
-        , spent(spent)
+    explicit consumable(T total = 0, T spent = 0)
+        : _total(total)
+        , _spent(spent)
     {}
+
+    T total() const {
+        return _total;
+    }
+
+    T spent() const {
+        return _spent;
+    }
+
+    T remaining() const {
+        return _total - _spent;
+    }
+
+    explicit operator bool() const {
+        return remaining() > 0;
+    }
+
+    T increase(T amount = 1) {
+        if (_spent > _total + amount) {
+            std::ostringstream oss;
+            oss << *this << " and attempting to increase " << amount;
+            throw std::logic_error(oss.str());
+        }
+        _total += amount;
+        return remaining();
+    }
+
+    T consume(T amount = 1) {
+        if (_spent + amount > _total) {
+            std::ostringstream oss;
+            oss << *this << " and attempting to spend " << amount;
+            throw std::logic_error(oss.str());
+        }
+        _spent += amount;
+        return remaining();
+    }
 
 };
 
+template<class chart, class traits, typename T>
+auto& operator<<(std::basic_ostream<chart,traits>& os, const consumable<T>& c)
+{
+    os << "[total=" << c.total() << ",spent=" << c.spent() << ']';
+    return os;
+}
 
 }
 
