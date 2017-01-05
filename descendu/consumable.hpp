@@ -68,6 +68,11 @@ public:
         return remaining();
     }
 
+    T reset() {
+        _spent = 0;
+        return remaining();
+    }
+
 };
 
 template<class chart, class traits, typename T>

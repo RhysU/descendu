@@ -48,17 +48,17 @@ TEST_CASE( "increase" ) {
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
     REQUIRE( !!a );
-    a.increase(2);
+    REQUIRE( 3 == a.increase(2) );
     REQUIRE( a.total() == 5 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 3 );
     REQUIRE( !!a );
-    a.increase();
+    REQUIRE( 4 == a.increase() );
     REQUIRE( a.total() == 6 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 4 );
     REQUIRE( !!a );
-    a.increase(-4);
+    REQUIRE( 0 == a.increase(-4) );
     REQUIRE( a.total() == 2 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 0 );
@@ -74,22 +74,33 @@ TEST_CASE( "consume" ) {
     REQUIRE( a.spent() == 0 );
     REQUIRE( a.remaining() == 3 );
     REQUIRE( !!a );
-    a.consume(2);
+    REQUIRE( 1 ==  a.consume(2) );
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
     REQUIRE( !!a );
-    a.consume(-1);
+    REQUIRE( 2 == a.consume(-1) );
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 1 );
     REQUIRE( a.remaining() == 2 );
     REQUIRE( !!a );
-    a.consume();
+    REQUIRE( 1 == a.consume() );
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
     REQUIRE( !!a );
     REQUIRE_THROWS_AS( a.consume(2), std::logic_error );
+
+}
+
+TEST_CASE( "reset" ) {
+
+    consumable<int> a(3, 2);
+    REQUIRE( a.total() == 3 );
+    REQUIRE( a.spent() == 2 );
+    REQUIRE( 3 == a.reset() );
+    REQUIRE( a.total() == 3 );
+    REQUIRE( a.spent() == 0 );
 
 }
 
