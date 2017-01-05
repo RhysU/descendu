@@ -58,29 +58,30 @@ public:
         return remaining() > 0;
     }
 
-    value_type increase(value_type amount = 1) {
+    // TODO Increase implies not yet consumable
+    consumable& increase(value_type amount = 1) {
         if (_spent > _total + amount || _total + amount > bound()) {
             std::ostringstream oss;
             oss << *this << " and attempting to increase " << amount;
             throw std::logic_error(oss.str());
         }
         _total += amount;
-        return remaining();
+        return *this;
     }
 
-    value_type consume(value_type amount = 1) {
+    consumable& consume(value_type amount = 1) {
         if (_spent + amount > _total) {
             std::ostringstream oss;
             oss << *this << " and attempting to spend " << amount;
             throw std::logic_error(oss.str());
         }
         _spent += amount;
-        return remaining();
+        return *this;
     }
 
-    value_type reset() {
+    consumable& reset() {
         _spent = 0;
-        return remaining();
+        return *this;
     }
 
 };
