@@ -34,7 +34,7 @@ public:
         if (_total > consumable::bound() || _spent > _total) {
             std::ostringstream oss;
             oss << "Invalid construction " << *this;
-            throw std::logic_error(oss.str());
+            throw std::invalid_argument(oss.str());
         }
     }
 
@@ -63,7 +63,7 @@ public:
         if (_spent > _total + amount || _total + amount > bound()) {
             std::ostringstream oss;
             oss << *this << " and attempting to increase " << amount;
-            throw std::logic_error(oss.str());
+            throw std::invalid_argument(oss.str());
         }
         _total += amount;
         return *this;
@@ -73,7 +73,7 @@ public:
         if (_spent + amount > _total) {
             std::ostringstream oss;
             oss << *this << " and attempting to spend " << amount;
-            throw std::logic_error(oss.str());
+            throw std::invalid_argument(oss.str());
         }
         _spent += amount;
         return *this;

@@ -67,7 +67,7 @@ TEST_CASE( "increase" ) {
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 0 );
     REQUIRE( !a );
-    REQUIRE_THROWS_AS( a.increase(-1), std::logic_error );
+    REQUIRE_THROWS_AS( a.increase(-1), std::invalid_argument );
 
     // Exceed bound
     consumable<int,3> b(0, 0);
@@ -78,7 +78,7 @@ TEST_CASE( "increase" ) {
     REQUIRE( b.total() == 3 );
     REQUIRE( b.spent() == 0 );
     REQUIRE( b.remaining() == 3 );
-    REQUIRE_THROWS_AS( b.increase(), std::logic_error );
+    REQUIRE_THROWS_AS( b.increase(), std::invalid_argument );
 
 }
 
@@ -104,7 +104,7 @@ TEST_CASE( "consume" ) {
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
     REQUIRE( !!a );
-    REQUIRE_THROWS_AS( a.consume(2), std::logic_error );
+    REQUIRE_THROWS_AS( a.consume(2), std::invalid_argument );
 
 }
 
