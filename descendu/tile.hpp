@@ -20,11 +20,11 @@ public:
     // TODO Better names!  Documentation!
     int height;
     // TODO index or pointer to player owning the tile?
-    consumable<int> walkers;
-    consumable<int> barracks;
-    consumable<int> cannon;
-    consumable<int> rounds;
-    consumable<int> harvester;
+    consumable<int,16> walkers;
+    consumable<int, 1> barracks;
+    consumable<int, 1> cannon;
+    consumable<int,16> rounds;
+    consumable<int, 1> harvester;
 
 };
 

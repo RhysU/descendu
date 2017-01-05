@@ -20,21 +20,24 @@ using namespace descendu;
 TEST_CASE( "constructor" ) {
 
     SECTION( "construct2" ) {
-        consumable<int> a(3, 2);
+        consumable<int,3> a(3, 2);
+        REQUIRE( a.bound()   == 3 );
         REQUIRE( a.total() == 3 );
         REQUIRE( a.spent() == 2 );
         REQUIRE( a.remaining() == 1 );
     }
 
     SECTION( "construct1" ) {
-        consumable<int> a(3);
+        consumable<int,4> a(3);
+        REQUIRE( a.bound()   == 4 );
         REQUIRE( a.total() == 3 );
         REQUIRE( a.spent() == 0 );
         REQUIRE( a.remaining() == 3 );
     }
 
     SECTION( "construct0" ) {
-        consumable<int> a;
+        consumable<int,1> a;
+        REQUIRE( a.bound() == 1 );
         REQUIRE( a.total() == 0 );
         REQUIRE( a.spent() == 0 );
         REQUIRE( a.remaining() == 0 );
@@ -43,7 +46,8 @@ TEST_CASE( "constructor" ) {
 
 TEST_CASE( "increase" ) {
 
-    consumable<int> a(3, 2);
+    // Under bound
+    consumable<int,6> a(3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
@@ -65,11 +69,22 @@ TEST_CASE( "increase" ) {
     REQUIRE( !a );
     REQUIRE_THROWS_AS( a.increase(-1), std::logic_error );
 
+    // Exceed bound
+    consumable<int,3> b(0, 0);
+    REQUIRE( b.total() == 0 );
+    REQUIRE( b.spent() == 0 );
+    REQUIRE( b.remaining() == 0 );
+    REQUIRE( 3 == b.increase(3) );
+    REQUIRE( b.total() == 3 );
+    REQUIRE( b.spent() == 0 );
+    REQUIRE( b.remaining() == 3 );
+    REQUIRE_THROWS_AS( b.increase(), std::logic_error );
+
 }
 
 TEST_CASE( "consume" ) {
 
-    consumable<int> a(3, 0);
+    consumable<int,3> a(3, 0);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 0 );
     REQUIRE( a.remaining() == 3 );
@@ -95,7 +110,7 @@ TEST_CASE( "consume" ) {
 
 TEST_CASE( "reset" ) {
 
-    consumable<int> a(3, 2);
+    consumable<int,3> a(3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( 3 == a.reset() );
@@ -109,8 +124,8 @@ TEST_CASE( "operator<<" ) {
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
-        oss << consumable<int>(3, 2);
-        REQUIRE( oss.str() == "[total=3,spent=2]" );
+        oss << consumable<int,4>(3, 2);
+        REQUIRE( oss.str() == "[bound=4,total=3,spent=2]" );
     }
 
 }

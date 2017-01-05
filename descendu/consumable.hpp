@@ -9,17 +9,15 @@
 #ifndef DESCENDU_CONSUMABLE_H
 #define DESCENDU_CONSUMABLE_H
 
-#include <array>
-#include <initializer_list>
+#include <algorithm>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
-#include <utility>
 
 namespace descendu
 {
 
-template<typename T>
+template<typename T, std::size_t Bound>
 class consumable {
 
     T _total;
@@ -27,20 +25,32 @@ class consumable {
 
 public:
 
-    explicit consumable(T total = 0, T spent = 0)
+    typedef T value_type;
+
+    explicit consumable(value_type total = 0, value_type spent = 0)
         : _total(total)
         , _spent(spent)
-    {}
+    {
+        if (_total > consumable::bound() || _spent > _total) {
+            std::ostringstream oss;
+            oss << "Invalid construction " << *this;
+            throw std::logic_error(oss.str());
+        }
+    }
 
-    T total() const {
+    static value_type bound() {
+        return Bound;
+    }
+
+    value_type total() const {
         return _total;
     }
 
-    T spent() const {
+    value_type spent() const {
         return _spent;
     }
 
-    T remaining() const {
+    value_type remaining() const {
         return _total - _spent;
     }
 
@@ -48,8 +58,8 @@ public:
         return remaining() > 0;
     }
 
-    T increase(T amount = 1) {
-        if (_spent > _total + amount) {
+    value_type increase(value_type amount = 1) {
+        if (_spent > _total + amount || _total + amount > bound()) {
             std::ostringstream oss;
             oss << *this << " and attempting to increase " << amount;
             throw std::logic_error(oss.str());
@@ -58,7 +68,7 @@ public:
         return remaining();
     }
 
-    T consume(T amount = 1) {
+    value_type consume(value_type amount = 1) {
         if (_spent + amount > _total) {
             std::ostringstream oss;
             oss << *this << " and attempting to spend " << amount;
@@ -68,17 +78,22 @@ public:
         return remaining();
     }
 
-    T reset() {
+    value_type reset() {
         _spent = 0;
         return remaining();
     }
 
 };
 
-template<class chart, class traits, typename T>
-auto& operator<<(std::basic_ostream<chart,traits>& os, const consumable<T>& c)
+template<class chart, class traits, typename T, std::size_t Bound>
+auto& operator<<(
+    std::basic_ostream<chart,traits>& os,
+    const consumable<T,Bound>& c)
 {
-    os << "[total=" << c.total() << ",spent=" << c.spent() << ']';
+    os << "[bound=" << Bound
+       << ",total=" << c.total()
+       << ",spent=" << c.spent()
+       << ']';
     return os;
 }
 
