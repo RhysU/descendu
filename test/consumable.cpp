@@ -119,6 +119,40 @@ TEST_CASE( "reset" ) {
 
 }
 
+TEST_CASE( "chain" ) {
+
+    consumable<int,6> a(3, 1);
+
+    SECTION( "consume" ) {
+        a.consume().increase();
+        REQUIRE( a.total() == 4 );
+        REQUIRE( a.spent() == 2 );
+
+        a.consume().reset();
+        REQUIRE( a.total() == 4 );
+        REQUIRE( a.spent() == 0 );
+    }
+
+    SECTION( "increase" ) {
+        a.increase().consume();
+        REQUIRE( a.total() == 4 );
+        REQUIRE( a.spent() == 2 );
+
+        a.increase().reset();
+        REQUIRE( a.total() == 5 );
+        REQUIRE( a.spent() == 0 );
+    }
+
+    SECTION( "reset" ) {
+        a.reset().increase();
+        REQUIRE( a.total() == 4 );
+        REQUIRE( a.spent() == 0 );
+        a.reset().consume();
+        REQUIRE( a.total() == 4 );
+        REQUIRE( a.spent() == 1 );
+    }
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;
