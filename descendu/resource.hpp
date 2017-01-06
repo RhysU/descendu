@@ -16,10 +16,9 @@
 
 namespace descendu {
 
-// TODO Airlift?
-class resource : d<int,1,spec::relative>
+class resource : d<int,2,spec::relative>
 {
-    typedef d<int,1,spec::relative> base_type;
+    typedef d<int,2,spec::relative> base_type;
 
     resource(const base_type& src) : base_type(src) {}
 
@@ -28,10 +27,14 @@ class resource : d<int,1,spec::relative>
 
 public:
 
-    constexpr resource(const int& gold) : base_type{gold} {}
-    constexpr resource() : resource(0) {}
+    constexpr resource(
+        const int gold = 0,
+        const int airlift = 0)
+    : base_type{gold, airlift}
+    {}
 
-    int gold() const { return this->operator[](0); }
+    int gold()    const { return this->operator[](0); }
+    int airlift() const { return this->operator[](1); }
 
     bool operator==(const resource& o) const { return base() == o.base(); }
     bool operator!=(const resource& o) const { return base() != o.base(); }
