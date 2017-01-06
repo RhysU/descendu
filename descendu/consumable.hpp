@@ -58,24 +58,27 @@ public:
         return remaining() > 0;
     }
 
-    // TODO Increase implies not yet consumable
+    // Increase total() without adjusting spent()
     consumable& increase(value_type amount = 1) {
-        if (_spent > _total + amount || _total + amount > bound()) {
+        const auto result = _total + amount;
+        if (0 > result || result > bound() || _spent > result) {
             std::ostringstream oss;
             oss << *this << " and attempting to increase " << amount;
             throw std::invalid_argument(oss.str());
         }
-        _total += amount;
+        _total = result;
         return *this;
     }
 
+    // Reduce spent() without adjusting total()
     consumable& consume(value_type amount = 1) {
-        if (_spent + amount > _total) {
+        const auto result = _spent + amount;
+        if (0 > result || result > _total) {
             std::ostringstream oss;
             oss << *this << " and attempting to spend " << amount;
             throw std::invalid_argument(oss.str());
         }
-        _spent += amount;
+        _spent = result;
         return *this;
     }
 
