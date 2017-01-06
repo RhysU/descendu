@@ -27,7 +27,7 @@ class resource : d<int,2,spec::relative>
 
 public:
 
-    constexpr resource(
+    constexpr explicit resource(
         const int gold = 0,
         const int airlift = 0)
     : base_type{gold, airlift}
