@@ -13,12 +13,10 @@
 
 namespace descendu {
 
-class player
+struct player
 {
-public:
-
+    bool alive = true;
     resource resources;
-
 };
 
 } // namespace

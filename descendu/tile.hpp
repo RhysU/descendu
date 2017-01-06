@@ -10,20 +10,18 @@
 #define DESCENDU_TILE_H
 
 #include "consumable.hpp"
+#include "optional.hpp"
 
 namespace descendu {
 
-class tile
+struct tile
 {
-public:
-
-    // TODO Better names!  Documentation!
     int height;
-    // TODO index or pointer to player owning the tile?
+    std::experimental::optional<int> owner;
     consumable<int,16> walkers;
     consumable<int, 1> barracks;
     consumable<int, 1> cannon;
-    consumable<int,16> rounds;
+    consumable<int,99> rounds;
     consumable<int, 1> harvester;
 
 };

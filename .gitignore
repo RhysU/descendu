@@ -48,6 +48,8 @@ test/hex
 test/player
 test/redblob
 test/resource
+test/test_optional
+test/test_type_traits
 test/tile
 test/world
 *.exe
