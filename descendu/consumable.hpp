@@ -75,11 +75,16 @@ public:
         const auto result = _spent + amount;
         if (0 > result || result > _total) {
             std::ostringstream oss;
-            oss << *this << " and attempting to spend " << amount;
+            oss << *this << " and attempting to consume " << amount;
             throw std::invalid_argument(oss.str());
         }
         _spent = result;
         return *this;
+    }
+
+    // Increase total() holding remaining() constant
+    consumable& construct(value_type amount = 1) {
+        return increase(amount).consume(amount);
     }
 
     consumable& reset() {

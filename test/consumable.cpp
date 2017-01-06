@@ -45,7 +45,6 @@ TEST_CASE( "constructor" ) {
 }
 
 TEST_CASE( "increase" ) {
-
     // Under bound
     consumable<int,6> a(3, 2);
     REQUIRE( a.total() == 3 );
@@ -90,11 +89,9 @@ TEST_CASE( "increase" ) {
     REQUIRE( b.total() == 3 );
     REQUIRE( b.spent() == 0 );
     REQUIRE( b.remaining() == 3 );
-
 }
 
 TEST_CASE( "consume" ) {
-
     consumable<int,3> a(3, 0);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 0 );
@@ -125,11 +122,9 @@ TEST_CASE( "consume" ) {
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
     REQUIRE( !!a );
-
 }
 
 TEST_CASE( "reset" ) {
-
     consumable<int,3> a(3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
@@ -137,6 +132,48 @@ TEST_CASE( "reset" ) {
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 0 );
 
+}
+
+TEST_CASE( "construct" ) {
+    // Under bound
+    consumable<int,6> a(3, 2);
+    REQUIRE( a.total() == 3 );
+    REQUIRE( a.spent() == 2 );
+    REQUIRE( a.remaining() == 1 );
+    a.construct(2);
+    REQUIRE( a.total() == 5 );
+    REQUIRE( a.spent() == 4 );
+    REQUIRE( a.remaining() == 1 );
+    a.construct();
+    REQUIRE( a.total() == 6 );
+    REQUIRE( a.spent() == 5 );
+    REQUIRE( a.remaining() == 1 );
+    a.construct(-1);
+    REQUIRE( a.total() == 5 );
+    REQUIRE( a.spent() == 4 );
+    REQUIRE( a.remaining() == 1 );
+    REQUIRE_THROWS_AS( a.construct(-5), std::invalid_argument );
+    REQUIRE( a.total() == 5 );
+    REQUIRE( a.spent() == 4 );
+    REQUIRE( a.remaining() == 1 );
+
+    // Exceed bound
+    consumable<int,3> b(0, 0);
+    REQUIRE( b.total() == 0 );
+    REQUIRE( b.spent() == 0 );
+    REQUIRE( b.remaining() == 0 );
+    b.construct(3);
+    REQUIRE( b.total() == 3 );
+    REQUIRE( b.spent() == 3 );
+    REQUIRE( b.remaining() == 0 );
+    REQUIRE_THROWS_AS( b.construct(), std::invalid_argument );
+    REQUIRE( b.total() == 3 );
+    REQUIRE( b.spent() == 3 );
+    REQUIRE( b.remaining() == 0 );
+    REQUIRE_THROWS_AS( b.construct(-4), std::invalid_argument );
+    REQUIRE( b.total() == 3 );
+    REQUIRE( b.spent() == 3 );
+    REQUIRE( b.remaining() == 0 );
 }
 
 TEST_CASE( "chain" ) {
