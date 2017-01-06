@@ -7,6 +7,7 @@ check_PROGRAMS  =
 pkginclude_HEADERS  = descendu/consumable.hpp
 pkginclude_HEADERS += descendu/d.hpp
 pkginclude_HEADERS += descendu/hex.hpp
+pkginclude_HEADERS += descendu/optional.hpp
 pkginclude_HEADERS += descendu/player.hpp
 pkginclude_HEADERS += descendu/resource.hpp
 pkginclude_HEADERS += descendu/tile.hpp
