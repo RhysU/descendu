@@ -17,10 +17,9 @@
 namespace descendu
 {
 
-template<typename T>
+template<typename T, std::size_t Bound>
 class consumable {
 
-    T _bound;
     T _total;
     T _spent;
 
@@ -28,32 +27,41 @@ public:
 
     typedef T value_type;
 
-    explicit consumable(
-        value_type bound,
-        value_type total = 0,
-        value_type spent = 0)
-        : _bound(bound)
-        , _total(total)
+    explicit consumable(value_type total = 0, value_type spent = 0)
+        : _total(total)
         , _spent(spent)
     {
-        if (_total > _bound || _spent > _total) {
+        if (_total > consumable::bound() || _spent > _total) {
             std::ostringstream oss;
             oss << "Invalid construction " << *this;
             throw std::invalid_argument(oss.str());
         }
     }
 
-    value_type bound() const { return _bound; }
-    value_type total() const { return _total; }
-    value_type spent() const { return _spent; }
+    static value_type bound() {
+        return Bound;
+    }
 
-    value_type remaining() const { return _total - _spent; }
-    explicit operator bool() const { return remaining() > 0; }
+    value_type total() const {
+        return _total;
+    }
+
+    value_type spent() const {
+        return _spent;
+    }
+
+    value_type remaining() const {
+        return _total - _spent;
+    }
+
+    explicit operator bool() const {
+        return remaining() > 0;
+    }
 
     // Increase total() without adjusting spent()
     consumable& increase(value_type amount = 1) {
         const auto result = _total + amount;
-        if (0 > result || result > _bound || _spent > result) {
+        if (0 > result || result > bound() || _spent > result) {
             std::ostringstream oss;
             oss << *this << " and attempting to increase " << amount;
             throw std::invalid_argument(oss.str());
@@ -86,10 +94,12 @@ public:
 
 };
 
-template<class chart, class traits, typename T>
-auto& operator<<(std::basic_ostream<chart,traits>& os, const consumable<T>& c)
+template<class chart, class traits, typename T, std::size_t Bound>
+auto& operator<<(
+    std::basic_ostream<chart,traits>& os,
+    const consumable<T,Bound>& c)
 {
-    os << "[bound=" << c.bound()
+    os << "[bound=" << Bound
        << ",total=" << c.total()
        << ",spent=" << c.spent()
        << ']';
