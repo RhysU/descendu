@@ -7,7 +7,6 @@ Status](https://travis-ci.org/RhysU/descendu.svg?branch=master)](https://travis-
 Work remaining
 --------------
 
- * Type specifying the state of a given hex tile (e.g. if owned, height, units)
  * Array of such types, accessed row-major, with zero edges providing the board
  * Arrangement of above types into a game state concept
  * Serialization and deserialization of that game state concept (e.g. for wire)
