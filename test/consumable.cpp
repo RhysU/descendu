@@ -19,24 +19,24 @@ using namespace descendu;
 
 TEST_CASE( "constructor" ) {
 
-    SECTION( "construct2" ) {
-        consumable<int,3> a(3, 2);
+    SECTION( "construct3" ) {
+        consumable<int> a(3, 3, 2);
         REQUIRE( a.bound()   == 3 );
         REQUIRE( a.total() == 3 );
         REQUIRE( a.spent() == 2 );
         REQUIRE( a.remaining() == 1 );
     }
 
-    SECTION( "construct1" ) {
-        consumable<int,4> a(3);
+    SECTION( "construct2" ) {
+        consumable<int> a(4, 3);
         REQUIRE( a.bound()   == 4 );
         REQUIRE( a.total() == 3 );
         REQUIRE( a.spent() == 0 );
         REQUIRE( a.remaining() == 3 );
     }
 
-    SECTION( "construct0" ) {
-        consumable<int,1> a;
+    SECTION( "construct1" ) {
+        consumable<int> a(1);
         REQUIRE( a.bound() == 1 );
         REQUIRE( a.total() == 0 );
         REQUIRE( a.spent() == 0 );
@@ -46,7 +46,7 @@ TEST_CASE( "constructor" ) {
 
 TEST_CASE( "increase" ) {
     // Under bound
-    consumable<int,6> a(3, 2);
+    consumable<int> a(6, 3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
@@ -73,7 +73,7 @@ TEST_CASE( "increase" ) {
     REQUIRE( !a );
 
     // Exceed bound
-    consumable<int,3> b(0, 0);
+    consumable<int> b(3, 0, 0);
     REQUIRE( b.total() == 0 );
     REQUIRE( b.spent() == 0 );
     REQUIRE( b.remaining() == 0 );
@@ -92,7 +92,7 @@ TEST_CASE( "increase" ) {
 }
 
 TEST_CASE( "consume" ) {
-    consumable<int,3> a(3, 0);
+    consumable<int> a(3, 3, 0);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 0 );
     REQUIRE( a.remaining() == 3 );
@@ -125,7 +125,7 @@ TEST_CASE( "consume" ) {
 }
 
 TEST_CASE( "reset" ) {
-    consumable<int,3> a(3, 2);
+    consumable<int> a(3, 3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     a.reset();
@@ -136,7 +136,7 @@ TEST_CASE( "reset" ) {
 
 TEST_CASE( "construct" ) {
     // Under bound
-    consumable<int,6> a(3, 2);
+    consumable<int> a(6, 3, 2);
     REQUIRE( a.total() == 3 );
     REQUIRE( a.spent() == 2 );
     REQUIRE( a.remaining() == 1 );
@@ -158,7 +158,7 @@ TEST_CASE( "construct" ) {
     REQUIRE( a.remaining() == 1 );
 
     // Exceed bound
-    consumable<int,3> b(0, 0);
+    consumable<int> b(3, 0, 0);
     REQUIRE( b.total() == 0 );
     REQUIRE( b.spent() == 0 );
     REQUIRE( b.remaining() == 0 );
@@ -178,7 +178,7 @@ TEST_CASE( "construct" ) {
 
 TEST_CASE( "chain" ) {
 
-    consumable<int,6> a(3, 1);
+    consumable<int> a(6, 3, 1);
 
     SECTION( "consume" ) {
         a.consume().increase();
@@ -215,7 +215,7 @@ TEST_CASE( "operator<<" ) {
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
-        oss << consumable<int,4>(3, 2);
+        oss << consumable<int>(4, 3, 2);
         REQUIRE( oss.str() == "[bound=4,total=3,spent=2]" );
     }
 

@@ -17,12 +17,12 @@ namespace descendu {
 struct tile
 {
     std::experimental::optional<int> owner;
-    consumable<int, 6> height;
-    consumable<int,16> walkers;
-    consumable<int, 1> barracks;
-    consumable<int, 1> cannon;
-    consumable<int,99> rounds;
-    consumable<int, 1> harvester;
+    consumable<int> height   {  6};
+    consumable<int> walker   { 16};
+    consumable<int> barracks {  1};
+    consumable<int> cannon   {  1};
+    consumable<int> rounds   { 99};
+    consumable<int> harvester{  1};
 };
 
 } // namespace
