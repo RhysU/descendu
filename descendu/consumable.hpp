@@ -87,6 +87,7 @@ public:
         return increase(amount).consume(amount);
     }
 
+    // Reset all consumption to mark resource as freshly usable
     consumable& reset() {
         _spent = 0;
         return *this;

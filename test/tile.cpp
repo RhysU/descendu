@@ -17,10 +17,17 @@
 
 using namespace descendu;
 
-TEST_CASE( "placeholder" ) {
+TEST_CASE( "initialize" ) {
 
-    SECTION( "placeholder" ) {
-        REQUIRE( 1 == 1 );
-    }
+    tile t;
+    REQUIRE(!t.owner);
+    REQUIRE( &t.height    == &(t.height   .increase(6) ) );
+    REQUIRE( &t.walkers   == &(t.walkers  .construct(3)) );
+    REQUIRE( t.walkers.remaining() == 0);
+    REQUIRE( &t.barracks  == &(t.barracks .construct() ) );
+    REQUIRE( &t.cannon    == &(t.cannon   .increase()  ) );
+    REQUIRE( &t.ammo      == &(t.ammo     .construct(3)) );
+    REQUIRE( t.ammo.remaining() == 0);
+    REQUIRE( &t.harvester == &(t.harvester.construct() ) );
 
 }

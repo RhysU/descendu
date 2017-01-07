@@ -17,12 +17,23 @@ namespace descendu {
 struct tile
 {
     std::experimental::optional<int> owner;
-    consumable<int, 6> height;
+    consumable<int,99> height;
     consumable<int,16> walkers;
     consumable<int, 1> barracks;
     consumable<int, 1> cannon;
-    consumable<int,99> rounds;
+    consumable<int,99> ammo;
     consumable<int, 1> harvester;
+
+    // Reset all turn-specific consumption
+    tile& reset() {
+        // height not reset
+        walkers.reset();
+        barracks.reset();
+        cannon.reset();
+        // ammo not reset
+        harvester.reset();
+        return *this;
+    }
 };
 
 } // namespace
