@@ -27,7 +27,7 @@ public:
 
     typedef T value_type;
 
-    constexpr explicit consumable(value_type total = 0, value_type spent = 0)
+    explicit consumable(value_type total = 0, value_type spent = 0)
         : _total(total)
         , _spent(spent)
     {
