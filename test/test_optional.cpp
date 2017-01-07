@@ -7,13 +7,16 @@
 // The idea and interface is based on Boost.Optional library
 // authored by Fernando Luis Cacciola Carballal
 
-# include "optional.hpp"
-# include <vector>
-# include <iostream>
-# include <functional>
-# include <complex>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
+#include <vector>
+#include <iostream>
+#include <functional>
+#include <complex>
 
+#include <descendu/optional.hpp>
 
 struct caller {
     template <class T> caller(T fun) { fun(); }

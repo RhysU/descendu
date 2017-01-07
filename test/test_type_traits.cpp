@@ -4,11 +4,15 @@
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if (defined __clang__)
   namespace std { class type_info; }
 #endif
 
-# include "optional.hpp"
+#include <descendu/optional.hpp>
 
 namespace std { namespace experimental {
 
