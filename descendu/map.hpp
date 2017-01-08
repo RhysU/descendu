@@ -9,10 +9,12 @@
 #ifndef DESCENDU_MAP_H
 #define DESCENDU_MAP_H
 
+#include <functional>
 #include <unordered_map>
 #include <utility>
 
 #include "hex.hpp"
+#include "optional.hpp"
 #include "tile.hpp"
 
 namespace descendu {
@@ -32,13 +34,27 @@ public:
     using base_type::key_type;
     using base_type::mapped_type;
 
-    // operator[] more closely resembles find to avoid accidental insertion
-    iterator       operator[](const key_type& hex)       { return find(hex); }
-    const_iterator operator[](const key_type& hex) const { return find(hex); }
-
-    // Create a tile at the given location or retrieve existing
-    mapped_type& insert(const key_type& hex) {
+    // Retrieve tile at the given hex, creating if non-existent
+    mapped_type& insert(const key_type& hex) {  // TODO Make cheaper?
         return base_type::insert({hex, mapped_type()}).first->second;
+    }
+
+    // Retrieve tile at the given hex should one exist
+    std::experimental::optional<mapped_type&>
+    lookup(const key_type& hex) {
+        const auto& result = find(hex);
+        return result == cend()
+            ? std::experimental::optional<mapped_type&>()
+            : std::experimental::make_optional(std::ref(result->second));
+    }
+
+    // Retrieve tile at the given hex should one exist
+    std::experimental::optional<const mapped_type&>
+    lookup(const key_type& hex) const {
+        const auto& result = find(hex);
+        return result == cend()
+            ? std::experimental::optional<const mapped_type&>()
+            : std::experimental::make_optional(std::cref(result->second));
     }
 
 };

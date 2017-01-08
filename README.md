@@ -31,4 +31,5 @@ Work remaining
  * Wire up a REPL along with the dotty wackiness to permit manual driving
      * Look into interacting via Guile
      * Look into rolling my own and wrap with rlwrap
+ * Clean up and refactor (e.g. split headers from implementation files)
  * Monkey around a bit and determine next steps
