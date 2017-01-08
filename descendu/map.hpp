@@ -6,24 +6,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_WORLD_H
-#define DESCENDU_WORLD_H
+#ifndef DESCENDU_MAP_H
+#define DESCENDU_MAP_H
 
-#include <vector>
+#include <unordered_map>
 
-#include "player.hpp"
+#include "hex.hpp"
+#include "tile.hpp"
 
 namespace descendu {
 
-class world
+class map
 {
 public:
-
-    world(int nplayers)
-        : players(nplayers)
-    {}
-
-    const std::vector<player> players;
 
 };
 

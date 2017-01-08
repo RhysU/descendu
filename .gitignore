@@ -43,8 +43,8 @@ descendu/stamp-h1
 # Executables
 test/consumable
 test/d
-test/hello
 test/hex
+test/map
 test/player
 test/redblob
 test/resource
