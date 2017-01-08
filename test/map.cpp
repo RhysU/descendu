@@ -19,8 +19,12 @@ using namespace descendu;
 
 TEST_CASE( "map" ) {
 
-    SECTION( "placeholder" ) {
-        REQUIRE( 1 == 1 );
+    SECTION( "construction" ) {
+        map m;
+        REQUIRE( m.cbegin() == m.cend() );
+        map::mapped_type tile = m.insert(map::key_type(0, 0));
+        REQUIRE( m.cbegin() != m.cend() );
+        // TODO
     }
 
 }
