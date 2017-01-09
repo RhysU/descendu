@@ -53,6 +53,10 @@ TEST_CASE( "map" ) {
 
         auto& b = m.lookup({0, 0}).value();
         REQUIRE( b.cannon.total() == 1 );
+
+        // No clobber of existing entry
+        auto& c = m.populate({0, 0});
+        REQUIRE( c.cannon.total() == 1 );
     }
 
     SECTION( "not_found" ) {
