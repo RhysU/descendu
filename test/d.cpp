@@ -10,10 +10,10 @@
 # include "config.h"
 #endif
 
+#include <sstream>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-
-#include <sstream>
 
 #include <descendu/d.hpp>
 

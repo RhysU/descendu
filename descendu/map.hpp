@@ -25,6 +25,7 @@ class map : std::unordered_map<hex<int,spec::absolute>,tile>
 
 public:
 
+    // Deliberately no base_type::size as removal of "dead" tiles TBD
     using base_type::begin;
     using base_type::cbegin;
     using base_type::cend;
@@ -35,7 +36,8 @@ public:
     using base_type::mapped_type;
 
     // Retrieve tile at the given hex, creating if non-existent
-    mapped_type& insert(const key_type& hex) {  // TODO Make cheaper?
+    mapped_type& populate(const key_type& hex) {
+        // TODO Make cheaper?  Perhaps find then insert-with-hint?
         return base_type::insert({hex, mapped_type()}).first->second;
     }
 
@@ -56,6 +58,9 @@ public:
             ? std::experimental::optional<const mapped_type&>()
             : std::experimental::make_optional(std::cref(result->second));
     }
+
+    // TODO Cardinality?
+    // TODO Removal?
 
 };
 
