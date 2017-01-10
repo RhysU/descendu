@@ -37,8 +37,10 @@ public:
 
     // Retrieve tile at the given hex, creating if non-existent
     mapped_type& populate(const key_type& hex) {
-        // TODO Make cheaper?  Perhaps find then insert-with-hint?
-        return base_type::insert({hex, mapped_type()}).first->second;
+        return base_type::emplace(
+                std::piecewise_construct,
+                std::forward_as_tuple(hex),
+                std::forward_as_tuple()).first->second;
     }
 
     // Retrieve tile at the given hex should one exist
