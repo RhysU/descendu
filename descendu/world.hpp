@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include "hexmap.hpp"
 #include "player.hpp"
 
 namespace descendu {
@@ -19,11 +20,13 @@ class world
 {
 public:
 
+    const std::vector<player> players;
+    hexmap map;
+
     world(int nplayers)
         : players(nplayers)
+        , map()
     {}
-
-    const std::vector<player> players;
 
 };
 

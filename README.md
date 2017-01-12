@@ -7,7 +7,8 @@ Status](https://travis-ci.org/RhysU/descendu.svg?branch=master)](https://travis-
 Work remaining
 --------------
 
- * Arrangement of types into a game state concept
+In no particular order:
+
  * Serialization and deserialization of that game state concept (e.g. for wire)
      * Look into https://github.com/USCiLab/cereal
      * Look into https://people.csail.mit.edu/rivest/Sexp.txt status)
