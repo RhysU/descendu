@@ -57,7 +57,7 @@ public:
         return (abs(q()-o.q()) + abs(r()-o.r()) + abs(s()-o.s())) / 2;
     }
 
-    hex neighbor(int i) const {
+    constexpr hex neighbor(int i) const {
         switch (i % 6) {  // C++11 modulo semantics
         case +0: default: return hex(q()+1, r()  );
         case +1: case -5: return hex(q()+1, r()-1);
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    hex diagonal(int i) const {
+    constexpr hex diagonal(int i) const {
         switch (i % 6) {  // C++11 modulo semantics
         case +0: default: return hex(q()+2, r()-1);
         case +1: case -5: return hex(q()+1, r()-2);
@@ -80,6 +80,24 @@ public:
     }
 
 };
+
+// Sugar to ease range-based for over neighboring hexes
+template <typename T, spec S>
+constexpr std::array<hex<T,S>,6> neighbors(const hex<T,S>& h) {
+    return {
+        h.neighbor(0), h.neighbor(1), h.neighbor(2),
+        h.neighbor(3), h.neighbor(4), h.neighbor(5)
+    };
+}
+
+// Sugar to ease range-based for over nearby diagonal hexes
+template <typename T, spec S>
+constexpr std::array<hex<T,S>,6> diagonals(const hex<T,S>& h) {
+    return {
+        h.diagonal(0), h.diagonal(1), h.diagonal(2),
+        h.diagonal(3), h.diagonal(4), h.diagonal(5)
+    };
+}
 
 template<class chart, class traits, typename T, spec S>
 auto& operator<<(std::basic_ostream<chart,traits>& os, const hex<T,S>& p)

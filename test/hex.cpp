@@ -178,6 +178,21 @@ TEST_CASE( "neighbor" ) {
         REQUIRE( a.neighbor(+4) == a.neighbor(+10) );
         REQUIRE( a.neighbor(+5) == a.neighbor(+11) );
     }
+
+    SECTION( "neighbors" ) {
+        const hex<int,spec::absolute> a {+0, +0};
+        auto adjacent = neighbors(a);
+        REQUIRE(( adjacent[0] == a.neighbor(0) ));
+        REQUIRE(( adjacent[1] == a.neighbor(1) ));
+        REQUIRE(( adjacent[2] == a.neighbor(2) ));
+        REQUIRE(( adjacent[3] == a.neighbor(3) ));
+        REQUIRE(( adjacent[4] == a.neighbor(4) ));
+        REQUIRE(( adjacent[5] == a.neighbor(5) ));
+
+        for (const auto& n : neighbors(a)) {
+            // NOP: Just confirming it compiles
+        }
+    }
 }
 
 TEST_CASE( "diagonal" ) {
@@ -222,6 +237,21 @@ TEST_CASE( "diagonal" ) {
         REQUIRE( a.diagonal(+4) == a.neighbor(5).neighbor(4) );
         REQUIRE( a.diagonal(+5) == a.neighbor(0).neighbor(5) );
         REQUIRE( a.diagonal(+5) == a.neighbor(5).neighbor(0) );
+    }
+
+    SECTION( "diagonals" ) {
+        const hex<int,spec::absolute> a {+0, +0};
+        auto nearby = diagonals(a);
+        REQUIRE(( nearby[0] == a.diagonal(0) ));
+        REQUIRE(( nearby[1] == a.diagonal(1) ));
+        REQUIRE(( nearby[2] == a.diagonal(2) ));
+        REQUIRE(( nearby[3] == a.diagonal(3) ));
+        REQUIRE(( nearby[4] == a.diagonal(4) ));
+        REQUIRE(( nearby[5] == a.diagonal(5) ));
+
+        for (const auto& d : diagonals(a)) {
+            // NOP: Just confirming it compiles
+        }
     }
 }
 

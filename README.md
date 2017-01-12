@@ -7,7 +7,6 @@ Status](https://travis-ci.org/RhysU/descendu.svg?branch=master)](https://travis-
 Work remaining
 --------------
 
- * Easy for loop over hex neighbors
  * Arrangement of types into a game state concept
  * Serialization and deserialization of that game state concept (e.g. for wire)
      * Look into https://github.com/USCiLab/cereal
