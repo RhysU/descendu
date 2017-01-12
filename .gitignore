@@ -44,7 +44,7 @@ descendu/stamp-h1
 test/consumable
 test/d
 test/hex
-test/map
+test/hexmap
 test/player
 test/redblob
 test/resource

@@ -15,32 +15,32 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <descendu/map.hpp>
+#include <descendu/hexmap.hpp>
 
 using namespace descendu;
 
-TEST_CASE( "map" ) {
+TEST_CASE( "hexmap" ) {
 
-    map m;
+    hexmap m;
 
     SECTION( "populate" ) {
         // Empty on construction
         REQUIRE( m.cbegin() == m.cend() );
 
         // Insertion with explicit type
-        m.populate(map::key_type(0, 0));
+        m.populate(hexmap::key_type(0, 0));
         auto a = m.cbegin();
         std::advance(a, 1);
         REQUIRE( a == m.cend() );
 
         // Idempotent re-insertion
-        m.populate(map::key_type(0, 0));
+        m.populate(hexmap::key_type(0, 0));
         auto b = m.cbegin();
         std::advance(b, 1);
         REQUIRE( b == m.cend() );
 
         // Insertion with nicety provided by hex
-        m.populate(map::key_type(1, 0));
+        m.populate(hexmap::key_type(1, 0));
         auto c = m.cbegin();
         std::advance(c, 2);
         REQUIRE( c == m.cend() );

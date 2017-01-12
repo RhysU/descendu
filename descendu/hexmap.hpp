@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_MAP_H
-#define DESCENDU_MAP_H
+#ifndef DESCENDU_HEXMAP_H
+#define DESCENDU_HEXMAP_H
 
 #include <functional>
 #include <unordered_map>
@@ -19,7 +19,7 @@
 
 namespace descendu {
 
-class map : std::unordered_map<hex<int,spec::absolute>,tile>
+class hexmap : std::unordered_map<hex<int,spec::absolute>,tile>
 {
     typedef std::unordered_map<hex<int,spec::absolute>,tile> base_type;
 
