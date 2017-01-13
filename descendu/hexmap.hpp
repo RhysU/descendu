@@ -9,9 +9,11 @@
 #ifndef DESCENDU_HEXMAP_H
 #define DESCENDU_HEXMAP_H
 
+#include <deque>
 #include <functional>
 #include <unordered_map>
 #include <utility>
+#include <stdexcept>
 
 #include "hex.hpp"
 #include "optional.hpp"
@@ -65,6 +67,54 @@ public:
     // TODO Removal?
 
 };
+
+// When investigating some tile in the course of a search, should the
+// tile be included as usable, excluded as unusable, or should the search
+// stop immediately?
+enum class search_result { stop, exclude, include };
+
+// Breadth first search returning a map from destination to source,
+// which may be traversed back to start for navigational purposes.
+// Predicate query(...) is assumed to be inexpensive-- revisit if otherwise.
+std::unordered_map<hexmap::key_type,hexmap::key_type>
+breadth_first_search(
+    const hexmap& map,
+    const hexmap::key_type start,
+    std::function<search_result(const hexmap::mapped_type&)> query) // unnamed
+{
+    std::unordered_map<hexmap::key_type,hexmap::key_type> retval;
+
+    std::deque<hexmap::key_type> frontier;
+    frontier.emplace_back(start);
+
+    while (frontier.size()) {
+
+        const auto& location = frontier.front();
+        const auto& contents = map.lookup(location);
+        const auto  result   = contents
+                             ? query(contents.value())
+                             : search_result::exclude;
+
+        switch (result) {
+        default:
+            throw std::logic_error("missing case");
+        case search_result::stop:
+            goto done;
+        case search_result::exclude:
+            break;
+        case search_result::include:
+            for (const auto& neighbor : neighbors(location)) {
+                if (retval.find(neighbor) == retval.cend()) {
+                    frontier.emplace_back(neighbor);
+                }
+            }
+        }
+
+        frontier.pop_front();
+    }
+
+    done: return retval;
+}
 
 } // namespace
 
