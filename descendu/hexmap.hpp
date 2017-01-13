@@ -11,6 +11,7 @@
 
 #include <deque>
 #include <functional>
+#include <limits>
 #include <unordered_map>
 #include <utility>
 #include <stdexcept>
@@ -74,24 +75,30 @@ public:
 enum class search_result { stop, exclude, include };
 
 // Breadth first search returning a map from destination to source,
-// which may be traversed back to start for navigational purposes.
+// which may be traversed back to origin for navigational purposes.
 // Predicate query(...) is assumed to be inexpensive-- revisit if otherwise.
 std::unordered_map<hexmap::key_type,hexmap::key_type>
 breadth_first_search(
     const hexmap& map,
-    const hexmap::key_type start,
-    std::function<search_result(const hexmap::mapped_type&)> query) // unnamed
+    const hexmap::key_type origin,
+    std::function<search_result(const hexmap::mapped_type&)> query,
+    const int max_distance = std::numeric_limits<int>::max())
 {
     std::unordered_map<hexmap::key_type,hexmap::key_type> retval;
 
-    std::deque<hexmap::key_type> frontier;
-    frontier.emplace_back(start);
+    // Tracks locations to visit as well as their distance from origin
+    std::deque<std::pair<hexmap::key_type,int>> frontier;
+    frontier.emplace_back(
+        std::piecewise_construct,
+        std::forward_as_tuple(origin),
+        std::forward_as_tuple(0));
 
+    // Proceed with breadth first search until one of exhaustion criteria met
     while (frontier.size()) {
 
-        const auto& location = frontier.front();
-        const auto& contents = map.lookup(location);
-        const auto  result   = contents
+        const auto& current  = frontier.front();
+        const auto& contents = map.lookup(current.first);
+        const auto  result   = current.second <= max_distance && contents
                              ? query(contents.value())
                              : search_result::exclude;
 
@@ -103,9 +110,12 @@ breadth_first_search(
         case search_result::exclude:
             break;
         case search_result::include:
-            for (const auto& neighbor : neighbors(location)) {
+            for (const auto& neighbor : neighbors(current.first)) {
                 if (retval.find(neighbor) == retval.cend()) {
-                    frontier.emplace_back(neighbor);
+                    frontier.emplace_back(
+                        std::piecewise_construct,
+                        std::forward_as_tuple(neighbor),
+                        std::forward_as_tuple(current.second + 1));
                 }
             }
         }
