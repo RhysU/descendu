@@ -29,14 +29,14 @@ class hexmap : std::unordered_map<hex<int,spec::absolute>,MappedType>
 public:
 
     // Deliberately no base_type::size as removal of "dead" tiles TBD
-    using typename base_type::begin;
-    using typename base_type::cbegin;
-    using typename base_type::cend;
     using typename base_type::const_iterator;
-    using typename base_type::end;
     using typename base_type::iterator;
     using typename base_type::key_type;
     using typename base_type::mapped_type;
+    using base_type::begin;
+    using base_type::cbegin;
+    using base_type::cend;
+    using base_type::end;
 
     // Retrieve tile at the given hex, creating if non-existent
     mapped_type& populate(const key_type& hex) {
