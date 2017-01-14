@@ -39,17 +39,17 @@ public:
     using base_type::end;
 
     // Retrieve tile at the given hex, creating if non-existent
-    mapped_type& populate(const key_type& hex) {
+    mapped_type& populate(const key_type& key) {
         return base_type::emplace(
                 std::piecewise_construct,
-                std::forward_as_tuple(hex),
+                std::forward_as_tuple(key),
                 std::forward_as_tuple()).first->second;
     }
 
     // Retrieve tile at the given hex should one exist
     std::experimental::optional<mapped_type&>
-    lookup(const key_type& hex) {
-        const auto& result = this->find(hex);
+    lookup(const key_type& key) {
+        const auto& result = this->find(key);
         return result == this->cend()
             ? std::experimental::optional<mapped_type&>()
             : std::experimental::make_optional(std::ref(result->second));
@@ -57,8 +57,8 @@ public:
 
     // Retrieve tile at the given hex should one exist
     std::experimental::optional<const mapped_type&>
-    lookup(const key_type& hex) const {
-        const auto& result = this->find(hex);
+    lookup(const key_type& key) const {
+        const auto& result = this->find(key);
         return result == this->cend()
             ? std::experimental::optional<const mapped_type&>()
             : std::experimental::make_optional(std::cref(result->second));
