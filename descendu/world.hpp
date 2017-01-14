@@ -13,6 +13,7 @@
 
 #include "hexmap.hpp"
 #include "player.hpp"
+#include "tile.hpp"
 
 namespace descendu {
 
@@ -21,7 +22,7 @@ class world
 public:
 
     const std::vector<player> players;
-    hexmap map;
+    hexmap<tile> map;
 
     world(int nplayers)
         : players(nplayers)

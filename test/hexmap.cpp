@@ -16,31 +16,33 @@
 #include "catch.hpp"
 
 #include <descendu/hexmap.hpp>
+#include <descendu/tile.hpp>
 
 using namespace descendu;
 
 TEST_CASE( "hexmap" ) {
 
-    hexmap m;
+    hexmap<tile> m;
+    typedef hexmap<tile>::key_type key_type;
 
     SECTION( "populate" ) {
         // Empty on construction
         REQUIRE( m.cbegin() == m.cend() );
 
         // Insertion with explicit type
-        m.populate(hexmap::key_type(0, 0));
+        m.populate(key_type(0, 0));
         auto a = m.cbegin();
         std::advance(a, 1);
         REQUIRE( a == m.cend() );
 
         // Idempotent re-insertion
-        m.populate(hexmap::key_type(0, 0));
+        m.populate(key_type(0, 0));
         auto b = m.cbegin();
         std::advance(b, 1);
         REQUIRE( b == m.cend() );
 
         // Insertion with nicety provided by hex
-        m.populate(hexmap::key_type(1, 0));
+        m.populate(key_type(1, 0));
         auto c = m.cbegin();
         std::advance(c, 2);
         REQUIRE( c == m.cend() );

@@ -18,25 +18,25 @@
 
 #include "hex.hpp"
 #include "optional.hpp"
-#include "tile.hpp"
 
 namespace descendu {
 
-class hexmap : std::unordered_map<hex<int,spec::absolute>,tile>
+template <class MappedType>
+class hexmap : std::unordered_map<hex<int,spec::absolute>,MappedType>
 {
-    typedef std::unordered_map<hex<int,spec::absolute>,tile> base_type;
+    typedef std::unordered_map<hex<int,spec::absolute>,MappedType> base_type;
 
 public:
 
     // Deliberately no base_type::size as removal of "dead" tiles TBD
-    using base_type::begin;
-    using base_type::cbegin;
-    using base_type::cend;
-    using base_type::const_iterator;
-    using base_type::end;
-    using base_type::iterator;
-    using base_type::key_type;
-    using base_type::mapped_type;
+    using typename base_type::begin;
+    using typename base_type::cbegin;
+    using typename base_type::cend;
+    using typename base_type::const_iterator;
+    using typename base_type::end;
+    using typename base_type::iterator;
+    using typename base_type::key_type;
+    using typename base_type::mapped_type;
 
     // Retrieve tile at the given hex, creating if non-existent
     mapped_type& populate(const key_type& hex) {
@@ -49,8 +49,8 @@ public:
     // Retrieve tile at the given hex should one exist
     std::experimental::optional<mapped_type&>
     lookup(const key_type& hex) {
-        const auto& result = find(hex);
-        return result == cend()
+        const auto& result = this->find(hex);
+        return result == this->cend()
             ? std::experimental::optional<mapped_type&>()
             : std::experimental::make_optional(std::ref(result->second));
     }
@@ -58,8 +58,8 @@ public:
     // Retrieve tile at the given hex should one exist
     std::experimental::optional<const mapped_type&>
     lookup(const key_type& hex) const {
-        const auto& result = find(hex);
-        return result == cend()
+        const auto& result = this->find(hex);
+        return result == this->cend()
             ? std::experimental::optional<const mapped_type&>()
             : std::experimental::make_optional(std::cref(result->second));
     }
@@ -74,20 +74,24 @@ public:
 // stop immediately?
 enum class search_result { stop, exclude, include };
 
+// TODO Make hexmap<optional<hex>>
+// TODO Use optional to track attempted visitation
+// TODO Consider making it optional<pair<hex,distance>
 // Breadth first search returning a map from destination to source,
 // which may be traversed back to origin for navigational purposes.
 // Predicate query(...) is assumed to be inexpensive-- revisit if otherwise.
-std::unordered_map<hexmap::key_type,hexmap::key_type>
+template <class MappedType>
+hexmap<typename hexmap<MappedType>::key_type>
 breadth_first_search(
-    const hexmap& map,
-    const hexmap::key_type origin,
-    std::function<search_result(const hexmap::mapped_type&)> query,
+    const hexmap<MappedType>& map,
+    const typename hexmap<MappedType>::key_type origin,
+    std::function<search_result(const typename hexmap<MappedType>::mapped_type&)> query,
     const int max_distance = std::numeric_limits<int>::max())
 {
-    std::unordered_map<hexmap::key_type,hexmap::key_type> retval;
+    hexmap<typename hexmap<MappedType>::key_type> retval;
 
     // Tracks locations to visit as well as their distance from origin
-    std::deque<std::pair<hexmap::key_type,int>> frontier;
+    std::deque<std::pair<typename hexmap<MappedType>::key_type,int>> frontier;
     frontier.emplace_back(
         std::piecewise_construct,
         std::forward_as_tuple(origin),
