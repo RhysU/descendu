@@ -12,9 +12,10 @@
 #include <deque>
 #include <functional>
 #include <limits>
+#include <stdexcept>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
-#include <stdexcept>
 
 #include "hex.hpp"
 #include "optional.hpp"
@@ -74,55 +75,69 @@ public:
 // stop immediately?
 enum class search_result { stop, exclude, include };
 
-// TODO Make hexmap<optional<hex>>
-// TODO Use optional to track attempted visitation
-// TODO Consider making it optional<pair<hex,distance>
-// Breadth first search returning a map from destination to source,
-// which may be traversed back to origin for navigational purposes.
-// Predicate query(...) is assumed to be inexpensive-- revisit if otherwise.
-template <class MappedType>
-hexmap<typename hexmap<MappedType>::key_type>
+// Breadth first search returning a map from destination to optional
+// source, which may be traversed back to origin for navigational purposes.
+// Destinations with no source value were considered but excluded.
+template <class T>
+hexmap<std::experimental::optional<typename hexmap<T>::key_type>>
 breadth_first_search(
-    const hexmap<MappedType>& map,
-    const typename hexmap<MappedType>::key_type origin,
-    std::function<search_result(const typename hexmap<MappedType>::mapped_type&)> query,
+    const hexmap<T>& map,
+    const typename hexmap<T>::key_type origin,
+    std::function<
+        search_result(const typename hexmap<T>::mapped_type&)
+    > query,
     const int max_distance = std::numeric_limits<int>::max())
 {
-    hexmap<typename hexmap<MappedType>::key_type> retval;
+    typedef typename hexmap<T>::key_type key_type;
+    using std::experimental::make_optional;
+    using std::experimental::optional;
 
-    // Tracks locations to visit as well as their distance from origin
-    std::deque<std::pair<typename hexmap<MappedType>::key_type,int>> frontier;
-    frontier.emplace_back(
-        std::piecewise_construct,
-        std::forward_as_tuple(origin),
-        std::forward_as_tuple(0));
+    // Maintains yet-to-be search (location, source, distance-from-origin)
+    std::deque<std::tuple<key_type,key_type,int>> frontier;
+
+    // Seed search with the neighbors of the origin
+    for (const auto& neighbor : neighbors(origin)) {
+        frontier.emplace_back(
+            std::piecewise_construct,
+            std::forward_as_tuple(neighbor),
+            std::forward_as_tuple(origin),
+            std::forward_as_tuple(1));
+    }
+
+    // Accumulates result as well as already-visited status
+    hexmap<optional<key_type>> retval;
 
     // Proceed with breadth first search until one of exhaustion criteria met
-    while (frontier.size()) {
+    while (!frontier.empty()) {
 
-        const auto& current  = frontier.front();
-        const auto& contents = map.lookup(current.first);
-        const auto  result   = current.second <= max_distance && contents
-                             ? query(contents.value())
-                             : search_result::exclude;
+        const auto& location = std::get<0>(frontier.front());
+        const auto& source   = std::get<1>(frontier.front());
+        const auto& distance = std::get<2>(frontier.front());
+        const auto& contents = map.lookup(location);
 
-        switch (result) {
-        default:
-            throw std::logic_error("missing case");
-        case search_result::stop:
-            goto done;
-        case search_result::exclude:
-            break;
-        case search_result::include:
-            for (const auto& neighbor : neighbors(current.first)) {
-                if (retval.find(neighbor) == retval.cend()) {
-                    frontier.emplace_back(
-                        std::piecewise_construct,
-                        std::forward_as_tuple(neighbor),
-                        std::forward_as_tuple(current.second + 1));
+        if (distance <= max_distance && contents) {
+            switch (query(contents.value())) {
+            default:
+                throw std::logic_error("missing case");
+            case search_result::stop:
+                goto done;
+            case search_result::exclude:
+                retval.conjure(location) = optional<key_type>();
+                break;
+            case search_result::include:
+                for (const auto& neighbor : neighbors(location)) {
+                    if (!retval.lookup(neighbor)) {
+                        frontier.emplace_back(
+                            std::piecewise_construct,
+                            std::forward_as_tuple(neighbor),
+                            std::forward_as_tuple(location),
+                            std::forward_as_tuple(distance + 1));
+                    }
                 }
+                retval.conjure(location) = make_optional(source);
             }
         }
+
 
         frontier.pop_front();
     }
