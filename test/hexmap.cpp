@@ -25,31 +25,31 @@ TEST_CASE( "hexmap" ) {
     hexmap<tile> m;
     typedef hexmap<tile>::key_type key_type;
 
-    SECTION( "populate" ) {
+    SECTION( "conjure" ) {
         // Empty on construction
         REQUIRE( m.cbegin() == m.cend() );
 
         // Insertion with explicit type
-        m.populate(key_type(0, 0));
+        m.conjure(key_type(0, 0));
         auto a = m.cbegin();
         std::advance(a, 1);
         REQUIRE( a == m.cend() );
 
         // Idempotent re-insertion
-        m.populate(key_type(0, 0));
+        m.conjure(key_type(0, 0));
         auto b = m.cbegin();
         std::advance(b, 1);
         REQUIRE( b == m.cend() );
 
         // Insertion with nicety provided by hex
-        m.populate(key_type(1, 0));
+        m.conjure(key_type(1, 0));
         auto c = m.cbegin();
         std::advance(c, 2);
         REQUIRE( c == m.cend() );
     }
 
     SECTION( "mutable" ) {
-        auto& a = m.populate({0, 0});
+        auto& a = m.conjure({0, 0});
         a.cannon.increase(1);
         REQUIRE( a.cannon.total() == 1 );
 
@@ -57,7 +57,7 @@ TEST_CASE( "hexmap" ) {
         REQUIRE( b.cannon.total() == 1 );
 
         // No clobber of existing entry
-        auto& c = m.populate({0, 0});
+        auto& c = m.conjure({0, 0});
         REQUIRE( c.cannon.total() == 1 );
     }
 

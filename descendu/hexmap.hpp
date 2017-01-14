@@ -38,8 +38,8 @@ public:
     using base_type::cend;
     using base_type::end;
 
-    // Retrieve tile at the given hex, creating if non-existent
-    mapped_type& populate(const key_type& key) {
+    // Create or retrieve tile at the given hex
+    mapped_type& conjure(const key_type& key) {
         return base_type::emplace(
                 std::piecewise_construct,
                 std::forward_as_tuple(key),
