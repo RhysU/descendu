@@ -34,18 +34,21 @@ TEST_CASE( "hexmap" ) {
         auto a = m.cbegin();
         std::advance(a, 1);
         REQUIRE( a == m.cend() );
+        REQUIRE( 1 == m.size() );
 
         // Idempotent re-insertion
         m.conjure(key_type(0, 0));
         auto b = m.cbegin();
         std::advance(b, 1);
         REQUIRE( b == m.cend() );
+        REQUIRE( 1 == m.size() );
 
         // Insertion with nicety provided by hex
         m.conjure(key_type(1, 0));
         auto c = m.cbegin();
         std::advance(c, 2);
         REQUIRE( c == m.cend() );
+        REQUIRE( 2 == m.size() );
     }
 
     SECTION( "mutable" ) {
