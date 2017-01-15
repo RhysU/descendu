@@ -107,4 +107,43 @@ TEST_CASE( "breadth_first_search" ) {
         REQUIRE( !retval.lookup({0, 0}).value() );
     }
 
+    SECTION( "linear" ) {
+        m.conjure({+0, +0});
+        m.conjure({+0, -1});
+        m.conjure({+0, -2});
+        const auto& retval = breadth_first_search(
+            m,
+            key_type(0, 0),
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 3 );
+        REQUIRE( retval.lookup({+0, -2}).value() == key_type(+0, -1) );
+        REQUIRE( retval.lookup({+0, -1}).value() == key_type(+0, +0) );
+        REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
+    }
+
+    SECTION( "outward" ) {
+        m.conjure({+0, +0});
+        m.conjure({+0, -1});
+        m.conjure({+1, -1});
+        m.conjure({+1, +0});
+        m.conjure({+0, +1});
+        m.conjure({-1, +1});
+        m.conjure({-1, +0});
+        const auto& retval = breadth_first_search(
+            m,
+            key_type(0, 0),
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 7 );
+        REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
+        // TODO FIXME
+        // REQUIRE( retval.lookup({+0, -1}).value().value() == key_type(+0, +0) );
+        // REQUIRE( retval.lookup({+1, -1}).value().value() == key_type(+0, +0) );
+        // REQUIRE( retval.lookup({+1, +0}).value().value() == key_type(+0, +0) );
+        // REQUIRE( retval.lookup({+0, +1}).value().value() == key_type(+0, +0) );
+        // REQUIRE( retval.lookup({-1, +1}).value().value() == key_type(+0, +0) );
+        // REQUIRE( retval.lookup({-1, +0}).value().value() == key_type(+0, +0) );
+    }
+
 }
