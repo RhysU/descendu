@@ -58,13 +58,13 @@ public:
     }
 
     constexpr hex neighbor(int i) const {
-        switch (i % 6) {  // C++11 modulo semantics
-        case +0: default: return hex(q()+1, r()  );
-        case +1: case -5: return hex(q()+1, r()-1);
-        case +2: case -4: return hex(q()  , r()-1);
-        case +3: case -3: return hex(q()-1, r()  );
-        case +4: case -2: return hex(q()-1, r()+1);
-        case +5: case -1: return hex(q()  , r()+1);
+        switch (i % 6) {                             // C++11 modulo semantics
+        case +0: default: return hex(q()+1, r()  );  // East
+        case +1: case -5: return hex(q()+1, r()-1);  // Northeast
+        case +2: case -4: return hex(q()  , r()-1);  // Northwest
+        case +3: case -3: return hex(q()-1, r()  );  // West
+        case +4: case -2: return hex(q()-1, r()+1);  // Southwest
+        case +5: case -1: return hex(q()  , r()+1);  // Southeast
         }
     }
 
