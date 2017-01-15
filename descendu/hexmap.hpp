@@ -76,13 +76,15 @@ public:
 enum class search_result { stop, exclude, include };
 
 // Breadth first search returning a map from destination to optional
-// source, which may be traversed back to origin for navigational purposes.
-// Destinations with no source value were considered but excluded.
+// source, which may be traversed back to start for navigational purposes.
+// The start is assumed to satisfy the query.  Destinations with no source
+// value were considered but excluded.  If present in the map, the start
+// is the only fixed point where destination equals source.
 template <class T>
 hexmap<std::experimental::optional<typename hexmap<T>::key_type>>
 breadth_first_search(
     const hexmap<T>& map,
-    const typename hexmap<T>::key_type origin,
+    const typename hexmap<T>::key_type start,
     std::function<
         search_result(const typename hexmap<T>::mapped_type&)
     > query,
@@ -92,20 +94,28 @@ breadth_first_search(
     using std::experimental::make_optional;
     using std::experimental::optional;
 
-    // Maintains yet-to-be search (location, source, distance-from-origin)
+    // Accumulates result as well as already-visited status
+    hexmap<optional<key_type>> retval;
+
+    // Enforce consistent semantics for the start in returned value
+    if (map.lookup(start)) {
+        retval.conjure(start) = make_optional(start);
+    } else {
+        retval.conjure(start) = optional<key_type>();
+        return retval;
+    }
+
+    // Maintains yet-to-be searched (location, source, distance-from-start)
     std::deque<std::tuple<key_type,key_type,int>> frontier;
 
-    // Seed search with the neighbors of the origin
-    for (const auto& neighbor : neighbors(origin)) {
+    // Seed search with the neighbors of the start
+    for (const auto& neighbor : neighbors(start)) {
         frontier.emplace_back(
             std::piecewise_construct,
             std::forward_as_tuple(neighbor),
-            std::forward_as_tuple(origin),
+            std::forward_as_tuple(start),
             std::forward_as_tuple(1));
     }
-
-    // Accumulates result as well as already-visited status
-    hexmap<optional<key_type>> retval;
 
     // Proceed with breadth first search until one of exhaustion criteria met
     while (!frontier.empty()) {
