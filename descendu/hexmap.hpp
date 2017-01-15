@@ -33,11 +33,11 @@ public:
     using typename base_type::iterator;
     using typename base_type::key_type;
     using typename base_type::mapped_type;
-    using typename base_type::size;
     using base_type::begin;
     using base_type::cbegin;
     using base_type::cend;
     using base_type::end;
+    using base_type::size;
 
     // Create or retrieve tile at the given hex
     mapped_type& conjure(const key_type& key) {
