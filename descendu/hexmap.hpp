@@ -65,7 +65,6 @@ public:
             : std::experimental::make_optional(std::cref(result->second));
     }
 
-    // TODO Cardinality?
     // TODO Removal?
 
 };
@@ -110,21 +109,19 @@ breadth_first_search(
 
     // Seed search with the neighbors of the start
     for (const auto& neighbor : neighbors(start)) {
-        frontier.emplace_back(
-            std::piecewise_construct,
-            std::forward_as_tuple(neighbor),
-            std::forward_as_tuple(start),
-            std::forward_as_tuple(1));
+        frontier.emplace_back(std::forward_as_tuple(neighbor, start, 1));
     }
 
     // Proceed with breadth first search until one of exhaustion criteria met
     while (!frontier.empty()) {
 
+        // Unpack current search location and associated details
         const auto& location = std::get<0>(frontier.front());
         const auto& source   = std::get<1>(frontier.front());
         const auto& distance = std::get<2>(frontier.front());
         const auto& contents = map.lookup(location);
 
+        // Process current location reflecting any new neighbors
         if (distance <= max_distance && contents) {
             switch (query(contents.value())) {
             default:
@@ -137,18 +134,15 @@ breadth_first_search(
             case search_result::include:
                 for (const auto& neighbor : neighbors(location)) {
                     if (!retval.lookup(neighbor)) {
-                        frontier.emplace_back(
-                            std::piecewise_construct,
-                            std::forward_as_tuple(neighbor),
-                            std::forward_as_tuple(location),
-                            std::forward_as_tuple(distance + 1));
+                        frontier.emplace_back(std::forward_as_tuple(
+                            neighbor, location, distance + 1));
                     }
                 }
                 retval.conjure(location) = make_optional(source);
             }
         }
 
-
+        // Move to following location
         frontier.pop_front();
     }
 

@@ -70,3 +70,18 @@ TEST_CASE( "hexmap" ) {
     }
 
 }
+
+TEST_CASE( "breadth_first_search" ) {
+
+    hexmap<int> m;
+    typedef hexmap<tile>::key_type key_type;
+
+    SECTION( "origin" ) {
+        m.conjure({0, 0});
+        breadth_first_search(
+            m,
+            key_type(0, 0),
+            [](const auto&) { return search_result::include; });
+    }
+
+}
