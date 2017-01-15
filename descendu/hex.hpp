@@ -84,19 +84,19 @@ public:
 // Sugar to ease range-based for over neighboring hexes
 template <typename T, spec S>
 constexpr std::array<hex<T,S>,6> neighbors(const hex<T,S>& h) {
-    return {
+    return {{
         h.neighbor(0), h.neighbor(1), h.neighbor(2),
         h.neighbor(3), h.neighbor(4), h.neighbor(5)
-    };
+    }};
 }
 
 // Sugar to ease range-based for over nearby diagonal hexes
 template <typename T, spec S>
 constexpr std::array<hex<T,S>,6> diagonals(const hex<T,S>& h) {
-    return {
+    return {{
         h.diagonal(0), h.diagonal(1), h.diagonal(2),
         h.diagonal(3), h.diagonal(4), h.diagonal(5)
-    };
+    }};
 }
 
 template<class chart, class traits, typename T, spec S>
