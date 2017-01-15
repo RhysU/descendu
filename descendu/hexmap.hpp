@@ -79,6 +79,7 @@ enum class search_result { stop, exclude, include };
 // The start is assumed to satisfy the query.  Destinations with no source
 // value were considered but excluded.  If present in the map, the start
 // is the only fixed point where destination equals source.
+// Beware retval.lookup(...).value() is itself an optional.
 template <class T>
 hexmap<std::experimental::optional<typename hexmap<T>::key_type>>
 breadth_first_search(

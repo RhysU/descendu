@@ -77,24 +77,34 @@ TEST_CASE( "breadth_first_search" ) {
     typedef hexmap<tile>::key_type key_type;
 
     SECTION( "origin_in_map" ) {
+        // Add origin
         m.conjure({0, 0});
+        // Search
         const auto& retval = breadth_first_search(
             m,
             key_type(0, 0),
             [](const auto&) { return search_result::include; },
             555);
+        // Considered origin
         REQUIRE( retval.size() == 1 );
-        REQUIRE( m.lookup({0, 0}) );
+        // Origin considered and provides self-referencing path
+        REQUIRE( retval.lookup({0, 0}) );
+        REQUIRE( retval.lookup({0, 0}).value() == key_type(0, 0) );
+
     }
 
     SECTION( "origin_not_in_map" ) {
+        // Origin not added
+        // Search
         const auto& retval = breadth_first_search(
             m,
             key_type(0, 0),
             [](const auto&) { return search_result::include; },
             555);
+        // Considered origin
         REQUIRE( retval.size() == 1 );
-        REQUIRE( !m.lookup({0, 0}) );
+        // Considered origin involves and empty optional
+        REQUIRE( !retval.lookup({0, 0}).value() );
     }
 
 }
