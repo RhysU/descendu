@@ -76,12 +76,25 @@ TEST_CASE( "breadth_first_search" ) {
     hexmap<int> m;
     typedef hexmap<tile>::key_type key_type;
 
-    SECTION( "origin" ) {
+    SECTION( "origin_in_map" ) {
         m.conjure({0, 0});
-        breadth_first_search(
+        const auto& retval = breadth_first_search(
             m,
             key_type(0, 0),
-            [](const auto&) { return search_result::include; });
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 1 );
+        REQUIRE( m.lookup({0, 0}) );
+    }
+
+    SECTION( "origin_not_in_map" ) {
+        const auto& retval = breadth_first_search(
+            m,
+            key_type(0, 0),
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 1 );
+        REQUIRE( !m.lookup({0, 0}) );
     }
 
 }
