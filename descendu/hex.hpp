@@ -69,7 +69,7 @@ public:
     }
 
     constexpr hex diagonal(int i) const {
-        switch (i % 6) {  // C++11 modulo semantics
+        switch (i % 6) {                             // C++11 modulo semantics
         case +0: default: return hex(q()+2, r()-1);  // East-north-east
         case +1: case -5: return hex(q()+1, r()-2);  // North
         case +2: case -4: return hex(q()-1, r()-1);  // West-north-west
