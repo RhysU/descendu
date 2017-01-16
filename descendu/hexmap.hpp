@@ -80,6 +80,7 @@ enum class search_result { stop, exclude, include };
 // value were considered but excluded.  If present in the map, the start
 // is the only fixed point where destination equals source.
 // Beware retval.lookup(...).value() is itself an optional.
+// Implementation eagerly filters on step count but avoids repeated lookups.
 template <class T>
 hexmap<std::experimental::optional<typename hexmap<T>::key_type>>
 breadth_first_search(
@@ -88,7 +89,7 @@ breadth_first_search(
     std::function<
         search_result(const typename hexmap<T>::mapped_type&)
     > query,
-    const int max_distance = std::numeric_limits<int>::max())
+    const int max_steps = std::numeric_limits<int>::max())
 {
     typedef typename hexmap<T>::key_type key_type;
     using std::experimental::make_optional;
@@ -98,53 +99,53 @@ breadth_first_search(
     hexmap<optional<key_type>> retval;
 
     // Enforce consistent semantics for the start in returned value
-    if (map.lookup(start)) {
+    if (0 <= max_steps && map.lookup(start)) {
         retval.conjure(start) = make_optional(start);
     } else {
         retval.conjure(start) = optional<key_type>();
         return retval;
     }
 
-    // Maintains yet-to-be searched (location, source, distance-from-start)
+    // Maintains yet-to-be searched (location, source, steps-from-start)
     std::deque<std::tuple<key_type,key_type,int>> frontier;
 
     // Seed search with the neighbors of the start
-    for (const auto& neighbor : neighbors(start)) {
-        frontier.emplace_back(std::forward_as_tuple(neighbor, start, 1));
+    if (1 <= max_steps) {
+        for (const auto& neighbor : neighbors(start)) {
+            frontier.emplace_back(std::forward_as_tuple(neighbor, start, 1));
+        }
     }
 
-    // Proceed with breadth first search until one of exhaustion criteria met
-    while (!frontier.empty()) {
+    // Process next entry in frontier until one of exhaustion criteria met
+    for (; !frontier.empty(); frontier.pop_front()) {
 
-        // Unpack current search location and associated details
-        const auto& location = std::get<0>(frontier.front());
-        const auto& source   = std::get<1>(frontier.front());
-        const auto& distance = std::get<2>(frontier.front());
-        const auto& contents = map.lookup(location);
+        const key_type& location   = std::get<0>(frontier.front());
+        const key_type& source     = std::get<1>(frontier.front());
+        const int       next_steps = std::get<2>(frontier.front()) + 1;
+        const auto&     contents   = map.lookup(location);
 
-        // Process current location reflecting any new neighbors
-        if (distance <= max_distance && contents) {
-            switch (query(contents.value())) {
-            default:
-                throw std::logic_error("missing case");
-            case search_result::stop:
-                goto done;
-            case search_result::exclude:
-                retval.conjure(location) = optional<key_type>();
-                break;
-            case search_result::include:
+        // Outside of map or already processed?
+        if (!contents || retval.lookup(location)) continue;
+
+        // Process per the injected query result
+        switch (query(contents.value())) {
+        default:
+            throw std::logic_error("missing case");
+        case search_result::stop:
+            goto done;
+        case search_result::exclude:
+            retval.conjure(location) = optional<key_type>();
+            break;
+        case search_result::include:
+            retval.conjure(location) = make_optional(source);
+            if (next_steps <= max_steps) {
                 for (const auto& neighbor : neighbors(location)) {
-                    if (!retval.lookup(neighbor)) {
-                        frontier.emplace_back(std::forward_as_tuple(
-                            neighbor, location, distance + 1));
-                    }
+                    frontier.emplace_back(std::forward_as_tuple(
+                        neighbor, location, next_steps));
                 }
-                retval.conjure(location) = make_optional(source);
             }
+            break;
         }
-
-        // Move to following location
-        frontier.pop_front();
     }
 
     done: return retval;

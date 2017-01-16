@@ -10,6 +10,7 @@
 # include "config.h"
 #endif
 
+#include <iostream>
 #include <iterator>
 
 #define CATCH_CONFIG_MAIN
@@ -155,11 +156,27 @@ TEST_CASE( "breadth_first_search" ) {
         }
     }
 
+    // Explicit 3-tile test about the origin
     SECTION( "outward_one_step" ) {
-        const auto& start = key_type(+0, +0);
+        m.conjure({+0, +0});
+        m.conjure({+1, +0});
+        m.conjure({+1, -1});
+        const auto& retval = breadth_first_search(
+            m,
+            key_type(+0, +0),
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 3 );
+        REQUIRE( retval.lookup({+0, +0}).value().value() == key_type(+0, +0) );
+        REQUIRE( retval.lookup({+1, +0}).value().value() == key_type(+0, +0) );
+        REQUIRE( retval.lookup({+1, -1}).value().value() == key_type(+0, +0) );
+    }
+
+    // Explicit 7-tile test away from the origin
+    SECTION( "radial_one_step" ) {
+        const auto& start = key_type(+3, +3);
         m.conjure(start);
         for (const auto& neighbor : neighbors(start)) {
-            std::cout << neighbor << std::endl;
             m.conjure(neighbor);
         }
         const auto& retval = breadth_first_search(
@@ -171,7 +188,7 @@ TEST_CASE( "breadth_first_search" ) {
         REQUIRE( retval.lookup(start).value() == start );
         for (const auto& neighbor : neighbors(start)) {
             CAPTURE( neighbor );
-// TODO //  REQUIRE( retval.lookup(neighbor).value().value() == start);
+            REQUIRE( retval.lookup(neighbor).value().value() == start);
         }
     }
 
