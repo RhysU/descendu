@@ -30,28 +30,28 @@ public:
 
     constexpr hex(const T& q, const T& r) : base_type{q, r} {}
 
-    T q() const { return this->operator[](0); }
-    T r() const { return this->operator[](1); }
-    T s() const { return - (q() + r()); }
+    constexpr T q() const { return this->operator[](0); }
+    constexpr T r() const { return this->operator[](1); }
+    constexpr T s() const { return - (q() + r()); }
 
-    bool operator==(const hex& o) const { return base() == o.base(); }
-    bool operator!=(const hex& o) const { return base() != o.base(); }
+    constexpr bool operator==(const hex& o) const { return base() == o.base(); }
+    constexpr bool operator!=(const hex& o) const { return base() != o.base(); }
 
     template <typename U, spec R>
     friend class hex;
 
     template <typename U, spec R>
-    auto operator+(const hex<U,R>& o) const {
+    constexpr auto operator+(const hex<U,R>& o) const {
         return hex(base() + o.base());
     }
 
     template <typename U, spec R>
-    auto operator-(const hex<U,R>& o) const {
+    constexpr auto operator-(const hex<U,R>& o) const {
         return hex(base() - o.base());
     }
 
     template <typename U>
-    auto distance(const hex<U,S>& o) const {
+    constexpr auto distance(const hex<U,S>& o) const {
         // Does not use operator- on account of spec compatibility
         using namespace std;
         return (abs(q()-o.q()) + abs(r()-o.r()) + abs(s()-o.s())) / 2;
