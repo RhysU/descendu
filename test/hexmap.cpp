@@ -126,6 +126,7 @@ TEST_CASE( "breadth_first_search" ) {
         const auto& p0 = key_type(+3, +3);
         const std::vector<int> directions = {0, 1, 2, 3, 4, 5};
         for (const auto direction : directions) {
+            CAPTURE( direction );
             // Construct 4 edges in the given direction
             hexmap<int> o;
             o.conjure(p0);
@@ -154,27 +155,24 @@ TEST_CASE( "breadth_first_search" ) {
         }
     }
 
-//  SECTION( "outward" ) {
-//      m.conjure({+0, +0});
-//      m.conjure({+1, +0});
-//      m.conjure({+1, -1});
-//      m.conjure({+0, -1});
-//      m.conjure({-1, +0});
-//      m.conjure({-1, +1});
-//      m.conjure({+0, +1});
-//      const auto& retval = breadth_first_search(
-//          m,
-//          key_type(0, 0),
-//          [](const auto&) { return search_result::include; },
-//          555);
-//      REQUIRE( retval.size() == 7 );
-//      REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({+1, +0}).value().value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({+1, -1}).value().value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({+0, -1}).value().value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({-1, +0}).value().value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({-1, +1}).value().value() == key_type(+0, +0) );
-//      REQUIRE( retval.lookup({+0, +1}).value().value() == key_type(+0, +0) );
-//  }
+    SECTION( "outward_one_step" ) {
+        const auto& start = key_type(+0, +0);
+        m.conjure(start);
+        for (const auto& neighbor : neighbors(start)) {
+            std::cout << neighbor << std::endl;
+            m.conjure(neighbor);
+        }
+        const auto& retval = breadth_first_search(
+            m,
+            start,
+            [](const auto&) { return search_result::include; },
+            555);
+        REQUIRE( retval.size() == 7 );
+        REQUIRE( retval.lookup(start).value() == start );
+        for (const auto& neighbor : neighbors(start)) {
+            CAPTURE( neighbor );
+// TODO //  REQUIRE( retval.lookup(neighbor).value().value() == start);
+        }
+    }
 
 }
