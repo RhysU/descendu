@@ -107,7 +107,7 @@ TEST_CASE( "breadth_first_search" ) {
         REQUIRE( !retval.lookup({0, 0}).value() );
     }
 
-    SECTION( "linear" ) {
+    SECTION( "linear_one_direction" ) {
         m.conjure({+0, +0});
         m.conjure({+0, -1});
         m.conjure({+0, -2});
@@ -122,28 +122,59 @@ TEST_CASE( "breadth_first_search" ) {
         REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
     }
 
-    SECTION( "outward" ) {
-        m.conjure({+0, +0});
-        m.conjure({+0, -1});
-        m.conjure({+1, -1});
-        m.conjure({+1, +0});
-        m.conjure({+0, +1});
-        m.conjure({-1, +1});
-        m.conjure({-1, +0});
-        const auto& retval = breadth_first_search(
-            m,
-            key_type(0, 0),
-            [](const auto&) { return search_result::include; },
-            555);
-        REQUIRE( retval.size() == 7 );
-        REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
-        // TODO FIXME
-        // REQUIRE( retval.lookup({+0, -1}).value().value() == key_type(+0, +0) );
-        // REQUIRE( retval.lookup({+1, -1}).value().value() == key_type(+0, +0) );
-        // REQUIRE( retval.lookup({+1, +0}).value().value() == key_type(+0, +0) );
-        // REQUIRE( retval.lookup({+0, +1}).value().value() == key_type(+0, +0) );
-        // REQUIRE( retval.lookup({-1, +1}).value().value() == key_type(+0, +0) );
-        // REQUIRE( retval.lookup({-1, +0}).value().value() == key_type(+0, +0) );
+    SECTION( "linear_all_directions" ) {
+        const auto& p0 = key_type(+3, +3);
+        const std::vector<int> directions = {0, 1, 2, 3, 4, 5};
+        for (const auto direction : directions) {
+            // Construct 4 edges in the given direction
+            hexmap<int> o;
+            o.conjure(p0);
+            const auto& p1 = p0.neighbor(direction);
+            o.conjure(p1);
+            const auto& p2 = p1.neighbor(direction);
+            o.conjure(p2);
+            const auto& p3 = p2.neighbor(direction);
+            o.conjure(p3);
+            const auto& p4 = p3.neighbor(direction);
+            o.conjure(p4);
+            // Search three edges in the direction
+            const auto& retval = breadth_first_search(
+                o,
+                p0,
+                [](const auto&) { return search_result::include; },
+                3);
+            // Origin plus 3 close-enough edges
+            REQUIRE( retval.size() == 4 );
+            REQUIRE( retval.lookup(p3).value().value() == p2 );
+            REQUIRE( retval.lookup(p2).value().value() == p1 );
+            REQUIRE( retval.lookup(p1).value().value() == p0 );
+            REQUIRE( retval.lookup(p0).value().value() == p0 );
+            // Fourth edge was too far
+            REQUIRE( !retval.lookup(p4) );
+        }
     }
+
+//  SECTION( "outward" ) {
+//      m.conjure({+0, +0});
+//      m.conjure({+1, +0});
+//      m.conjure({+1, -1});
+//      m.conjure({+0, -1});
+//      m.conjure({-1, +0});
+//      m.conjure({-1, +1});
+//      m.conjure({+0, +1});
+//      const auto& retval = breadth_first_search(
+//          m,
+//          key_type(0, 0),
+//          [](const auto&) { return search_result::include; },
+//          555);
+//      REQUIRE( retval.size() == 7 );
+//      REQUIRE( retval.lookup({+0, +0}).value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({+1, +0}).value().value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({+1, -1}).value().value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({+0, -1}).value().value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({-1, +0}).value().value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({-1, +1}).value().value() == key_type(+0, +0) );
+//      REQUIRE( retval.lookup({+0, +1}).value().value() == key_type(+0, +0) );
+//  }
 
 }
