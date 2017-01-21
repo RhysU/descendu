@@ -9,7 +9,6 @@ Work remaining
 
 In no particular order:
 
- * Coordinates always signed on output of hexes
  * Serialization and deserialization of that game state concept (e.g. for wire)
      * Look into https://github.com/USCiLab/cereal
      * Look into https://people.csail.mit.edu/rivest/Sexp.txt status)

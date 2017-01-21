@@ -190,7 +190,7 @@ TEST_CASE( "operator<<" ) {
 
     SECTION( "absolute" ) {
         oss << d<int,2,spec::absolute>{1,2};
-        REQUIRE( oss.str() == "[absolute:1,2]" );
+        REQUIRE( oss.str() == "[absolute:+1,+2]" );
     }
 
 }

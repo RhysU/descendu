@@ -11,6 +11,8 @@
 
 #include <array>
 #include <initializer_list>
+#include <iomanip>
+#include <ios>
 #include <ostream>
 #include <utility>
 
@@ -121,9 +123,12 @@ auto& components(
 template<class chart, class traits, typename T, std::size_t N, spec S>
 auto& operator<<(std::basic_ostream<chart,traits>& os, const d<T,N,S>& p)
 {
-    os << '[' << S << ':';
+    std::ios prior(nullptr);
+    prior.copyfmt(os);
+    os << '[' << S << ':' << std::showpos;
     components(os, p, ',');
     os << ']';
+    os.copyfmt(prior);
     return os;
 }
 
