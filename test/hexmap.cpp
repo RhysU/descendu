@@ -26,7 +26,7 @@ TEST_CASE( "hexmap" ) {
     hexmap<tile> m;
     typedef hexmap<tile>::key_type key_type;
 
-    SECTION( "conjure" ) {
+    SECTION( "conjure and erase" ) {
         // Empty on construction
         REQUIRE( m.cbegin() == m.cend() );
 
@@ -50,6 +50,19 @@ TEST_CASE( "hexmap" ) {
         std::advance(c, 2);
         REQUIRE( c == m.cend() );
         REQUIRE( 2 == m.size() );
+
+        // Erase in reverse order via key_type and confirm removed
+        m.erase(key_type(1, 0));
+        auto d = m.cbegin();
+        std::advance(d, 1);
+        REQUIRE( d == m.cend() );
+        REQUIRE( 1 == m.size() );
+
+        // Erase in reverse order via nicety provided by hex
+        m.erase({0, 0});
+        auto e = m.cbegin();
+        REQUIRE( e == m.cend() );
+        REQUIRE( 0 == m.size() );
     }
 
     SECTION( "mutable" ) {

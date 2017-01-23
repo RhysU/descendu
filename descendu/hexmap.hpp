@@ -37,6 +37,7 @@ public:
     using base_type::cbegin;
     using base_type::cend;
     using base_type::end;
+    using base_type::erase;
     using base_type::size;
 
     // Create or retrieve tile at the given hex
@@ -64,8 +65,6 @@ public:
             ? std::experimental::optional<const mapped_type&>()
             : std::experimental::make_optional(std::cref(result->second));
     }
-
-    // TODO Removal?
 
 };
 
