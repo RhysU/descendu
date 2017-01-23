@@ -15,6 +15,17 @@ namespace descendu {
 
 namespace transform {
 
+    /** Reset all turn-specific consumption. */
+    tile& reset(tile &t) {
+        // t.height not reset
+        t.walkers.reset();
+        t.barracks.reset();
+        t.cannon.reset();
+        // ammo not reset
+        t.harvester.reset();
+        return t;
+    }
+
 } // namespace transform
 
 } // namespace descendu

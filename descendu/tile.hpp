@@ -23,17 +23,6 @@ struct tile
     consumable<int, 1> cannon;
     consumable<int,99> ammo;
     consumable<int, 1> harvester;
-
-    // Reset all turn-specific consumption
-    tile& reset() {
-        // height not reset
-        walkers.reset();
-        barracks.reset();
-        cannon.reset();
-        // ammo not reset
-        harvester.reset();
-        return *this;
-    }
 };
 
 } // namespace
