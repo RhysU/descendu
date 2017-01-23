@@ -12,6 +12,7 @@ pkginclude_HEADERS += descendu/optional.hpp
 pkginclude_HEADERS += descendu/player.hpp
 pkginclude_HEADERS += descendu/resource.hpp
 pkginclude_HEADERS += descendu/tile.hpp
+pkginclude_HEADERS += descendu/transform.hpp
 pkginclude_HEADERS += descendu/world.hpp
 
 noinst_HEADERS  = test/catch.hpp
@@ -25,6 +26,7 @@ check_PROGRAMS += test/resource
 check_PROGRAMS += test/test_optional
 check_PROGRAMS += test/test_type_traits
 check_PROGRAMS += test/tile
+check_PROGRAMS += test/transform
 check_PROGRAMS += test/world
 TESTS = $(check_PROGRAMS)
 
