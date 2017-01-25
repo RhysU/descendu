@@ -216,7 +216,7 @@ TEST_CASE( "operator<<" ) {
 
     SECTION( "absolute" ) {
         oss << consumable<int,4>(3, 2);
-        REQUIRE( oss.str() == "[bound=4,total=3,spent=2]" );
+        REQUIRE( oss.str() == "(consumable 4 3 2)" );
     }
 
 }

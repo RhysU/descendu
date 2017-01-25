@@ -69,17 +69,17 @@ public:
         return operator>=(resource());
     }
 
-    template<class chart, class traits> friend
-    auto& operator<<(std::basic_ostream<chart,traits>& os, const resource& r);
+    template<class OutputStream> friend
+    auto& operator<<(OutputStream& os, const resource& r);
 
 };
 
-template<class chart, class traits>
-auto& operator<<(std::basic_ostream<chart,traits>& os, const resource& r)
+template<class OutputStream>
+auto& operator<<(OutputStream& os, const resource& r)
 {
-    os << "[resource:";
-    components(os, r.base(), ',');
-    os << ']';
+    os << "(resource ";
+    components(os, r.base(), ' ');
+    os << ')';
     return os;
 }
 

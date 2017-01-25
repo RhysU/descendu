@@ -99,15 +99,9 @@ constexpr std::array<hex<T,S>,6> diagonals(const hex<T,S>& h) {
     }};
 }
 
-template<class chart, class traits, typename T, spec S>
-auto& operator<<(std::basic_ostream<chart,traits>& os, const hex<T,S>& p)
-{
-    os << '['
-       << S << ':'
-       << p.q() << ','
-       << p.r() << ','
-       << p.s()
-       << ']';
+template<class OutputStream, typename T, spec S>
+OutputStream& operator<<(OutputStream& os, const hex<T,S>& h) {
+    os << "(hex " << d<T,3,S>{h.q(), h.r(), h.s()} << ")";
     return os;
 }
 

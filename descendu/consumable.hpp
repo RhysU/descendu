@@ -10,8 +10,6 @@
 #define DESCENDU_CONSUMABLE_H
 
 #include <algorithm>
-#include <ostream>
-#include <sstream>
 #include <stdexcept>
 
 namespace descendu
@@ -95,15 +93,13 @@ public:
 
 };
 
-template<class chart, class traits, typename T, std::size_t Bound>
-auto& operator<<(
-    std::basic_ostream<chart,traits>& os,
-    const consumable<T,Bound>& c)
+template<class OutputStream, typename T, std::size_t Bound>
+auto& operator<<(OutputStream& os, const consumable<T,Bound>& c)
 {
-    os << "[bound=" << Bound
-       << ",total=" << c.total()
-       << ",spent=" << c.spent()
-       << ']';
+    os << "(consumable " << Bound
+       << ' ' << c.total()
+       << ' ' << c.spent()
+       << ')';
     return os;
 }
 

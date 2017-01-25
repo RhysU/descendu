@@ -261,7 +261,7 @@ TEST_CASE( "operator<<" ) {
 
     SECTION( "absolute" ) {
         oss << hex<int,spec::absolute>{1,2};
-        REQUIRE( oss.str() == "[absolute:1,2,-3]" );
+        REQUIRE( oss.str() == "(hex (absolute +1 +2 -3))" );
     }
 
 }
