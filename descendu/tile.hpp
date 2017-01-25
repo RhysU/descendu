@@ -25,6 +25,8 @@ struct tile
     consumable<int, 1> harvester;
 };
 
+// TODO OutputStream
+
 } // namespace
 
 #endif

@@ -68,6 +68,8 @@ public:
 
 };
 
+// TODO OutputStream
+
 // When investigating some tile in the course of a search, should the
 // tile be included as usable, excluded as unusable, or should the search
 // stop immediately?

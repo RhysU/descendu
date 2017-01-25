@@ -31,6 +31,8 @@ public:
 
 };
 
+// TODO OutputStream
+
 } // namespace
 
 #endif

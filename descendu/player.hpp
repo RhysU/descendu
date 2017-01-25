@@ -19,6 +19,8 @@ struct player
     resource resources;
 };
 
+// TODO OutputStream
+
 } // namespace
 
 #endif
