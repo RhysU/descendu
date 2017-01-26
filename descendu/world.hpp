@@ -24,7 +24,7 @@ public:
     const std::vector<player> players;
     hexmap<tile> map;
 
-    world(int nplayers)
+    explicit world(int nplayers)
         : players(nplayers)
         , map()
     {}

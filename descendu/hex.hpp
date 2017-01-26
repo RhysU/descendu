@@ -21,7 +21,7 @@ class hex : d<T,2,S>
 {
     typedef d<T,2,S> base_type;
 
-    hex(const base_type& src) : base_type(src) {}
+    explicit hex(const base_type& src) : base_type(src) {}
 
     const base_type& base() const { return *this; }
           base_type& base()       { return *this; }

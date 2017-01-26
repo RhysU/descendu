@@ -20,7 +20,7 @@ class resource : d<int,2,spec::relative>
 {
     typedef d<int,2,spec::relative> base_type;
 
-    resource(const base_type& src) : base_type(src) {}
+    explicit resource(const base_type& src) : base_type(src) {}
 
     const base_type& base() const { return *this; }
           base_type& base()       { return *this; }
