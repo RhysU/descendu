@@ -19,7 +19,15 @@ struct player
     resource resources;
 };
 
-// TODO OutputStream
+template<class OutputStream>
+OutputStream& operator<<(OutputStream& os, const player& p)
+{
+    os << "(player "
+       << (p.alive ? "alive " : "dead ")
+       << p.resources
+       << ')';
+    return os;
+}
 
 } // namespace
 

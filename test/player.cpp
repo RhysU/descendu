@@ -25,3 +25,12 @@ TEST_CASE( "player" ) {
     }
 
 }
+
+TEST_CASE( "operator<<" ) {
+
+    player p;
+    std::ostringstream oss;
+    oss << p;
+    REQUIRE( oss.str() == "(player alive (resource +0 +0))" );
+
+}
