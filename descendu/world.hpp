@@ -23,7 +23,20 @@ struct world
     hexmap<tile> map;
 };
 
-// TODO OutputStream
+template<class OutputStream>
+OutputStream& operator<<(OutputStream& os, const world& w)
+{
+    os << "(world (";
+    int ndx = 0;
+    for (const auto& player : w.players) {
+        if (ndx++) {
+            os << ' ';
+        }
+        os << player;
+    }
+    os << ") " << w.map << ')';
+    return os;
+}
 
 } // namespace
 

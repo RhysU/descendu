@@ -10,6 +10,8 @@
 # include "config.h"
 #endif
 
+#include <sstream>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -20,10 +22,14 @@ using namespace descendu;
 TEST_CASE( "world" ) {
 
     world w;
+    std::ostringstream oss;
 
     SECTION( "default" ) {
         REQUIRE( w.players.size() == 0 );
         REQUIRE( w.map.size() == 0 );
+
+        oss << w;
+        REQUIRE( oss.str() == "(world () (hexmap))" );
     }
 
     SECTION( "add_players" ) {
@@ -31,6 +37,13 @@ TEST_CASE( "world" ) {
         w.players.emplace_back();
         REQUIRE( w.players.size() == 2 );
         REQUIRE( w.map.size() == 0 );
+
+        const auto& expected = "(world "
+            "((player alive (resource +0 +0))"
+            " (player alive (resource +0 +0)))"
+            " (hexmap))";
+        oss << w;
+        REQUIRE( oss.str() == expected );
     }
 
     SECTION( "mutate_map" ) {
@@ -38,6 +51,10 @@ TEST_CASE( "world" ) {
         w.map.conjure({1, 2});
         REQUIRE( w.players.size() == 0 );
         REQUIRE( w.map.size() == 2 );
+
+        // 2 or more entries not deterministic and therefore tested manually
+        oss << w;
+        REQUIRE( oss.str().size() > 0 );
     }
 
 }
