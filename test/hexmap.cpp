@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <sstream>
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
@@ -200,7 +201,9 @@ TEST_CASE( "breadth_first_search" ) {
         REQUIRE( retval.size() == 7 );
         REQUIRE( retval.lookup(start).value() == start );
         for (const auto& neighbor : neighbors(start)) {
-            CAPTURE( neighbor );
+            std::stringstream ss;  // clang-3.8 dislikes CAPTURE(neighbor)
+            ss << neighbor;        // because of (erroneous?) ambiguity of
+            CAPTURE( ss.str() );   // hex:: vs d::operator<<.  g++ cares not.
             REQUIRE( retval.lookup(neighbor).value().value() == start);
         }
     }
