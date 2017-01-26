@@ -209,3 +209,23 @@ TEST_CASE( "breadth_first_search" ) {
     }
 
 }
+
+TEST_CASE( "operator<<" ) {
+
+    hexmap<int> m;
+    std::stringstream ss;
+
+    SECTION( "empty" ) {
+        ss << m;
+        REQUIRE( ss.str() == "(hexmap)" );
+    }
+
+    SECTION( "one" ) {
+        m.conjure({1, 2});
+        ss << m;
+        REQUIRE( ss.str() == "(hexmap ((hex (absolute +1 +2 -3)) 0))" );
+    }
+
+    // 2 or more entries not deterministic and therefore tested manually
+
+}

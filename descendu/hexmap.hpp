@@ -68,7 +68,16 @@ public:
 
 };
 
-// TODO OutputStream
+template<class OutputStream, class T>
+OutputStream& operator<<(OutputStream& os, const hexmap<T>& map)
+{
+    os << "(hexmap";
+    for (const auto& it : map) {
+        os << " (" << it.first << ' ' << it.second << ")";
+    }
+    os << ")";
+    return os;
+}
 
 // When investigating some tile in the course of a search, should the
 // tile be included as usable, excluded as unusable, or should the search
