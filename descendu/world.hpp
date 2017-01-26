@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_WORLD_H
-#define DESCENDU_WORLD_H
+#ifndef DESCENDU_WORLD_HPP
+#define DESCENDU_WORLD_HPP
 
 #include <vector>
 

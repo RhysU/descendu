@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_TRANSFORM_H
-#define DESCENDU_TRANSFORM_H
+#ifndef DESCENDU_TRANSFORM_HPP
+#define DESCENDU_TRANSFORM_HPP
 
 #include "world.hpp"
 

@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_PLAYER_H
-#define DESCENDU_PLAYER_H
+#ifndef DESCENDU_PLAYER_HPP
+#define DESCENDU_PLAYER_HPP
 
 #include "resource.hpp"
 

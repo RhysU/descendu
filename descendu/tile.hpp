@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_TILE_H
-#define DESCENDU_TILE_H
+#ifndef DESCENDU_TILE_HPP
+#define DESCENDU_TILE_HPP
 
 #include "consumable.hpp"
 #include "optional.hpp"

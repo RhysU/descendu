@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_D_H
-#define DESCENDU_D_H
+#ifndef DESCENDU_D_HPP
+#define DESCENDU_D_HPP
 
 #include <array>
 #include <initializer_list>

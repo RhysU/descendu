@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_RESOURCE_H
-#define DESCENDU_RESOURCE_H
+#ifndef DESCENDU_RESOURCE_HPP
+#define DESCENDU_RESOURCE_HPP
 
 #include <algorithm>
 #include <utility>

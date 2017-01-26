@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_HEXMAP_H
-#define DESCENDU_HEXMAP_H
+#ifndef DESCENDU_HEXMAP_HPP
+#define DESCENDU_HEXMAP_HPP
 
 #include <deque>
 #include <functional>

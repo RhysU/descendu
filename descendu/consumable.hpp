@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DESCENDU_CONSUMABLE_H
-#define DESCENDU_CONSUMABLE_H
+#ifndef DESCENDU_CONSUMABLE_HPP
+#define DESCENDU_CONSUMABLE_HPP
 
 #include <algorithm>
 #include <stdexcept>
