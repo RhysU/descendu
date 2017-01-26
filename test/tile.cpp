@@ -10,6 +10,8 @@
 # include "config.h"
 #endif
 
+#include <sstream>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -29,5 +31,25 @@ TEST_CASE( "initialize" ) {
     REQUIRE( &t.ammo      == &(t.ammo     .construct(3)) );
     REQUIRE( t.ammo.remaining() == 0);
     REQUIRE( &t.harvester == &(t.harvester.construct() ) );
+
+}
+
+TEST_CASE( "operator<<" ) {
+
+	const auto expected = "(tile"
+      " (owner)"
+	  " (height (consumable 99 0 0))"
+	  " (walkers (consumable 16 0 0))"
+	  " (barracks (consumable 1 0 0))"
+	  " (cannon (consumable 1 0 0))"
+	  " (ammo (consumable 99 0 0))"
+	  " (harvester (consumable 1 0 0))"
+	")";
+
+    tile t;
+    std::ostringstream oss;
+    oss << t;
+    REQUIRE( oss.str() == expected );
+
 
 }

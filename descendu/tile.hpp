@@ -25,7 +25,22 @@ struct tile
     consumable<int, 1> harvester;
 };
 
-// TODO OutputStream
+template<class OutputStream>
+OutputStream& operator<<(OutputStream& os, const tile& t)
+{
+    os << "(tile (owner";
+    if (t.owner) {
+        os << ' ' << t.owner.value();
+    }
+    os << ") (height "    << t.height
+       << ") (walkers "   << t.walkers
+       << ") (barracks "  << t.barracks
+       << ") (cannon "    << t.cannon
+       << ") (ammo "      << t.ammo
+       << ") (harvester " << t.harvester
+       << "))";
+    return os;
+}
 
 } // namespace
 
