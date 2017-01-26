@@ -9,7 +9,7 @@ Work remaining
 
 In no particular order:
 
- * Serialization and deserialization of that game state concept (e.g. for wire)
+ * Deserialization of game state from previously output S-expressions
  * Convert serialized data into simple dotty dump for basic visualization/debug
  * Determination of whether or not a particular player has pieces remaining
  * Destruction of a hex due to its height being reduced by one (e.g. mining)
