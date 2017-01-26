@@ -17,18 +17,10 @@
 
 namespace descendu {
 
-class world
+struct world
 {
-public:
-
-    const std::vector<player> players;
+    std::vector<player> players;
     hexmap<tile> map;
-
-    explicit world(int nplayers)
-        : players(nplayers)
-        , map()
-    {}
-
 };
 
 // TODO OutputStream

@@ -19,9 +19,25 @@ using namespace descendu;
 
 TEST_CASE( "world" ) {
 
-    SECTION( "construct" ) {
-        world w(2);
+    world w;
+
+    SECTION( "default" ) {
+        REQUIRE( w.players.size() == 0 );
+        REQUIRE( w.map.size() == 0 );
+    }
+
+    SECTION( "add_players" ) {
+        w.players.emplace_back();
+        w.players.emplace_back();
         REQUIRE( w.players.size() == 2 );
+        REQUIRE( w.map.size() == 0 );
+    }
+
+    SECTION( "mutate_map" ) {
+        w.map.conjure({0, 1});
+        w.map.conjure({1, 2});
+        REQUIRE( w.players.size() == 0 );
+        REQUIRE( w.map.size() == 2 );
     }
 
 }
