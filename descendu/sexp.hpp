@@ -9,10 +9,10 @@
 #ifndef DESCENDU_SEXP_HPP
 #define DESCENDU_SEXP_HPP
 
+#include <cctype>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <iterator>
 
 #include "optional.hpp"
 
@@ -20,6 +20,9 @@ namespace descendu {
 
 namespace sexp {
 
+// TODO Track line/column as input processed
+// TODO Record line/column within each node
+// TODO Confirm well-formed and throw informatively if not
 //// Saith https://en.wikipedia.org/wiki/S-expression#Parsing
 //// regarding a particularly cute algorithm.  Who am I to argue?
 // def parse_sexp(string):
@@ -51,18 +54,66 @@ namespace sexp {
 //     return sexp[0]
 
 struct node {
+
+    // If (string) then use string.value()
+    // else process children as a list.
     std::experimental::optional<std::string> string;
     std::vector<node> children;
+
+    // Construct a string node
+    explicit node(const std::string& string)
+        : string(string)
+        , children(0)
+    {};
+
+    // Construct a list node
+    node()
+        : string()
+        , children(0)
+    {};
 };
 
 // http://stackoverflow.com/questions/20731
 // std::stringstream().swap(m);
 
-template<typename CharT, class Traits>
-std::vector<node> parse(std::basic_istream<CharT,Traits>& is) {
+template<typename InputIterator>
+std::vector<node> parse(InputIterator curr, InputIterator end) {
     std::vector<node> sexp;
-    // TODO
-    return sexp;
+    std::ostringstream word;
+    bool in_str;
+    for (; curr != end; ++curr) {
+        const char c = *curr;
+        if (c == '(' && !in_str) {
+            sexp.emplace_back();
+        } else if (c == ')' && !in_str) {
+            // TODO
+        } else if (std::isspace(c) && !in_str) {
+            // TODO
+        } else if (c == '"') {
+            in_str = !in_str;
+        } else {
+            word << c;
+        }
+    }
+    return sexp; // FIXME [0]
+
+//         if char == '(' and not in_str:
+//             sexp.append([])
+//         elif char == ')' and not in_str:
+//             if word:
+//                 sexp[-1].append(word)
+//                 word = ''
+//             temp = sexp.pop()
+//             sexp[-1].append(temp)
+//         elif char in (' ', '\n', '\t') and not in_str:
+//             if word:
+//                 sexp[-1].append(word)
+//                 word = ''
+//         elif char == '\"':
+//             in_str = not in_str
+//         else:
+//             word += char
+//     return sexp[0]
 }
 
 

@@ -20,6 +20,8 @@ using namespace descendu;
 TEST_CASE( "placeholder" ) {
 
     SECTION( "placeholder" ) {
+        std::string foo("foo");
+        sexp::parse(foo.cbegin(), foo.cend());
         REQUIRE( 1 == 1 );
     }
 
