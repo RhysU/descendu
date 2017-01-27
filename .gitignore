@@ -48,6 +48,7 @@ test/hexmap
 test/player
 test/redblob
 test/resource
+test/sexp
 test/test_optional
 test/test_type_traits
 test/tile
