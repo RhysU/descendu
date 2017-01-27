@@ -55,6 +55,9 @@ struct node {
     std::vector<node> children;
 };
 
+// http://stackoverflow.com/questions/20731
+// std::stringstream().swap(m);
+
 template<typename CharT, class Traits>
 std::vector<node> parse(std::basic_istream<CharT,Traits>& is) {
     std::vector<node> sexp;
