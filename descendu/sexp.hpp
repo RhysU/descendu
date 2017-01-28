@@ -102,7 +102,7 @@ node parse(InputIterator curr, InputIterator end) {
                 word.clear();
             }
             in_string = false;
-            node temp(sexp.back());
+            node temp(std::move(sexp.back()));
             sexp.pop_back();
             sexp.back().emplace_back(std::move(temp));
         } else if (std::isspace(c) && !in_quotes) {
