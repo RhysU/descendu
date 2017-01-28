@@ -40,10 +40,10 @@ class node : std::vector<node>
 
 public:
 
-    // For string-like access
+    // For string node access
     std::experimental::optional<std::string> string;
 
-    // For list-like access
+    // For list node access
     using base_type::back;
     using base_type::begin;
     using base_type::cbegin;
@@ -54,11 +54,6 @@ public:
     using base_type::operator[];
     using base_type::pop_back;
     using base_type::size;
-
-    // Direct access to list
-    std::vector<node>& terms() {
-        return *this;
-    }
 
     // Construct a string node
     explicit node(const std::string& string)
@@ -82,7 +77,7 @@ public:
 // TODO ostringstream instead of string += c?
 // Based upon https://en.wikipedia.org/wiki/S-expression#Parsing
 template<typename InputIterator>
-std::vector<node> parse(InputIterator curr, InputIterator end) {
+node parse(InputIterator curr, InputIterator end) {
     node sexp;
     sexp.emplace_back();
     std::string word;
@@ -118,10 +113,10 @@ std::vector<node> parse(InputIterator curr, InputIterator end) {
     if (sexp.front().string) {
         throw std::logic_error("sanity failure on type");
     }
-    return sexp.front().terms();
+    return sexp.front();
 }
 
-std::vector<node> parse(const std::string& in) {
+node parse(const std::string& in) {
     return parse(in.cbegin(), in.cend());
 }
 
@@ -150,27 +145,6 @@ std::string to_string(const node& sexp) {
     copy(sexp, it);
     return oss.str();
 }
-
-template<typename OutputIterator>
-void copy(const std::vector<node>& parsed, OutputIterator out) {
-    *out++ = '[';
-    std::size_t count = 0;
-    for (const auto& item : parsed) {
-        if (count++) {
-            *out++ = ',';
-        }
-        copy(item, out);
-    }
-    *out++ = ']';
-}
-
-std::string to_string(const std::vector<node>& parsed) {
-    std::ostringstream oss;
-    std::ostream_iterator<char> it(oss);
-    copy(parsed, it);
-    return oss.str();
-}
-
 
 } // namespace
 
