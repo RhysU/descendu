@@ -74,45 +74,65 @@ public:
     {};
 };
 
-// TODO ostringstream instead of string += c?
+// Parse zero or more S-expressions in the input returning a list.
+// Notice parsed input is wrapped in one additional list.  That is,
+//     1) "(foo)(bar)" returned as ((foo)(bar))
+//     2) "(foo)"      returned as ((foo))
+//     3) "foo"        returned as (foo)
+//     4) ""           returned as ()
+// as otherwise non-list or trivial inputs problematic.
 // Based upon https://en.wikipedia.org/wiki/S-expression#Parsing
+// and grotesquely extended to handle different input with checking.
 template<typename InputIterator>
 node parse(InputIterator curr, InputIterator end) {
+
     node sexp;
     sexp.emplace_back();
     std::string word;
-    bool in_str;
+    bool in_quotes;
+    bool in_string;
+
     for (; curr != end; ++curr) {
         const char c = *curr;
-        if (c == '(' && !in_str) {
+        if (c == '(' && !in_quotes) {
             sexp.emplace_back();
-        } else if (c == ')' && !in_str) {
-            if (word.size()) {
+        } else if (c == ')' && !in_quotes) {
+            if (in_string) {
                 sexp.back().emplace_back(word);
                 word.clear();
             }
+            in_string = false;
             node temp(sexp.back());
             sexp.pop_back();
             sexp.back().emplace_back(std::move(temp));
-        } else if (std::isspace(c) && !in_str) {
-            if (word.size()) {
+        } else if (std::isspace(c) && !in_quotes) {
+            if (in_string) {
                 sexp.back().emplace_back(word);
                 word.clear();
             }
+            in_string = false;
         } else if (c == '"') {
-            in_str = !in_str;
+            in_quotes = !in_quotes;
+            in_string = in_quotes;
         } else {
             word += c;
+            in_string = true;
         }
     }
-    // Should not encounter problems below here,
-    // but avoid undefined behavior if bugs above.
+
+    if (in_quotes) {
+        throw std::invalid_argument("unclosed quote");
+    }
+    if (in_string) {
+        sexp.back().emplace_back(word);
+    }
     if (!sexp.size()) {
         throw std::logic_error("sanity failure on size");
     }
     if (sexp.front().string) {
         throw std::logic_error("sanity failure on type");
     }
+
     return sexp.front();
 }
 

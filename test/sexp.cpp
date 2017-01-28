@@ -10,6 +10,7 @@
 # include "config.h"
 #endif
 
+#include <sstream>
 #include <string>
 
 #define CATCH_CONFIG_MAIN
@@ -62,39 +63,40 @@ TEST_CASE( "to_string" ) {
 }
 
 static void check_roundtrip(const std::string& in) {
-    REQUIRE( to_string(sexp::parse(in)) == in );
+    std::ostringstream expected;
+    expected << '(' << in << ')';
+    REQUIRE( expected.str() == to_string(sexp::parse(in)) );
 }
 
 TEST_CASE( "parse" ) {
 
-    // FIXME
-    // SECTION( "empty string" ) {
-    //     check_roundtrip("");
-    // }
+    SECTION( "empty string" ) {
+        check_roundtrip("");
+    }
+
+    SECTION( "string" ) {
+        check_roundtrip("hola");
+    }
+
+    SECTION( "empty list" ) {
+        check_roundtrip("()");
+    }
+
+    SECTION( "empty list inside list" ) {
+        check_roundtrip("(())");
+    }
+
+    SECTION( "string inside list" ) {
+        check_roundtrip("(hola)");
+    }
+
+    SECTION( "strings inside list" ) {
+        check_roundtrip("(hola amigo)");
+    }
 
     // FIXME
-    // SECTION( "string" ) {
-    //     check_roundtrip("hola");
-    // }
-
-    // FIXME
-    // SECTION( "empty list" ) {
-    //     check_roundtrip("()");
-    // }
-
-    // FIXME
-    // SECTION( "empty list inside list" ) {
-    //     check_roundtrip("(())");
-    // }
-
-    // FIXME
-    // SECTION( "string inside list" ) {
-    //     check_roundtrip("(hola)");
-    // }
-
-    // FIXME
-    // SECTION( "strings inside list" ) {
-    //     check_roundtrip("(hola amigo)");
+    // SECTION( "empty string inside list" ) {
+    //     check_roundtrip("(hola \"\" amigo)");
     // }
 
 }
