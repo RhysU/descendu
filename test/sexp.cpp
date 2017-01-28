@@ -11,6 +11,7 @@
 #endif
 
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #define CATCH_CONFIG_MAIN
@@ -22,6 +23,7 @@ using namespace descendu;
 
 // TODO Test empty quoted strings
 // TODO Test empty term lists
+// TODO Test escaping of various sorts
 
 // Confirming copy/to_string eases later checks for parse
 TEST_CASE( "to_string" ) {
@@ -63,6 +65,7 @@ TEST_CASE( "to_string" ) {
 }
 
 static void check_roundtrip(const std::string& in) {
+    CAPTURE( in );
     std::ostringstream expected;
     expected << '(' << in << ')';
     REQUIRE( expected.str() == to_string(sexp::parse(in)) );
@@ -74,8 +77,12 @@ TEST_CASE( "parse" ) {
         check_roundtrip("");
     }
 
-    SECTION( "string" ) {
+    SECTION( "one string" ) {
         check_roundtrip("hola");
+    }
+
+    SECTION( "two strings" ) {
+        check_roundtrip("hola amigos");
     }
 
     SECTION( "empty list" ) {
@@ -94,7 +101,27 @@ TEST_CASE( "parse" ) {
         check_roundtrip("(hola amigo)");
     }
 
-    // FIXME
+    SECTION( "strings and a list" ) {
+        check_roundtrip("hola (mi amigo)");
+    }
+
+    SECTION( "mismatched quotes" ) {
+        REQUIRE_THROWS_AS(
+            sexp::parse("(hola \"amigo"),
+            std::invalid_argument );
+    }
+
+    SECTION( "mismatched parentheses" ) {
+        REQUIRE_THROWS_AS(
+            sexp::parse("(hola (amigo)"),
+            std::invalid_argument );
+        // FIXME SIGSEGV!
+        // REQUIRE_THROWS_AS(
+        //     sexp::parse("(amigo) )"),
+        //     std::invalid_argument );
+    }
+
+    // FIXME No quote processing
     // SECTION( "empty string inside list" ) {
     //     check_roundtrip("(hola \"\" amigo)");
     // }

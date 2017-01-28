@@ -89,22 +89,25 @@ node parse(InputIterator curr, InputIterator end) {
     node sexp;
     sexp.emplace_back();
     std::string word;
-    bool in_quotes;
-    bool in_string;
+    bool in_quotes = false;
+    bool in_string = false;
+    int level = 0;
 
     for (; curr != end; ++curr) {
         const char c = *curr;
         if (c == '(' && !in_quotes) {
             sexp.emplace_back();
+            ++level;
         } else if (c == ')' && !in_quotes) {
             if (in_string) {
                 sexp.back().emplace_back(word);
                 word.clear();
             }
-            in_string = false;
             node temp(std::move(sexp.back()));
             sexp.pop_back();
             sexp.back().emplace_back(std::move(temp));
+            in_string = false;
+            --level;
         } else if (std::isspace(c) && !in_quotes) {
             if (in_string) {
                 sexp.back().emplace_back(word);
@@ -123,7 +126,10 @@ node parse(InputIterator curr, InputIterator end) {
     if (in_quotes) {
         throw std::invalid_argument("unclosed quote");
     }
-    if (in_string) {
+    if (level != 0) {
+        throw std::invalid_argument("mismatched parenthesis");
+    }
+    if (in_string) { // Required for final top-level string
         sexp.back().emplace_back(word);
     }
     if (!sexp.size()) {
