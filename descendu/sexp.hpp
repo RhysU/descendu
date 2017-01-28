@@ -11,8 +11,8 @@
 
 #include <cctype>
 #include <iostream>
-#include <sstream>
 #include <string>
+#include <utility>
 
 #include "optional.hpp"
 
@@ -56,66 +56,60 @@ namespace sexp {
 struct node {
 
     // If (string) then use string.value()
-    // else process children as a list.
+    // else process list as a list.
     std::experimental::optional<std::string> string;
-    std::vector<node> children;
+    std::vector<node> list;
 
     // Construct a string node
     explicit node(const std::string& string)
         : string(string)
-        , children(0)
+        , list(0)
+    {};
+
+    // Construct a string node
+    explicit node(std::string&& string)
+        : string(string)
+        , list(0)
     {};
 
     // Construct a list node
     node()
         : string()
-        , children(0)
+        , list(0)
     {};
 };
 
-// http://stackoverflow.com/questions/20731
-// std::stringstream().swap(m);
-
 template<typename InputIterator>
-std::vector<node> parse(InputIterator curr, InputIterator end) {
-    std::vector<node> sexp;
-    std::ostringstream word;
+node parse(InputIterator curr, InputIterator end) {
+    node sexp;
+    sexp.list.emplace_back();
+    std::string word;
     bool in_str;
     for (; curr != end; ++curr) {
         const char c = *curr;
         if (c == '(' && !in_str) {
-            sexp.emplace_back();
+            sexp.list.emplace_back();
         } else if (c == ')' && !in_str) {
-            // TODO
+            if (word.size()) {
+                sexp.list.back().list.emplace_back(word);
+                word.clear();
+            }
+            node temp(sexp.list.back());
+            sexp.list.pop_back();
+            sexp.list.back().list.emplace_back(std::move(temp));
         } else if (std::isspace(c) && !in_str) {
-            // TODO
+            if (word.size()) {
+                sexp.list.back().list.emplace_back(word);
+                word.clear();
+            }
         } else if (c == '"') {
             in_str = !in_str;
         } else {
-            word << c;
+            word += c;
         }
     }
-    return sexp; // FIXME [0]
-
-//         if char == '(' and not in_str:
-//             sexp.append([])
-//         elif char == ')' and not in_str:
-//             if word:
-//                 sexp[-1].append(word)
-//                 word = ''
-//             temp = sexp.pop()
-//             sexp[-1].append(temp)
-//         elif char in (' ', '\n', '\t') and not in_str:
-//             if word:
-//                 sexp[-1].append(word)
-//                 word = ''
-//         elif char == '\"':
-//             in_str = not in_str
-//         else:
-//             word += char
-//     return sexp[0]
+    return sexp; // FIXME [0] ?
 }
-
 
 } // namespace
 

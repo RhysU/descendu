@@ -17,6 +17,9 @@
 
 using namespace descendu;
 
+// TODO Test empty quoted strings
+// TODO Test empty term lists
+
 TEST_CASE( "placeholder" ) {
 
     SECTION( "placeholder" ) {
