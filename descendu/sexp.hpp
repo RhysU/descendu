@@ -11,6 +11,8 @@
 
 #include <cctype>
 #include <iostream>
+#include <iterator>
+#include <sstream>
 #include <string>
 #include <utility>
 
@@ -79,6 +81,7 @@ struct node {
     {};
 };
 
+// ostringstream instead of string += c?
 template<typename InputIterator>
 node parse(InputIterator curr, InputIterator end) {
     node sexp;
@@ -112,7 +115,7 @@ node parse(InputIterator curr, InputIterator end) {
 }
 
 template<typename OutputIterator>
-void dump(const node& sexp, OutputIterator out) {
+void copy(const node& sexp, OutputIterator out) {
     if (sexp.string) {
         // TODO Escaping?  Spaces?
         const auto& string = sexp.string.value();
@@ -124,10 +127,17 @@ void dump(const node& sexp, OutputIterator out) {
             if (count++) {
                 *out++ = ' ';
             }
-            dump(item, out);
+            copy(item, out);
         }
         *out++ = ')';
     }
+}
+
+std::string to_string(const node& sexp) {
+    std::ostringstream oss;
+    std::ostream_iterator<char> it(oss);
+    copy(sexp, it);
+    return oss.str();
 }
 
 } // namespace

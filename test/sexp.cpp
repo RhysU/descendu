@@ -10,8 +10,6 @@
 # include "config.h"
 #endif
 
-#include <iterator>
-#include <sstream>
 #include <string>
 
 #define CATCH_CONFIG_MAIN
@@ -24,28 +22,41 @@ using namespace descendu;
 // TODO Test empty quoted strings
 // TODO Test empty term lists
 
-// Debugging is easier with a working dump command
-TEST_CASE( "dump" ) {
-
-    std::ostringstream oss;
-    std::ostream_iterator<char> out(oss);
+// Confirming copy/to_string eases later checks for parse
+TEST_CASE( "to_string" ) {
 
     SECTION( "empty string" ) {
         sexp::node data("");
-        sexp::dump(data, out);
-        REQUIRE( oss.str() == "" );
+        REQUIRE( to_string(data) == "" );
     }
 
     SECTION( "string" ) {
         sexp::node data("hola");
-        sexp::dump(data, out);
-        REQUIRE( oss.str() == "hola" );
+        REQUIRE( to_string(data) == "hola" );
     }
 
     SECTION( "empty list" ) {
         sexp::node data;
-        sexp::dump(data, out);
-        REQUIRE( oss.str() == "()" );
+        REQUIRE( to_string(data) == "()" );
+    }
+
+    SECTION( "empty list inside list" ) {
+        sexp::node data;
+        data.list.emplace_back();
+        REQUIRE( to_string(data) == "(())" );
+    }
+
+    SECTION( "string inside list" ) {
+        sexp::node data;
+        data.list.emplace_back("hola");
+        REQUIRE( to_string(data) == "(hola)" );
+    }
+
+    SECTION( "strings inside list" ) {
+        sexp::node data;
+        data.list.emplace_back("hola");
+        data.list.emplace_back("amigos");
+        REQUIRE( to_string(data) == "(hola amigos)" );
     }
 
 }
