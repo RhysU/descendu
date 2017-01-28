@@ -74,6 +74,7 @@ public:
     {};
 };
 
+// TODO Add understanding of quoted vs non-quoted strings
 // Parse zero or more S-expressions in the input returning a list.
 // Notice parsed input is wrapped in one additional list.  That is,
 //     1) "(foo)(bar)" returned as ((foo)(bar))
@@ -96,9 +97,12 @@ node parse(InputIterator curr, InputIterator end) {
     for (; curr != end; ++curr) {
         const char c = *curr;
         if (c == '(' && !in_quotes) {
-            sexp.emplace_back();
             ++level;
+            sexp.emplace_back();
         } else if (c == ')' && !in_quotes) {
+            if (level == 0) {
+                throw std::invalid_argument("unopened right parenthesis");
+            }
             if (in_string) {
                 sexp.back().emplace_back(word);
                 word.clear();
@@ -127,7 +131,7 @@ node parse(InputIterator curr, InputIterator end) {
         throw std::invalid_argument("unclosed quote");
     }
     if (level != 0) {
-        throw std::invalid_argument("mismatched parenthesis");
+        throw std::invalid_argument("unclosed left parenthesis");
     }
     if (in_string) { // Required for final top-level string
         sexp.back().emplace_back(word);

@@ -115,10 +115,9 @@ TEST_CASE( "parse" ) {
         REQUIRE_THROWS_AS(
             sexp::parse("(hola (amigo)"),
             std::invalid_argument );
-        // FIXME SIGSEGV!
-        // REQUIRE_THROWS_AS(
-        //     sexp::parse("(amigo) )"),
-        //     std::invalid_argument );
+        REQUIRE_THROWS_AS(
+            sexp::parse("(amigo) )"),
+            std::invalid_argument );
     }
 
     // FIXME No quote processing
