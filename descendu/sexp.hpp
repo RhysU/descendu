@@ -150,6 +150,12 @@ node parse(const std::string& in) {
     return parse(in.cbegin(), in.cend());
 }
 
+node parse(std::istream& is) {
+    return parse(
+        std::istream_iterator<char>(is),
+        std::istream_iterator<char>());
+}
+
 template<typename OutputIterator>
 void copy(const node& sexp, OutputIterator out) {
     if (sexp.string) {
@@ -167,6 +173,10 @@ void copy(const node& sexp, OutputIterator out) {
         }
         *out++ = ')';
     }
+}
+
+void copy(const node& sexp, std::ostream& os) {
+    return copy(sexp, std::ostream_iterator<char>(os));
 }
 
 std::string to_string(const node& sexp) {
