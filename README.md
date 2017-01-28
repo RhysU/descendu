@@ -11,6 +11,7 @@ In no particular order:
 
  * Deserialization of game state from previously output S-expressions
  * Convert serialized data into simple dotty dump for basic visualization/debug
+ * Tweak BFS into something a-star-ish
  * Determination of whether or not a particular player has pieces remaining
  * Destruction of a hex due to its height being reduced by one (e.g. mining)
  * Destruction of a hex with "splash" destroying linked marginal hexes
