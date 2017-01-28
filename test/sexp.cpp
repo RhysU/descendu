@@ -60,3 +60,37 @@ TEST_CASE( "to_string" ) {
     }
 
 }
+
+static std::string roundtrip(const std::string& in) {
+    return to_string(sexp::parse(in));
+}
+
+TEST_CASE( "parse" ) {
+
+    SECTION( "empty string" ) {
+        REQUIRE( roundtrip("") == "[]" );
+    }
+
+    // FIXME
+    // SECTION( "string" ) {
+    //     REQUIRE( roundtrip("hola") == "[hola]" );
+    // }
+
+    SECTION( "empty list" ) {
+        sexp::node data;
+        REQUIRE( roundtrip("()") == "[()]" );
+    }
+
+    SECTION( "empty list inside list" ) {
+        REQUIRE( roundtrip("(())") == "[(())]" );
+    }
+
+    SECTION( "string inside list" ) {
+        REQUIRE( roundtrip("(hola)") == "[(hola)]" );
+    }
+
+    SECTION( "strings inside list" ) {
+        REQUIRE( roundtrip("(hola amigos)") == "[(hola amigos)]" );
+    }
+
+}

@@ -13,6 +13,7 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -25,35 +26,6 @@ namespace sexp {
 // TODO Track line/column as input processed
 // TODO Record line/column within each node
 // TODO Confirm well-formed and throw informatively if not
-//// Saith https://en.wikipedia.org/wiki/S-expression#Parsing
-//// regarding a particularly cute algorithm.  Who am I to argue?
-// def parse_sexp(string):
-//     """
-//     >>> parse_sexp("(+ 5 (+ 3 5))")
-//     [['+', '5', ['+', '3', '5']]]
-//
-//     """
-//     sexp = [[]]
-//     word = ''
-//     in_str = False
-//     for char in string:
-//         if char == '(' and not in_str:
-//             sexp.append([])
-//         elif char == ')' and not in_str:
-//             if word:
-//                 sexp[-1].append(word)
-//                 word = ''
-//             temp = sexp.pop()
-//             sexp[-1].append(temp)
-//         elif char in (' ', '\n', '\t') and not in_str:
-//             if word:
-//                 sexp[-1].append(word)
-//                 word = ''
-//         elif char == '\"':
-//             in_str = not in_str
-//         else:
-//             word += char
-//     return sexp[0]
 
 struct node {
 
@@ -68,22 +40,23 @@ struct node {
         , list(0)
     {};
 
-    // Construct a string node
+    // Move into a string node
     explicit node(std::string&& string)
         : string(string)
         , list(0)
     {};
 
-    // Construct a list node
+    // Construct an empty list node
     node()
         : string()
         , list(0)
     {};
 };
 
-// ostringstream instead of string += c?
+// TODO ostringstream instead of string += c?
+// Based upon https://en.wikipedia.org/wiki/S-expression#Parsing
 template<typename InputIterator>
-node parse(InputIterator curr, InputIterator end) {
+std::vector<node> parse(InputIterator curr, InputIterator end) {
     node sexp;
     sexp.list.emplace_back();
     std::string word;
@@ -111,7 +84,19 @@ node parse(InputIterator curr, InputIterator end) {
             word += c;
         }
     }
-    return sexp; // FIXME [0] ?
+    // Should not encounter problems below here,
+    // but avoid undefined behavior if bugs above.
+    if (!sexp.list.size()) {
+        throw std::logic_error("sanity failure on size");
+    }
+    if (sexp.list.front().string) {
+        throw std::logic_error("sanity failure on type");
+    }
+    return sexp.list.front().list;
+}
+
+std::vector<node> parse(const std::string& in) {
+    return parse(in.cbegin(), in.cend());
 }
 
 template<typename OutputIterator>
@@ -139,6 +124,27 @@ std::string to_string(const node& sexp) {
     copy(sexp, it);
     return oss.str();
 }
+
+template<typename OutputIterator>
+void copy(const std::vector<node>& parsed, OutputIterator out) {
+    *out++ = '[';
+    std::size_t count = 0;
+    for (const auto& item : parsed) {
+        if (count++) {
+            *out++ = ',';
+        }
+        copy(item, out);
+    }
+    *out++ = ']';
+}
+
+std::string to_string(const std::vector<node>& parsed) {
+    std::ostringstream oss;
+    std::ostream_iterator<char> it(oss);
+    copy(parsed, it);
+    return oss.str();
+}
+
 
 } // namespace
 
