@@ -10,6 +10,10 @@
 # include "config.h"
 #endif
 
+#include <iterator>
+#include <sstream>
+#include <string>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -20,12 +24,28 @@ using namespace descendu;
 // TODO Test empty quoted strings
 // TODO Test empty term lists
 
-TEST_CASE( "placeholder" ) {
+// Debugging is easier with a working dump command
+TEST_CASE( "dump" ) {
 
-    SECTION( "placeholder" ) {
-        std::string foo("foo");
-        sexp::parse(foo.cbegin(), foo.cend());
-        REQUIRE( 1 == 1 );
+    std::ostringstream oss;
+    std::ostream_iterator<char> out(oss);
+
+    SECTION( "empty string" ) {
+        sexp::node data("");
+        sexp::dump(data, out);
+        REQUIRE( oss.str() == "" );
+    }
+
+    SECTION( "string" ) {
+        sexp::node data("hola");
+        sexp::dump(data, out);
+        REQUIRE( oss.str() == "hola" );
+    }
+
+    SECTION( "empty list" ) {
+        sexp::node data;
+        sexp::dump(data, out);
+        REQUIRE( oss.str() == "()" );
     }
 
 }

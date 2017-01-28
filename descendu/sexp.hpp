@@ -111,6 +111,25 @@ node parse(InputIterator curr, InputIterator end) {
     return sexp; // FIXME [0] ?
 }
 
+template<typename OutputIterator>
+void dump(const node& sexp, OutputIterator out) {
+    if (sexp.string) {
+        // TODO Escaping?  Spaces?
+        const auto& string = sexp.string.value();
+        std::copy(string.cbegin(), string.cend(), out);
+    } else {
+        *out++ = '(';
+        std::size_t count = 0;
+        for (const auto& item : sexp.list) {
+            if (count++) {
+                *out++ = ' ';
+            }
+            dump(item, out);
+        }
+        *out++ = ')';
+    }
+}
+
 } // namespace
 
 } // namespace
