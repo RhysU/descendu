@@ -26,30 +26,56 @@ namespace sexp {
 // TODO Track line/column as input processed
 // TODO Record line/column within each node
 // TODO Confirm well-formed and throw informatively if not
+// TODO Consider some cheaper sentinel than optional?
 
-struct node {
 
-    // If (string) then use string.value()
-    // else process list as a list.
+// if (node.string) {
+//     // Use node.string.value()
+// } else {
+//     // Use list-like methods on node.
+// }
+class node : std::vector<node>
+{
+    typedef std::vector<node> base_type;
+
+public:
+
+    // For string-like access
     std::experimental::optional<std::string> string;
-    std::vector<node> list;
+
+    // For list-like access
+    using base_type::back;
+    using base_type::begin;
+    using base_type::cbegin;
+    using base_type::cend;
+    using base_type::emplace_back;
+    using base_type::end;
+    using base_type::front;
+    using base_type::operator[];
+    using base_type::pop_back;
+    using base_type::size;
+
+    // Direct access to list
+    std::vector<node>& terms() {
+        return *this;
+    }
 
     // Construct a string node
     explicit node(const std::string& string)
-        : string(string)
-        , list(0)
+        : base_type(0)
+        , string(string)
     {};
 
     // Move into a string node
     explicit node(std::string&& string)
-        : string(string)
-        , list(0)
+        : base_type(0)
+        , string(string)
     {};
 
     // Construct an empty list node
     node()
-        : string()
-        , list(0)
+        : base_type()
+        , string()
     {};
 };
 
@@ -58,24 +84,24 @@ struct node {
 template<typename InputIterator>
 std::vector<node> parse(InputIterator curr, InputIterator end) {
     node sexp;
-    sexp.list.emplace_back();
+    sexp.emplace_back();
     std::string word;
     bool in_str;
     for (; curr != end; ++curr) {
         const char c = *curr;
         if (c == '(' && !in_str) {
-            sexp.list.emplace_back();
+            sexp.emplace_back();
         } else if (c == ')' && !in_str) {
             if (word.size()) {
-                sexp.list.back().list.emplace_back(word);
+                sexp.back().emplace_back(word);
                 word.clear();
             }
-            node temp(sexp.list.back());
-            sexp.list.pop_back();
-            sexp.list.back().list.emplace_back(std::move(temp));
+            node temp(sexp.back());
+            sexp.pop_back();
+            sexp.back().emplace_back(std::move(temp));
         } else if (std::isspace(c) && !in_str) {
             if (word.size()) {
-                sexp.list.back().list.emplace_back(word);
+                sexp.back().emplace_back(word);
                 word.clear();
             }
         } else if (c == '"') {
@@ -86,13 +112,13 @@ std::vector<node> parse(InputIterator curr, InputIterator end) {
     }
     // Should not encounter problems below here,
     // but avoid undefined behavior if bugs above.
-    if (!sexp.list.size()) {
+    if (!sexp.size()) {
         throw std::logic_error("sanity failure on size");
     }
-    if (sexp.list.front().string) {
+    if (sexp.front().string) {
         throw std::logic_error("sanity failure on type");
     }
-    return sexp.list.front().list;
+    return sexp.front().terms();
 }
 
 std::vector<node> parse(const std::string& in) {
@@ -108,11 +134,11 @@ void copy(const node& sexp, OutputIterator out) {
     } else {
         *out++ = '(';
         std::size_t count = 0;
-        for (const auto& item : sexp.list) {
+        for (const auto& term : sexp) {
             if (count++) {
                 *out++ = ' ';
             }
-            copy(item, out);
+            copy(term, out);
         }
         *out++ = ')';
     }

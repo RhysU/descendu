@@ -42,20 +42,20 @@ TEST_CASE( "to_string" ) {
 
     SECTION( "empty list inside list" ) {
         sexp::node data;
-        data.list.emplace_back();
+        data.emplace_back();
         REQUIRE( to_string(data) == "(())" );
     }
 
     SECTION( "string inside list" ) {
         sexp::node data;
-        data.list.emplace_back("hola");
+        data.emplace_back("hola");
         REQUIRE( to_string(data) == "(hola)" );
     }
 
     SECTION( "strings inside list" ) {
         sexp::node data;
-        data.list.emplace_back("hola");
-        data.list.emplace_back("amigos");
+        data.emplace_back("hola");
+        data.emplace_back("amigos");
         REQUIRE( to_string(data) == "(hola amigos)" );
     }
 
