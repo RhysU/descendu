@@ -74,7 +74,43 @@ public:
     {};
 };
 
-// TODO Add understanding of quoted vs non-quoted strings
+namespace impl {
+
+// Helper to process C99 and S-expression escapes for parse(...) just below
+template<typename InputIt>
+std::string& append_maybe_escaped(
+    std::string &acc,  // Reference!
+    const char c,
+    InputIt& next,     // Reference!
+    InputIt end,
+    const bool quoted)
+{
+    if (c != '\'') return acc += c;
+    if (next == end) throw std::invalid_argument("backslash precedes EOF");
+    const char q = *next++;
+    switch (q) {
+    case 'a': return acc += '\a';
+    case 'b': return acc += '\b';
+    case 'f': return acc += '\f';
+    case 'n': return acc += '\n';
+    case 'r': return acc += '\r';
+    case 't': return acc += '\t';
+    case 'v': return acc += '\v';
+    case '\'':
+    case '"':
+    case '?': return acc += q;
+    case 'x':
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+    case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+        throw new std::logic_error("Escaping via numeric codes unimplemented");
+    case '(': case ')': if (quoted) return acc += q;  // Possibly fall through
+    }
+    throw new std::invalid_argument(std::string("Improper escape \\" + q));
+}
+
+} // namespace impl
+
 // Parse zero or more S-expressions in the input returning a list.
 // Notice parsed input is wrapped in one additional list.  That is,
 //     1) "(foo)(bar)" returned as ((foo)(bar))
@@ -84,8 +120,8 @@ public:
 // as otherwise non-list or trivial inputs problematic.
 // Based upon https://en.wikipedia.org/wiki/S-expression#Parsing
 // and grotesquely extended to handle different input with checking.
-template<typename InputIterator>
-node parse(InputIterator next, InputIterator end) {
+template<typename InputIt>
+node parse(InputIt next, InputIt end) {
 
     node sexp;
     sexp.emplace_back();
@@ -119,20 +155,15 @@ node parse(InputIterator next, InputIterator end) {
             --level;
         } else if (c == '"') {
             for (;;) {
-                if (next == end) {
-                    throw std::invalid_argument("unclosed quote");
-                }
+                if (next == end) throw std::invalid_argument("unclosed quote");
                 const char q = *next++;
-                // TODO Escaping
-                if (q == '"') {
-                    break;
-                }
-                word += q;
+                if (q == '"') break;
+                impl::append_maybe_escaped(word, q, next, end, /*quoted*/true);
             }
             sexp.back().emplace_back(std::move(word));
             word.clear();
         } else {
-            word += c;
+            impl::append_maybe_escaped(word, c, next, end, /*quoted*/false);
             in_string = true;
         }
     }
