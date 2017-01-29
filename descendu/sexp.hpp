@@ -96,10 +96,32 @@ node parse(InputIterator curr, InputIterator end) {
 
     for (; curr != end; ++curr) {
         const char c = *curr;
-        if (c == '(' && !in_quotes) {
+        if (in_quotes) {
+
+            if (c == '"') {
+                sexp.back().emplace_back(std::move(word));
+                word.clear();
+                in_quotes = false;
+                in_string = false;
+            } else {
+                word += c;
+            }
+
+        } else if (std::isspace(c)) {
+
+            if (in_string) {
+                sexp.back().emplace_back(std::move(word));
+                word.clear();
+            }
+            in_string = false;
+
+        } else if (c == '(') {
+
             ++level;
             sexp.emplace_back();
-        } else if (c == ')' && !in_quotes) {
+
+        } else if (c == ')') {
+
             if (level == 0) {
                 throw std::invalid_argument("unopened right parenthesis");
             }
@@ -112,22 +134,17 @@ node parse(InputIterator curr, InputIterator end) {
             sexp.back().emplace_back(std::move(temp));
             in_string = false;
             --level;
-        } else if (std::isspace(c) && !in_quotes) {
-            if (in_string) {
-                sexp.back().emplace_back(std::move(word));
-                word.clear();
-            }
-            in_string = false;
+
         } else if (c == '"') {
-            if (in_quotes) {
-                sexp.back().emplace_back(std::move(word));
-                word.clear();
-            }
-            in_quotes = !in_quotes;
-            in_string = in_quotes;
+
+            in_quotes = true;
+            in_string = true;
+
         } else {
+
             word += c;
             in_string = true;
+
         }
     }
 
