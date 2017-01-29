@@ -90,30 +90,30 @@ node parse(InputIterator curr, InputIterator end) {
     node sexp;
     sexp.emplace_back();
     std::string word;
-    bool in_quotes = false;
-    bool in_string = false;
     int level = 0;
+    enum { neither=0, quoted, symbol } mode = neither;
 
     for (; curr != end; ++curr) {
         const char c = *curr;
-        if (in_quotes) {
+        if (mode == quoted) {
 
             if (c == '"') {
+                // TODO Record that it was quoted
                 sexp.back().emplace_back(std::move(word));
                 word.clear();
-                in_quotes = false;
-                in_string = false;
+                mode = neither;
             } else {
+                // TODO Escape handling
                 word += c;
             }
 
         } else if (std::isspace(c)) {
 
-            if (in_string) {
+            if (mode == symbol) {
                 sexp.back().emplace_back(std::move(word));
                 word.clear();
+                mode = neither;
             }
-            in_string = false;
 
         } else if (c == '(') {
 
@@ -125,36 +125,35 @@ node parse(InputIterator curr, InputIterator end) {
             if (level == 0) {
                 throw std::invalid_argument("unopened right parenthesis");
             }
-            if (in_string) {
+            if (mode == symbol) {
                 sexp.back().emplace_back(std::move(word));
                 word.clear();
+                mode = neither;
             }
             node temp(std::move(sexp.back()));
             sexp.pop_back();
             sexp.back().emplace_back(std::move(temp));
-            in_string = false;
             --level;
 
         } else if (c == '"') {
 
-            in_quotes = true;
-            in_string = true;
+            mode = quoted;
 
         } else {
 
             word += c;
-            in_string = true;
+            mode = symbol;
 
         }
     }
 
-    if (in_quotes) {
+    if (mode == quoted) {
         throw std::invalid_argument("unclosed quote");
     }
     if (level != 0) {
         throw std::invalid_argument("unclosed left parenthesis");
     }
-    if (in_string) { // Required for final top-level string
+    if (mode == symbol) { // Required for final top-level string
         sexp.back().emplace_back(word);
     }
     if (!sexp.size()) {
