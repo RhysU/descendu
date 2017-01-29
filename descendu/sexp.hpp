@@ -104,7 +104,7 @@ node parse(InputIterator curr, InputIterator end) {
                 throw std::invalid_argument("unopened right parenthesis");
             }
             if (in_string) {
-                sexp.back().emplace_back(word);
+                sexp.back().emplace_back(std::move(word));
                 word.clear();
             }
             node temp(std::move(sexp.back()));
@@ -114,7 +114,7 @@ node parse(InputIterator curr, InputIterator end) {
             --level;
         } else if (std::isspace(c) && !in_quotes) {
             if (in_string) {
-                sexp.back().emplace_back(word);
+                sexp.back().emplace_back(std::move(word));
                 word.clear();
             }
             in_string = false;
