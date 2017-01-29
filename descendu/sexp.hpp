@@ -85,75 +85,62 @@ public:
 // Based upon https://en.wikipedia.org/wiki/S-expression#Parsing
 // and grotesquely extended to handle different input with checking.
 template<typename InputIterator>
-node parse(InputIterator curr, InputIterator end) {
+node parse(InputIterator next, InputIterator end) {
 
     node sexp;
     sexp.emplace_back();
     std::string word;
     int level = 0;
-    enum { neither=0, quoted, symbol } mode = neither;
+    bool in_string = 0;
 
-    for (; curr != end; ++curr) {
-        const char c = *curr;
-        if (mode == quoted) {
-
-            if (c == '"') {
-                // TODO Record that it was quoted
+    while (next != end) {
+        const char c = *next++;
+        if (std::isspace(c)) {
+            if (in_string) {
                 sexp.back().emplace_back(std::move(word));
                 word.clear();
-                mode = neither;
-            } else {
-                // TODO Escape handling
-                word += c;
             }
-
-        } else if (std::isspace(c)) {
-
-            if (mode == symbol) {
-                sexp.back().emplace_back(std::move(word));
-                word.clear();
-                mode = neither;
-            }
-
+            in_string = false;
         } else if (c == '(') {
-
             ++level;
             sexp.emplace_back();
-
         } else if (c == ')') {
-
             if (level == 0) {
                 throw std::invalid_argument("unopened right parenthesis");
             }
-            if (mode == symbol) {
+            if (in_string) {
                 sexp.back().emplace_back(std::move(word));
                 word.clear();
-                mode = neither;
             }
+            in_string = false;
             node temp(std::move(sexp.back()));
             sexp.pop_back();
             sexp.back().emplace_back(std::move(temp));
             --level;
-
         } else if (c == '"') {
-
-            mode = quoted;
-
+            for (;;) {
+                if (next == end) {
+                    throw std::invalid_argument("unclosed quote");
+                }
+                const char q = *next++;
+                // TODO Escaping
+                if (q == '"') {
+                    break;
+                }
+                word += q;
+            }
+            sexp.back().emplace_back(std::move(word));
+            word.clear();
         } else {
-
             word += c;
-            mode = symbol;
-
+            in_string = true;
         }
     }
 
-    if (mode == quoted) {
-        throw std::invalid_argument("unclosed quote");
-    }
     if (level != 0) {
         throw std::invalid_argument("unclosed left parenthesis");
     }
-    if (mode == symbol) { // Required for final top-level string
+    if (in_string) { // Required for final top-level string
         sexp.back().emplace_back(word);
     }
     if (!sexp.size()) {
