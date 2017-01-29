@@ -125,4 +125,10 @@ TEST_CASE( "parse" ) {
     //     check_roundtrip("(hola \"\" amigo)");
     // }
 
+    // FIXME No quote processing
+    // FIXME Simple check_roundtrip won't cut it
+    // SECTION( "quotes separate terms" ) {
+    //     check_roundtrip("(foo\"bar\"baz\"qux\")");
+    // }
+
 }
