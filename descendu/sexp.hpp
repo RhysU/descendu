@@ -119,6 +119,10 @@ node parse(InputIterator curr, InputIterator end) {
             }
             in_string = false;
         } else if (c == '"') {
+            if (in_quotes) {
+                sexp.back().emplace_back(std::move(word));
+                word.clear();
+            }
             in_quotes = !in_quotes;
             in_string = in_quotes;
         } else {
