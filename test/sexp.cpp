@@ -21,10 +21,6 @@
 
 using namespace descendu;
 
-// TODO Test empty quoted strings
-// TODO Test empty term lists
-// TODO Test escaping of various sorts
-
 // Confirming copy/to_string eases later checks for parse
 TEST_CASE( "to_string" ) {
 
