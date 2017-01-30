@@ -88,7 +88,7 @@ std::string& append_maybe_escaped(
     InputIt end,
     const bool quoted)
 {
-    if (c != '\'') return acc += c;
+    if (c != '\\') return acc += c;
     if (next == end) throw std::invalid_argument("backslash precedes EOF");
     const char q = *next++;
     switch (q) {
