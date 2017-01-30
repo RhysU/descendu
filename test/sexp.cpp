@@ -169,12 +169,11 @@ TEST_CASE( "parse" ) {
         check_roundtrip("(hola \"\" amigo)");
     }
 
-    // FIXME
-    // SECTION( "whitespace-preserving string inside list" ) {
-    //     check_roundtrip(
-    //         "(hola \"\\n\\t\\r  \"   \v amigo)",
-    //         "(hola \"\\n\\t\\r  \" amigo)");
-    // }
+    SECTION( "whitespace-preserving string inside list" ) {
+        check_roundtrip(
+            "(hola \"\\n\\t\\r  \"   \v amigo)",
+            "(hola \"\n\t\r  \" amigo)");
+    }
 
     SECTION( "quotes separate terms" ) {
         check_roundtrip("(foo\"bar\"baz\"qux\")", "(foo \"bar\" baz \"qux\")");
