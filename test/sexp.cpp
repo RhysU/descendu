@@ -101,6 +101,18 @@ TEST_CASE( "parse" ) {
         check_roundtrip("(hola)");
     }
 
+    SECTION( "ignore whitespace inside list" ) {
+        check_roundtrip("(\t\n\r hola\t\n\r )", "(hola)");
+    }
+
+    SECTION( "strings inside list" ) {
+        check_roundtrip("(hola amigo)");
+    }
+
+    SECTION( "ignore whitespace outside list" ) {
+        check_roundtrip("\t\n\r  (hola amigo)\t\n\r  ", "(hola amigo)");
+    }
+
     SECTION( "strings inside list" ) {
         check_roundtrip("(hola amigo)");
     }
@@ -127,6 +139,11 @@ TEST_CASE( "parse" ) {
     SECTION( "empty string inside list" ) {
         check_roundtrip("(hola \"\" amigo)");
     }
+
+    // FIXME
+    // SECTION( "whitespace-preserving string inside list" ) {
+    //     check_roundtrip("(hola \"\\n\\l\\r  \" amigo)");
+    // }
 
     SECTION( "quotes separate terms" ) {
         check_roundtrip("(foo\"bar\"baz\"qux\")", "(foo \"bar\" baz \"qux\")");
