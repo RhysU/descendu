@@ -17,8 +17,6 @@
 #include <string>
 #include <utility>
 
-#include "optional.hpp"
-
 namespace descendu {
 
 namespace sexp {
@@ -28,7 +26,7 @@ namespace sexp {
 // TODO Confirm well-formed and throw informatively if not
 // TODO Consider some cheaper sentinel than optional?
 
-enum struct node_type { invalid=0, list, symbol, string };
+enum struct node_type { list=1, symbol, string };
 
 // switch (node.type) {
 //     case node_type::list:    /* Use list-like methods */ break;
@@ -45,7 +43,7 @@ public:
     node_type type;
 
     // For string node access
-    std::experimental::optional<std::string> string;
+    std::string string;
 
     // For list node access
     using base_type::back;
@@ -60,17 +58,17 @@ public:
     using base_type::size;
 
     // Construct a string node
-    explicit node(const std::string& string)
+    explicit node(const std::string& s, const bool is_symbol = true)
         : base_type(0)
-        , type(node_type::string)
-        , string(string)
+        , type(is_symbol ? node_type::symbol : node_type::string)
+        , string(s)
     {};
 
     // Move into a string node
-    explicit node(std::string&& string)
+    explicit node(std::string&& s, const bool is_symbol = true)
         : base_type(0)
-        , type(node_type::string)
-        , string(string)
+        , type(is_symbol ? node_type::string : node_type::string)
+        , string(s)
     {};
 
     // Construct an empty list node
@@ -172,7 +170,7 @@ node parse(InputIt next, InputIt end) {
                 if (q == '"') break;
                 impl::append_maybe_escaped(q, word, next, end, /*quoted*/true);
             }
-            sexp.back().emplace_back(std::move(word));
+            sexp.back().emplace_back(std::move(word), /*string*/false);
             word.clear();
         } else {
             impl::append_maybe_escaped(c, word, next, end, /*quoted*/false);
@@ -189,7 +187,7 @@ node parse(InputIt next, InputIt end) {
     if (!sexp.size()) {
         throw std::logic_error("sanity failure on size");
     }
-    if (sexp.front().string) {
+    if (sexp.front().type != node_type::list) {
         throw std::logic_error("sanity failure on type");
     }
 
@@ -208,20 +206,24 @@ node parse(std::istream& is) {
 
 template<typename OutputIterator>
 void copy(const node& sexp, OutputIterator out) {
-    if (sexp.string) {
-        // TODO Escaping?  Spaces?
-        const auto& string = sexp.string.value();
-        std::copy(string.cbegin(), string.cend(), out);
-    } else {
-        *out++ = '(';
-        std::size_t count = 0;
-        for (const auto& term : sexp) {
-            if (count++) {
-                *out++ = ' ';
+    switch (sexp.type) {
+    case node_type::list:
+        {
+            *out++ = '(';
+            std::size_t count = 0;
+            for (const auto& term : sexp) {
+                if (count++) {
+                    *out++ = ' ';
+                }
+                copy(term, out);
             }
-            copy(term, out);
+            *out++ = ')';
         }
-        *out++ = ')';
+        break;
+    case node_type::symbol:
+    case node_type::string: // TODO Escaping?  Spaces?
+        std::copy(sexp.string.cbegin(), sexp.string.cend(), out);
+        break;
     }
 }
 
