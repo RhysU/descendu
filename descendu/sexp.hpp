@@ -23,8 +23,6 @@ namespace sexp {
 
 // TODO Track line/column as input processed
 // TODO Record line/column within each node
-// TODO Confirm well-formed and throw informatively if not
-// TODO Consider some cheaper sentinel than optional?
 
 enum struct node_type { list=1, symbol, string };
 
@@ -67,7 +65,7 @@ public:
     // Move into a string node
     explicit node(std::string&& s, const bool is_symbol = true)
         : base_type(0)
-        , type(is_symbol ? node_type::string : node_type::string)
+        , type(is_symbol ? node_type::symbol : node_type::string)
         , string(s)
     {};
 
@@ -221,9 +219,42 @@ void copy(const node& sexp, OutputIterator out) {
         }
         break;
     case node_type::symbol:
-    case node_type::string: // TODO Escaping?  Spaces?
-        std::copy(sexp.string.cbegin(), sexp.string.cend(), out);
+        for (const char c : sexp.string) {
+            switch (c) {
+            case '\a': *out++ = '\\'; *out++ = 'a';  break;
+            case '\b': *out++ = '\\'; *out++ = 'b';  break;
+            case '\f': *out++ = '\\'; *out++ = 'f';  break;
+            case '\n': *out++ = '\\'; *out++ = 'n';  break;
+            case '\r': *out++ = '\\'; *out++ = 'r';  break;
+            case '\t': *out++ = '\\'; *out++ = 't';  break;
+            case '\v': *out++ = '\\'; *out++ = 'v';  break;
+            case '\'': *out++ = '\\'; *out++ = '\''; break;
+            case '"':  *out++ = '\\'; *out++ = '"';  break;
+            case '?':  *out++ = '\\'; *out++ = '?';  break;
+            case ' ':  *out++ = '\\'; *out++ = ' ';  break;
+            case '(':  *out++ = '\\'; *out++ = '(';  break;
+            case ')':  *out++ = '\\'; *out++ = ')';  break;
+            default:
+                *out++ = c;
+            }
+        }
         break;
+    case node_type::string:
+        *out++ = '"';
+        for (const char c : sexp.string) {
+            switch (c) {
+            case '\a': *out++ = '\\'; *out++ = 'a';  break;
+            case '\b': *out++ = '\\'; *out++ = 'b';  break;
+            case '\f': *out++ = '\\'; *out++ = 'f';  break;
+            case '"':  *out++ = '\\'; *out++ = '"';  break;
+            default:
+                *out++ = c;
+            }
+        }
+        *out++ = '"';
+        break;
+    default:
+        throw std::logic_error("Unimplemented case");
     }
 }
 

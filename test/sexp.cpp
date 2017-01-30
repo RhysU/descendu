@@ -64,11 +64,15 @@ TEST_CASE( "to_string" ) {
 
 }
 
-static void check_roundtrip(const std::string& in) {
+static void check_roundtrip(const std::string& in, const std::string& expect) {
     CAPTURE( in );
-    std::ostringstream expected;
-    expected << '(' << in << ')';
-    REQUIRE( expected.str() == to_string(sexp::parse(in)) );
+    std::ostringstream tmp;
+    tmp << '(' << expect << ')';
+    REQUIRE( tmp.str() == to_string(sexp::parse(in)) );
+}
+
+static void check_roundtrip(const std::string& in) {
+    check_roundtrip(in, in);
 }
 
 TEST_CASE( "parse" ) {
@@ -120,15 +124,21 @@ TEST_CASE( "parse" ) {
             std::invalid_argument );
     }
 
-    // FIXME No quote processing
-    // SECTION( "empty string inside list" ) {
-    //     check_roundtrip("(hola \"\" amigo)");
-    // }
+    SECTION( "empty string inside list" ) {
+        check_roundtrip("(hola \"\" amigo)");
+    }
 
-    // FIXME No quote processing
-    // FIXME Simple check_roundtrip won't cut it
-    // SECTION( "quotes separate terms" ) {
-    //     check_roundtrip("(foo\"bar\"baz\"qux\")");
-    // }
+    SECTION( "quotes separate terms" ) {
+        check_roundtrip("(foo\"bar\"baz\"qux\")", "(foo \"bar\" baz \"qux\")");
+    }
+
+// FIXME
+//  SECTION( "challenging" ) {
+//      const std::string input =
+//          "((data da\\(\\)ta \"quot\\\\ed data\" 123 4.5)\n"
+//          " (\"data\" (!@# (4.5) \"(mo\\\"re\" \"data)\")))";
+//      const std::string expected = "";
+//      check_roundtrip(input, expected);
+//  }
 
 }
