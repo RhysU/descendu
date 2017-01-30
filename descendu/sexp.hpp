@@ -79,8 +79,8 @@ namespace impl {
 // Helper to process C99 and S-expression escapes for parse(...) just below
 template<typename InputIt>
 std::string& append_maybe_escaped(
-    std::string &acc,  // Reference!
     const char c,
+    std::string &acc,  // Reference!
     InputIt& next,     // Reference!
     InputIt end,
     const bool quoted)
@@ -158,12 +158,12 @@ node parse(InputIt next, InputIt end) {
                 if (next == end) throw std::invalid_argument("unclosed quote");
                 const char q = *next++;
                 if (q == '"') break;
-                impl::append_maybe_escaped(word, q, next, end, /*quoted*/true);
+                impl::append_maybe_escaped(q, word, next, end, /*quoted*/true);
             }
             sexp.back().emplace_back(std::move(word));
             word.clear();
         } else {
-            impl::append_maybe_escaped(word, c, next, end, /*quoted*/false);
+            impl::append_maybe_escaped(c, word, next, end, /*quoted*/false);
             in_string = true;
         }
     }
