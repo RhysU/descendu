@@ -107,7 +107,7 @@ std::string& append_maybe_escaped(
     case '5': case '6': case '7': case '8': case '9':
     case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
         throw new std::logic_error("Escaping via numeric codes unimplemented");
-    case '(': case ')': if (quoted) return acc += q;  // Possibly fall through
+    case '(': case ')': if (!quoted) return acc += q;  // Possibly fall through
     }
     throw new std::invalid_argument(std::string("Improper escape \\" + q));
 }
