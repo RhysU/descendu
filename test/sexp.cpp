@@ -58,6 +58,39 @@ TEST_CASE( "to_string" ) {
         REQUIRE( to_string(data) == "(hola amigos)" );
     }
 
+    SECTION( "escaped symbol" ) {
+        std::string input, expected;
+        input += '\a'; expected += "\\a";
+        input += '\b'; expected += "\\b";
+        input += '\f'; expected += "\\f";
+        input += '\n'; expected += "\\n";
+        input += ' ' ; expected += "\\ ";
+        input += '?' ; expected += "\\?";
+        input += '"' ; expected += "\\\"";
+        input += '(' ; expected += "\\(";
+        input += ')' ; expected += "\\)";
+        input += '\''; expected += "\\'";
+        input += '\\'; expected += "\\\\";
+        input += '\r'; expected += "\\r";
+        input += '\t'; expected += "\\t";
+        input += '\v'; expected += "\\v";
+        sexp::node data(input, true);
+        REQUIRE( to_string(data) == expected );
+    }
+
+    SECTION( "escaped quoted" ) {
+        std::string input, expected;
+        expected += '"'; // Opening
+        input += '\a'; expected += "\\a";
+        input += '\b'; expected += "\\b";
+        input += '\f'; expected += "\\f";
+        input += '"' ; expected += "\\\"";
+        input += '\\'; expected += "\\\\";
+        expected += '"'; // Closing
+        sexp::node data(input, false);
+        REQUIRE( to_string(data) == expected );
+    }
+
 }
 
 static void check_roundtrip(const std::string& in, const std::string& expect) {
@@ -138,7 +171,9 @@ TEST_CASE( "parse" ) {
 
     // FIXME
     // SECTION( "whitespace-preserving string inside list" ) {
-    //     check_roundtrip("(hola \"\\n\\l\\r  \" amigo)");
+    //     check_roundtrip(
+    //         "(hola \"\\n\\t\\r  \"   \v amigo)",
+    //         "(hola \"\\n\\t\\r  \" amigo)");
     // }
 
     SECTION( "quotes separate terms" ) {
