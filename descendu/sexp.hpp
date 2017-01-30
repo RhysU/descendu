@@ -110,7 +110,7 @@ std::string& append_maybe_escaped(
         throw new std::logic_error("Escaping via numeric codes unimplemented");
     case '(': case ')': if (!quoted) return acc += q;  // Possibly fall through
     }
-    throw new std::invalid_argument(std::string("Improper escape \\" + q));
+    throw new std::invalid_argument(std::string("Improper escape \\") + q);
 }
 
 } // namespace impl
