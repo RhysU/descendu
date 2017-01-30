@@ -132,13 +132,8 @@ TEST_CASE( "parse" ) {
         check_roundtrip("(foo\"bar\"baz\"qux\")", "(foo \"bar\" baz \"qux\")");
     }
 
-// FIXME
-//  SECTION( "challenging" ) {
-//      const std::string input =
-//          "((data da\\(\\)ta \"quot\\\\ed data\" 123 4.5)\n"
-//          " (\"data\" (!@# (4.5) \"(mo\\\"re\" \"data)\")))";
-//      const std::string expected = "";
-//      check_roundtrip(input, expected);
-//  }
+    SECTION( "somewhat challenging" ) {
+        check_roundtrip("(data da\\(\\)ta \"quot\\\\ed data\" 123 4.5)");
+    }
 
 }
