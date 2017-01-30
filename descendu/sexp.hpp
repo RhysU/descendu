@@ -23,6 +23,7 @@ namespace sexp {
 
 // TODO Track line/column as input processed
 // TODO Record line/column within each node
+// Such tracking most useful within stateful parser
 
 enum struct node_type { list=1, symbol, string };
 
