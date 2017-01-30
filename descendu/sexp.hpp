@@ -28,17 +28,21 @@ namespace sexp {
 // TODO Confirm well-formed and throw informatively if not
 // TODO Consider some cheaper sentinel than optional?
 
+enum struct node_type { invalid=0, list, symbol, string };
 
-// if (node.string) {
-//     // Use node.string.value()
-// } else {
-//     // Use list-like methods on node.
+// switch (node.type) {
+//     case node_type::list:    /* Use list-like methods */ break;
+//     case node_type::symbol:  /* Use node.string */       break;
+//     case node_type::string:  /* Use node.string */       break;
 // }
 class node : std::vector<node>
 {
     typedef std::vector<node> base_type;
 
 public:
+
+    // Discern which type of data is contained.
+    node_type type;
 
     // For string node access
     std::experimental::optional<std::string> string;
@@ -58,18 +62,21 @@ public:
     // Construct a string node
     explicit node(const std::string& string)
         : base_type(0)
+        , type(node_type::string)
         , string(string)
     {};
 
     // Move into a string node
     explicit node(std::string&& string)
         : base_type(0)
+        , type(node_type::string)
         , string(string)
     {};
 
     // Construct an empty list node
     node()
         : base_type()
+        , type(node_type::list)
         , string()
     {};
 };
