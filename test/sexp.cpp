@@ -136,4 +136,8 @@ TEST_CASE( "parse" ) {
         check_roundtrip("(data da\\(\\)ta \"quot\\\\ed data\" 123 4.5)");
     }
 
+    SECTION( "also challenging" ) {
+        check_roundtrip("(\"data\" (!@# (4.5) \"(mo\\\"re\" \"data)\"))");
+    }
+
 }
