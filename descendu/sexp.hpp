@@ -100,6 +100,7 @@ std::string& append_maybe_escaped(
     case 't': return acc += '\t';
     case 'v': return acc += '\v';
     case '\'':
+    case '\\':
     case '"':
     case '?': return acc += q;
     case 'x':
@@ -225,15 +226,16 @@ void copy(const node& sexp, OutputIterator out) {
             case '\b': *out++ = '\\'; *out++ = 'b';  break;
             case '\f': *out++ = '\\'; *out++ = 'f';  break;
             case '\n': *out++ = '\\'; *out++ = 'n';  break;
+            case ' ':  *out++ = '\\'; *out++ = ' ';  break;
+            case '?':  *out++ = '\\'; *out++ = '?';  break;
+            case '"':  *out++ = '\\'; *out++ = '"';  break;
+            case '(':  *out++ = '\\'; *out++ = '(';  break;
+            case ')':  *out++ = '\\'; *out++ = ')';  break;
+            case '\'': *out++ = '\\'; *out++ = '\''; break;
+            case '\\': *out++ = '\\'; *out++ = '\\'; break;
             case '\r': *out++ = '\\'; *out++ = 'r';  break;
             case '\t': *out++ = '\\'; *out++ = 't';  break;
             case '\v': *out++ = '\\'; *out++ = 'v';  break;
-            case '\'': *out++ = '\\'; *out++ = '\''; break;
-            case '"':  *out++ = '\\'; *out++ = '"';  break;
-            case '?':  *out++ = '\\'; *out++ = '?';  break;
-            case ' ':  *out++ = '\\'; *out++ = ' ';  break;
-            case '(':  *out++ = '\\'; *out++ = '(';  break;
-            case ')':  *out++ = '\\'; *out++ = ')';  break;
             default:
                 *out++ = c;
             }
@@ -247,6 +249,7 @@ void copy(const node& sexp, OutputIterator out) {
             case '\b': *out++ = '\\'; *out++ = 'b';  break;
             case '\f': *out++ = '\\'; *out++ = 'f';  break;
             case '"':  *out++ = '\\'; *out++ = '"';  break;
+            case '\\': *out++ = '\\'; *out++ = '\\'; break;
             default:
                 *out++ = c;
             }
