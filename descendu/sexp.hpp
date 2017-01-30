@@ -154,6 +154,11 @@ node parse(InputIt next, InputIt end) {
             sexp.back().emplace_back(std::move(temp));
             --level;
         } else if (c == '"') {
+            if (in_string) {
+                sexp.back().emplace_back(std::move(word));
+                word.clear();
+            }
+            in_string = false;
             for (;;) {
                 if (next == end) throw std::invalid_argument("unclosed quote");
                 const char q = *next++;
