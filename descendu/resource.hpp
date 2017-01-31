@@ -33,8 +33,11 @@ public:
     : base_type{gold, airlift}
     {}
 
-    int gold()    const { return this->operator[](0); }
-    int airlift() const { return this->operator[](1); }
+    int& gold()    { return this->operator[](0); }
+    int& airlift() { return this->operator[](1); }
+
+    const int gold()    const { return this->operator[](0); }
+    const int airlift() const { return this->operator[](1); }
 
     bool operator==(const resource& o) const { return base() == o.base(); }
     bool operator!=(const resource& o) const { return base() != o.base(); }

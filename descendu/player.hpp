@@ -17,6 +17,14 @@ struct player
 {
     bool alive = true;
     resource resources;
+
+    bool operator==(const player& other) const {
+        return alive == other.alive && resources == other.resources;
+    }
+
+    bool operator!=(const player& other) const {
+        return !(*this == other);
+    }
 };
 
 template<class OutputStream>

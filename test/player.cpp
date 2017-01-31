@@ -26,6 +26,26 @@ TEST_CASE( "player" ) {
 
 }
 
+TEST_CASE( "operator==" ) {
+
+    player p;
+    player q;
+
+    REQUIRE( p == q );
+    p.alive = false;
+    REQUIRE( p != q );
+    q.alive = false;
+    REQUIRE( p == q );
+    p.resources.gold() += 1;
+    REQUIRE( p != q );
+    q.resources.gold() += 1;
+    REQUIRE( p == q );
+    p.resources.airlift() += 2;
+    REQUIRE( p != q );
+    q.resources.airlift() += 2;
+    REQUIRE( p == q );
+}
+
 TEST_CASE( "operator<<" ) {
 
     player p;
