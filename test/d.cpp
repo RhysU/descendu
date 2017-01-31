@@ -184,6 +184,29 @@ TEST_CASE( "subtraction" ) {
     }
 }
 
+TEST_CASE( "swap" ) {
+
+    SECTION( "absolute" ) {
+        d<int,2,spec::absolute> a {1,2};
+        d<int,2,spec::absolute> b {4,3};
+        swap(a, b);
+        REQUIRE ( a[0] == 4 );
+        REQUIRE ( a[1] == 3 );
+        REQUIRE ( b[0] == 1 );
+        REQUIRE ( b[1] == 2 );
+    }
+
+    SECTION( "relative" ) {
+        d<int,2,spec::relative> a {1,2};
+        d<int,2,spec::relative> b {4,3};
+        swap(a, b);
+        REQUIRE ( a[0] == 4 );
+        REQUIRE ( a[1] == 3 );
+        REQUIRE ( b[0] == 1 );
+        REQUIRE ( b[1] == 2 );
+    }
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;

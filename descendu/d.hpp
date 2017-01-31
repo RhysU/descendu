@@ -29,7 +29,6 @@ auto& operator<<(OutputStream& os, spec s) {
     return os;
 }
 
-// TODO swap
 template <typename T, std::size_t N, spec S>
 struct d : private std::array<T,N>
 {
@@ -45,6 +44,7 @@ struct d : private std::array<T,N>
     using std::array<T,N>::front;
     using std::array<T,N>::operator[];
     using std::array<T,N>::size;
+    using std::array<T,N>::swap;
     using typename std::array<T,N>::value_type;
 };
 
@@ -56,6 +56,11 @@ bool operator==(const d<T1,N,S>& a, const d<T2,N,S>& b) {
 template <typename T1, typename T2, std::size_t N, spec S>
 bool operator!=(const d<T1,N,S>& a, const d<T2,N,S>& b) {
     return !(a == b);
+}
+
+template <typename T, std::size_t N, spec S>
+void swap(const d<T,N,S>& a, const d<T,N,S>& b) {
+    a.swap(b);
 }
 
 // At least one operand must be spec::relative
