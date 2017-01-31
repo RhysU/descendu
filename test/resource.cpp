@@ -57,3 +57,19 @@ TEST_CASE( "resource" ) {
     }
 
 }
+
+TEST_CASE( "operator==" ) {
+
+    resource a;
+    resource b;
+    REQUIRE( a == b );
+    a.gold() += 1;
+    REQUIRE( a != b );
+    b.gold() += 1;
+    REQUIRE( a == b );
+    a.airlift() += 1;
+    REQUIRE( a != b );
+    b.airlift() += 1;
+    REQUIRE( a == b );
+
+}
