@@ -5,7 +5,9 @@ bin_PROGRAMS    =
 check_PROGRAMS  =
 
 pkginclude_HEADERS  = descendu/consumable.hpp
+pkginclude_HEADERS += descendu/current_function.hpp
 pkginclude_HEADERS += descendu/d.hpp
+pkginclude_HEADERS += descendu/ensure.hpp
 pkginclude_HEADERS += descendu/hex.hpp
 pkginclude_HEADERS += descendu/hexmap.hpp
 pkginclude_HEADERS += descendu/optional.hpp
@@ -19,6 +21,7 @@ pkginclude_HEADERS += descendu/world.hpp
 noinst_HEADERS  = test/catch.hpp
 check_PROGRAMS += test/consumable
 check_PROGRAMS += test/d
+check_PROGRAMS += test/ensure
 check_PROGRAMS += test/hex
 check_PROGRAMS += test/hexmap
 check_PROGRAMS += test/player
