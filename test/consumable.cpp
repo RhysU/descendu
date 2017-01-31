@@ -210,6 +210,15 @@ TEST_CASE( "chain" ) {
     }
 }
 
+TEST_CASE( "operator==" ) {
+
+    consumable<int,6> a(3, 1);
+    consumable<int,6> b(3, 2);
+
+    REQUIRE( a == a );
+    REQUIRE( a != b );
+}
+
 TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;

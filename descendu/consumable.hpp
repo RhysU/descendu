@@ -91,6 +91,15 @@ public:
         return *this;
     }
 
+    bool operator==(const consumable& other) const {
+        return _total == other._total
+            && _spent == other._spent;
+    }
+
+    bool operator!=(const consumable& other) const {
+        return !(*this == other);
+    }
+
 };
 
 template<class OutputStream, typename T, std::size_t Bound>
