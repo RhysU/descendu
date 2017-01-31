@@ -66,6 +66,23 @@ public:
             : std::experimental::make_optional(std::cref(result->second));
     }
 
+    bool operator==(const hexmap& other) const {
+        if (size() != other.size()) return false;
+
+        for (const auto& it : *this) {
+            const auto& other_optional = other.lookup(it.first);
+            const bool equal = other_optional
+                             ? it.second == other_optional.value()
+                             : false;
+            if (!equal) return false;
+        }
+        return true;
+    }
+
+    bool operator!=(const hexmap& other) const {
+        return !(*this == other);
+    }
+
 };
 
 template<class OutputStream, class T>

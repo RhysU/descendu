@@ -210,6 +210,31 @@ TEST_CASE( "breadth_first_search" ) {
 
 }
 
+TEST_CASE( "operator==" ) {
+
+    hexmap<int> a;
+    hexmap<int> b;
+
+    REQUIRE( a == a );
+    REQUIRE( a == b );
+
+    a.conjure({0, 0}) = 5;
+    REQUIRE( a == a );
+    REQUIRE( a != b );
+
+    b.conjure({0, 0}) = 6;
+    REQUIRE( a != b );
+
+    b.conjure({0, 0}) = 5;
+    REQUIRE( a == b );
+
+    b.conjure({0, 1}) = 5;
+    REQUIRE( a != b );
+
+    a.conjure({0, 1}) = 5;
+    REQUIRE( a == b );
+}
+
 TEST_CASE( "operator<<" ) {
 
     hexmap<int> m;
