@@ -23,6 +23,18 @@ struct tile
     consumable<int, 1> cannon;
     consumable<int,99> ammo;
     consumable<int, 1> harvester;
+
+    bool operator==(const tile& o) const {
+        return owner     == o.owner
+            && height    == o.height
+            && walkers   == o.walkers
+            && barracks  == o.barracks
+            && cannon    == o.cannon
+            && ammo      == o.ammo
+            && harvester == o.harvester;
+    }
+
+    bool operator!=(const tile& o) const { return !(*this == o); }
 };
 
 template<class OutputStream>
