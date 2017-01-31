@@ -40,7 +40,7 @@ public:
     const int airlift() const { return this->operator[](1); }
 
     bool operator==(const resource& o) const { return base() == o.base(); }
-    bool operator!=(const resource& o) const { return base() != o.base(); }
+    bool operator!=(const resource& o) const { return !(*this == o); }
 
     auto operator+(const resource& o) const {
         return resource(base() + o.base());
