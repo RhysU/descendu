@@ -21,6 +21,58 @@
 
 using namespace descendu;
 
+TEST_CASE( "operator==" ) {
+
+    SECTION( "symbol equal" ) {
+        sexp::node a("123", true);
+        sexp::node b("123", true);
+        REQUIRE( a == b );
+        sexp::node c("123", false);
+        REQUIRE( a != c );
+        sexp::node d;
+        REQUIRE( a != d );
+        REQUIRE( sexp::node("") != d );
+    }
+
+    SECTION( "symbol inequal" ) {
+        sexp::node a("123", true);
+        sexp::node b("456", true);
+        REQUIRE( a != b );
+    }
+
+    SECTION( "string equal" ) {
+        sexp::node a("123", false);
+        sexp::node b("123", false);
+        REQUIRE( a == b );
+        sexp::node c("123", true);
+        REQUIRE( a != c );
+        sexp::node d;
+        REQUIRE( a != d );
+        REQUIRE( sexp::node("") != d );
+    }
+
+    SECTION( "string inequal" ) {
+        sexp::node a("123", false);
+        sexp::node b("456", false);
+        REQUIRE( a != b );
+    }
+
+    SECTION( "list" ) {
+        sexp::node empty_string("", true);
+        sexp::node empty_symbol("", false);
+        sexp::node a;
+        REQUIRE( a != empty_string );
+        REQUIRE( a != empty_symbol );
+        sexp::node b;
+        REQUIRE( a == b);
+        b.emplace_back();
+        REQUIRE( a != b);
+        a.emplace_back();
+        REQUIRE( a == b);
+    }
+
+}
+
 // Confirming copy/to_string eases later checks for parse
 TEST_CASE( "to_string" ) {
 

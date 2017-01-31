@@ -76,6 +76,23 @@ public:
         , type(node_type::list)
         , string()
     {};
+
+    bool operator==(const node& other) const {
+        if (type != other.type) return false;
+        switch (type) {
+        case node_type::symbol:
+        case node_type::string:
+            return string == other.string;
+        case node_type::list:
+            return static_cast<const base_type&>(*this) == other;
+        default:
+            throw std::logic_error("Unimplemented case");
+        }
+    }
+
+    bool operator!=(const node& other) const {
+        return !(*this == other);
+    }
 };
 
 namespace impl {
