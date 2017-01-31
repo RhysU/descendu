@@ -21,6 +21,13 @@ struct world
 {
     std::vector<player> players;
     hexmap<tile> map;
+
+    bool operator==(const world& o) const {
+        return players == o.players
+            && map     == o.map;
+    }
+
+    bool operator!=(const world& o) const { return !(*this == o); }
 };
 
 template<class OutputStream>
