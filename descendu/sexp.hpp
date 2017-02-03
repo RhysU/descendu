@@ -15,6 +15,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 namespace descendu {
@@ -26,6 +27,27 @@ namespace sexp {
 // Such tracking most useful within stateful parser
 
 enum struct node_type { list=1, symbol, string };
+
+template<class OutputStream>
+auto& operator<<(OutputStream& os, node_type type) {
+    switch (type) {
+        case node_type::list:   os << "list";   break;
+        case node_type::symbol: os << "symbol"; break;
+        case node_type::string: os << "string"; break;
+        default:                throw std::logic_error("unimplemented");
+    }
+    return os;
+}
+
+std::string to_string(const node_type& node) {
+    std::ostringstream oss;
+    oss << node;
+    return oss.str();
+}
+
+// Forward to permit use during error handling
+class node;
+std::string to_string(const node& sexp);
 
 // switch (node.type) {
 //     case node_type::list:    /* Use list-like methods */ break;
@@ -92,6 +114,26 @@ public:
 
     bool operator!=(const node& other) const {
         return !(*this == other);
+    }
+
+    // TODO Cleaner way to detect entire string consumed?
+    // Permits directly casting a symbol node to any numeric type
+    template<class T, typename = std::enable_if_t<std::is_arithmetic<T>::value>>
+    explicit operator T() const {
+        if (this->type != node_type::symbol) {
+            throw std::logic_error(to_string(*this));       // Caller misused
+        }
+        T retval;
+        std::istringstream iss(this->string);
+        iss >> std::noskipws >> retval;
+        if (!iss) {
+            throw std::domain_error(to_string(*this));      // Malformed input
+        }
+        iss.get();
+        if (!iss.eof()) {
+            throw std::invalid_argument(to_string(*this));  // Extraneous input
+        }
+        return retval;
     }
 };
 

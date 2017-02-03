@@ -73,8 +73,69 @@ TEST_CASE( "operator==" ) {
 
 }
 
+TEST_CASE( "numeric cast" ) {
+
+    SECTION( "list throws" ) {
+        sexp::node node;
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::logic_error );
+    }
+
+    SECTION( "symbol throws" ) {
+        sexp::node node("foo", false);
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::logic_error );
+    }
+
+    SECTION( "empty throws" ) {
+        sexp::node node("");
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::domain_error );
+    }
+
+    SECTION( "whitespace throws" ) {
+        sexp::node node(" ");
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::domain_error );
+    }
+
+    SECTION( "invalid throws" ) {
+        sexp::node node("abc");
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::domain_error );
+    }
+
+    SECTION( "extraneous whitespace throws" ) {
+        sexp::node node("123 ");
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::invalid_argument );
+    }
+
+    SECTION( "extraneous content throws" ) {
+        sexp::node node("123abc");
+        REQUIRE_THROWS_AS(
+            (void) static_cast<int>(node), std::invalid_argument );
+    }
+
+    SECTION( "int" ) {
+        sexp::node node("123");
+        REQUIRE(static_cast<int>(node) == 123);
+    }
+
+    SECTION( "double" ) {
+        sexp::node node("123.5");
+        REQUIRE(static_cast<double>(node) == 123.5);
+    }
+}
+
 // Confirming copy/to_string eases later checks for parse
 TEST_CASE( "to_string" ) {
+
+    SECTION( "node_type" ) {
+        REQUIRE( to_string(sexp::node_type::list) == "list" );
+        REQUIRE( to_string(sexp::node_type::symbol) == "symbol" );
+        REQUIRE( to_string(sexp::node_type::string) == "string" );
+    }
 
     SECTION( "empty string" ) {
         sexp::node data("");
