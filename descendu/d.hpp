@@ -19,13 +19,17 @@ namespace descendu
 
 enum struct spec { absolute, relative };
 
-template<class OutputStream>
-auto& operator<<(OutputStream& os, spec s) {
+std::string to_string(const spec& s) {
     switch (s) {
-        case spec::absolute: os << "absolute"; break;
-        case spec::relative: os << "relative"; break;
+        case spec::absolute: return "absolute";
+        case spec::relative: return "relative";
         default:             throw std::logic_error("unimplemented");
     }
+}
+
+template<class OutputStream>
+auto& operator<<(OutputStream& os, spec s) {
+    os << to_string(s);
     return os;
 }
 
