@@ -45,6 +45,7 @@ public:
     std::string string;
 
     // For list node access
+    using base_type::at;
     using base_type::back;
     using base_type::begin;
     using base_type::cbegin;
@@ -52,7 +53,6 @@ public:
     using base_type::emplace_back;
     using base_type::end;
     using base_type::front;
-    using base_type::operator[];
     using base_type::pop_back;
     using base_type::size;
 
