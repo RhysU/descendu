@@ -14,6 +14,9 @@
 #include <stdexcept>
 #include <utility>
 
+#include "ensure.hpp"
+#include "sexp.hpp"
+
 namespace descendu
 {
 
@@ -37,8 +40,25 @@ template <typename T, std::size_t N, spec S>
 struct d : private std::array<T,N>
 {
     template<typename ...U>
-    constexpr d(U&&... u) : std::array<T,N>{{ std::forward<U>(u)... }} {}
+    constexpr d(U&&... u)
+        : std::array<T,N>{{ std::forward<U>(u)... }}
+    {}
 
+    d(const sexp::node& node) {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == to_string(S));
+        for (std::size_t i = 0; i < N; ++i) {
+            (*this)[i] = static_cast<T>(node.at(i+1));
+        }
+        DESCENDU_ENSURE(node.size() == N + 1);
+    }
+
+    // Required on account of the std::forward constructor above
+    d(sexp::node& node)
+        : d(const_cast<const sexp::node&>(node))
+    {}
+
+    using std::array<T,N>::at;
     using std::array<T,N>::back;
     using std::array<T,N>::begin;
     using std::array<T,N>::cbegin;

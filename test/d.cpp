@@ -212,13 +212,26 @@ TEST_CASE( "operator<<" ) {
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
+        // Serialize
+        d<int,2,spec::absolute> a {1,2};
         oss << d<int,2,spec::absolute>{1,2};
         REQUIRE( oss.str() == "(absolute +1 +2)" );
+
+        // Deserialize
+        /*non-const*/ sexp::node node = sexp::parse(oss.str());
+        d<int,2,spec::absolute> b(node.at(0));
+        REQUIRE( a == b );
     }
 
     SECTION( "relative" ) {
-        oss << d<int,3,spec::relative>{1,2,-3};
-        REQUIRE( oss.str() == "(relative +1 +2 -3)" );
+        // Serialize
+        d<int,2,spec::relative> a {1,2};
+        oss << d<int,2,spec::relative>{1,2};
+        REQUIRE( oss.str() == "(relative +1 +2)" );
+
+        // Deserialize
+        d<int,2,spec::relative> b(sexp::parse(oss.str()).at(0));
+        REQUIRE( a == b );
     }
 
 }
