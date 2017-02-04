@@ -237,20 +237,40 @@ TEST_CASE( "operator==" ) {
 
 TEST_CASE( "operator<<" ) {
 
-    hexmap<int> m;
+    hexmap<d<int,2,spec::relative>> m;
     std::stringstream ss;
 
     SECTION( "empty" ) {
+        // Serialize
         ss << m;
         REQUIRE( ss.str() == "(hexmap)" );
+
+        // Deserialize
+        const hexmap<d<int,2,spec::relative>> n(sexp::parse(ss.str()).at(0));
+        REQUIRE( m == n );
     }
 
     SECTION( "one" ) {
-        m.conjure({1, 2});
+        // Serialize
+        m.conjure({1, 2})[0] = 5;
         ss << m;
-        REQUIRE( ss.str() == "(hexmap ((hex (absolute +1 +2 -3)) 0))" );
+        REQUIRE( ss.str() == "(hexmap ((hex (absolute +1 +2 -3)) (relative +5 +0)))" );
+
+        // Deserialize
+        const hexmap<d<int,2,spec::relative>> n(sexp::parse(ss.str()).at(0));
+        REQUIRE( m == n );
     }
 
-    // 2 or more entries not deterministic and therefore tested manually
+    SECTION( "two" ) {
+        // Serialize
+        // 2+ entries not deterministic and therefore only round trip checked
+        m.conjure({1, 2})[0] = 5;
+        m.conjure({1, 3})[1] = 6;
+        ss << m;
+
+        // Deserialize
+        const hexmap<d<int,2,spec::relative>> n(sexp::parse(ss.str()).at(0));
+        REQUIRE( m == n );
+    }
 
 }

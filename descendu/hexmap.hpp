@@ -42,6 +42,22 @@ public:
     using base_type::erase;
     using base_type::size;
 
+    // Default is empty
+    hexmap() {}
+
+    // When supported by mapped_type, construct hexmap with values from sexp.
+    explicit hexmap(const sexp::node& node) {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "hexmap");
+        for (std::size_t i = 1; i < node.size(); ++i) {
+            const sexp::node& curr = node.at(i);
+            DESCENDU_ENSURE(curr.type == sexp::node_type::list);
+            DESCENDU_ENSURE(curr.size() == 2);
+            this->emplace(key_type(curr.at(0)), mapped_type(curr.at(1)));
+        }
+        DESCENDU_ENSURE(this->size() == node.size() - 1);  // Otherwise dupes!
+    }
+
     // Create or retrieve tile at the given hex
     mapped_type& conjure(const key_type& key) {
         return base_type::emplace(
