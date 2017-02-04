@@ -213,8 +213,8 @@ TEST_CASE( "operator<<" ) {
 
     SECTION( "absolute" ) {
         // Serialize
-        d<int,2,spec::absolute> a {1,2};
-        oss << d<int,2,spec::absolute>{1,2};
+        const d<int,2,spec::absolute> a {1,2};
+        oss << a;
         REQUIRE( oss.str() == "(absolute +1 +2)" );
 
         // Deserialize
@@ -225,8 +225,8 @@ TEST_CASE( "operator<<" ) {
 
     SECTION( "relative" ) {
         // Serialize
-        d<int,2,spec::relative> a {1,2};
-        oss << d<int,2,spec::relative>{1,2};
+        const d<int,2,spec::relative> a{1,2};
+        oss << a;
         REQUIRE( oss.str() == "(relative +1 +2)" );
 
         // Deserialize

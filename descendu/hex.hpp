@@ -13,6 +13,9 @@
 
 #include "d.hpp"
 
+#include "ensure.hpp"
+#include "sexp.hpp"
+
 namespace descendu {
 
 // Based upon http://www.redblobgames.com/grids/hexagons/
@@ -28,7 +31,22 @@ class hex : d<T,2,S>
 
 public:
 
-    constexpr hex(const T& q, const T& r) : base_type{q, r} {}
+    constexpr hex(const T& q, const T& r)
+        : base_type{q, r}
+    {}
+
+    hex(const sexp::node& node)
+        : base_type()
+    {
+        // Weird looking as serialized form does not use base_type
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "hex");
+        d<T,3,S> qrs(node.at(1));
+        base()[0] = qrs[0];
+        base()[1] = qrs[1];
+        DESCENDU_ENSURE(node.size() == 2);
+        DESCENDU_ENSURE(s() == qrs[2]);
+    }
 
     constexpr T q() const { return this->operator[](0); }
     constexpr T r() const { return this->operator[](1); }

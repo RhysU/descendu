@@ -260,8 +260,26 @@ TEST_CASE( "operator<<" ) {
     std::ostringstream oss;
 
     SECTION( "absolute" ) {
-        oss << hex<int,spec::absolute>{1,2};
+        // Serialize
+        const hex<int,spec::absolute> a{+1, +2};
+        oss << a;
         REQUIRE( oss.str() == "(hex (absolute +1 +2 -3))" );
+
+        // Deserialize
+        /*non-const*/ sexp::node node = sexp::parse(oss.str());
+        hex<int,spec::absolute> b(node.at(0));
+        REQUIRE( a == b );
+    }
+
+    SECTION( "relative" ) {
+        // Serialize
+        const hex<int,spec::relative> a{+1, +2};
+        oss << a;
+        REQUIRE( oss.str() == "(hex (relative +1 +2 -3))" );
+
+        // Deserialize
+        hex<int,spec::relative> b(sexp::parse(oss.str()).at(0));
+        REQUIRE( a == b );
     }
 
 }
