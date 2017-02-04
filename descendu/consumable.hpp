@@ -12,6 +12,9 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "ensure.hpp"
+#include "sexp.hpp"
+
 namespace descendu
 {
 
@@ -34,6 +37,17 @@ public:
             oss << "Invalid construction " << *this;
             throw std::invalid_argument(oss.str());
         }
+    }
+
+    consumable(const sexp::node& node) {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "consumable");
+        DESCENDU_ENSURE(static_cast<T>(node.at(1)) <= static_cast<T>(Bound));
+        _total = static_cast<T>(node.at(2));
+        if (_total > bound()) throw std::invalid_argument(to_string(node));
+        _spent = static_cast<T>(node.at(3));
+        if (_spent > _total) throw std::invalid_argument(to_string(node));
+        DESCENDU_ENSURE(node.size() == 4);
     }
 
     static value_type bound() {

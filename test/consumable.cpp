@@ -223,9 +223,35 @@ TEST_CASE( "operator<<" ) {
 
     std::ostringstream oss;
 
-    SECTION( "absolute" ) {
-        oss << consumable<int,4>(3, 2);
+    SECTION( "round trip" ) {
+        consumable<int,4> a (3, 2);
+        oss << a;
         REQUIRE( oss.str() == "(consumable 4 3 2)" );
+
+        consumable<int,4> b(sexp::parse(oss.str()).at(0));
+        REQUIRE( a == b );
     }
 
+    SECTION( "larger bounds" ) {
+        REQUIRE_THROWS_AS(
+            (consumable<int,4>(sexp::parse("(consumable 5 3 2)").at(0))),
+            std::runtime_error );
+    }
+
+    SECTION( "smaller bounds" ) {
+        REQUIRE_NOTHROW(
+            (consumable<int,6>(sexp::parse("(consumable 5 3 2)").at(0))));
+    }
+
+    SECTION( "total exceeds bound" ) {
+        REQUIRE_THROWS_AS(
+            (consumable<int,7>(sexp::parse("(consumable 7 9 2)").at(0))),
+            std::invalid_argument );
+    }
+
+    SECTION( "spent exceeds total" ) {
+        REQUIRE_THROWS_AS(
+            (consumable<int,9>(sexp::parse("(consumable 9 9 10)").at(0))),
+            std::invalid_argument );
+    }
 }
