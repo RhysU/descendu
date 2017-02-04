@@ -35,7 +35,7 @@ public:
         : base_type{q, r}
     {}
 
-    hex(const sexp::node& node)
+    explicit hex(const sexp::node& node)
         : base_type()
     {
         // Weird looking as serialized form does not use base_type

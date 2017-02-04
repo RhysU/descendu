@@ -39,7 +39,7 @@ public:
         }
     }
 
-    consumable(const sexp::node& node) {
+    explicit consumable(const sexp::node& node) {
         DESCENDU_ENSURE(node.type == sexp::node_type::list);
         DESCENDU_ENSURE(node.at(0).string == "consumable");
         DESCENDU_ENSURE(static_cast<T>(node.at(1)) <= static_cast<T>(Bound));

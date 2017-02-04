@@ -17,8 +17,10 @@
 #include <unordered_map>
 #include <utility>
 
+#include "ensure.hpp"
 #include "hex.hpp"
 #include "optional.hpp"
+#include "sexp.hpp"
 
 namespace descendu {
 

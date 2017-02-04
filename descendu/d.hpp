@@ -40,11 +40,11 @@ template <typename T, std::size_t N, spec S>
 struct d : private std::array<T,N>
 {
     template<typename ...U>
-    constexpr d(U&&... u)
+    explicit constexpr d(U&&... u)
         : std::array<T,N>{{ std::forward<U>(u)... }}
     {}
 
-    d(const sexp::node& node) {
+    explicit d(const sexp::node& node) {
         DESCENDU_ENSURE(node.type == sexp::node_type::list);
         DESCENDU_ENSURE(node.at(0).string == to_string(S));
         for (std::size_t i = 0; i < N; ++i) {
