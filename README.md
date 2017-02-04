@@ -30,4 +30,5 @@ In no particular order:
      * Look into rolling my own and wrap with rlwrap
  * Clean up and refactor (e.g. split headers from implementation files)
  * Hashing functions could use some love.
+ * Nicer backtraces? https://github.com/bombela/backward-cpp
  * Monkey around a bit and determine next steps
