@@ -10,6 +10,8 @@
 # include "config.h"
 #endif
 
+#include <sstream>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -72,4 +74,17 @@ TEST_CASE( "operator==" ) {
     b.airlift() += 1;
     REQUIRE( a == b );
 
+}
+
+TEST_CASE( "operator<<" ) {
+
+    // Serialize
+    const resource a(1, 2);
+    std::ostringstream oss;
+    oss << a;
+    REQUIRE( oss.str() == "(resource +1 +2)" );
+
+    // Deserialize
+    const resource b(sexp::parse(oss.str()).at(0));
+    REQUIRE( a == b );
 }

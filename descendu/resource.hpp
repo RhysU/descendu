@@ -13,6 +13,8 @@
 #include <utility>
 
 #include "d.hpp"
+#include "ensure.hpp"
+#include "sexp.hpp"
 
 namespace descendu {
 
@@ -30,8 +32,19 @@ public:
     constexpr explicit resource(
         const int gold = 0,
         const int airlift = 0)
-    : base_type{gold, airlift}
+        : base_type{gold, airlift}
     {}
+
+    explicit resource(const sexp::node& node)
+        : base_type()
+    {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "resource");
+        for (std::size_t i = 0; i < base().size(); ++i) {
+            base()[i] = static_cast<int>(node.at(i + 1));
+        }
+        DESCENDU_ENSURE(node.size() == base().size() + 1);
+    }
 
     int& gold()    { return this->operator[](0); }
     int& airlift() { return this->operator[](1); }
