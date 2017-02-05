@@ -9,7 +9,8 @@ Work remaining
 
 In no particular order:
 
- * Convert serialized data into simple dotty dump for basic visualization/debug
+ * Convert serialized data into some sort of  dump for visualization/debug
+   (http://www.redblobgames.com/grids/hexagons/implementation.html#layout)
  * Tweak BFS into something a-star-ish
  * Determination of whether or not a particular player has pieces remaining
  * Destruction of a hex due to its height being reduced by one (e.g. mining)
