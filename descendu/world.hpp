@@ -11,8 +11,10 @@
 
 #include <vector>
 
+#include "ensure.hpp"
 #include "hexmap.hpp"
 #include "player.hpp"
+#include "sexp.hpp"
 #include "tile.hpp"
 
 namespace descendu {
@@ -21,6 +23,20 @@ struct world
 {
     std::vector<player> players;
     hexmap<tile> map;
+
+    world() {}
+
+    explicit world(const sexp::node& node)
+        : players(0)
+        , map(node.at(2))
+    {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "world");
+        for (std::size_t i = 0; i < node.at(1).size(); ++i) {
+            players.emplace_back(node.at(1).at(i));
+        }
+        DESCENDU_ENSURE(node.size() == 3);
+    }
 
     bool operator==(const world& o) const {
         return players == o.players

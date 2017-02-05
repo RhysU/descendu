@@ -29,7 +29,7 @@ struct tile
     tile() {}
 
     // Parsing up front followed by well-formed verification afterwards
-    tile(const sexp::node& node)
+    explicit tile(const sexp::node& node)
         : owner    (node.at(1).size() > 1
                     ? static_cast<int>(node.at(1).at(1))
                     : std::experimental::optional<int>())

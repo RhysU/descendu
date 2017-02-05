@@ -44,6 +44,9 @@ TEST_CASE( "world" ) {
             " (hexmap))";
         oss << w;
         REQUIRE( oss.str() == expected );
+
+        world v(sexp::parse(oss.str()).at(0));
+        REQUIRE( w == v );
     }
 
     SECTION( "mutate_map" ) {
@@ -55,6 +58,9 @@ TEST_CASE( "world" ) {
         // 2 or more entries not deterministic and therefore tested manually
         oss << w;
         REQUIRE( oss.str().size() > 0 );
+
+        world v(sexp::parse(oss.str()).at(0));
+        REQUIRE( w == v );
     }
 
 }
