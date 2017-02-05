@@ -9,7 +9,6 @@ Work remaining
 
 In no particular order:
 
- * Deserialization of game state from previously output S-expressions
  * Convert serialized data into simple dotty dump for basic visualization/debug
  * Tweak BFS into something a-star-ish
  * Determination of whether or not a particular player has pieces remaining
