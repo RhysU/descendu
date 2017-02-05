@@ -9,14 +9,26 @@
 #ifndef DESCENDU_PLAYER_HPP
 #define DESCENDU_PLAYER_HPP
 
+#include "ensure.hpp"
 #include "resource.hpp"
+#include "sexp.hpp"
 
 namespace descendu {
 
 struct player
 {
-    bool alive = true;
+    bool alive;
     resource resources;
+
+    player() : alive(true), resources() {}
+
+    explicit player(const sexp::node& node) {
+        DESCENDU_ENSURE( node.type == sexp::node_type::list );
+        DESCENDU_ENSURE( node.at(0).string == "player" );
+        alive = node.at(1).string == "alive";
+        resources = resource(node.at(2));
+        DESCENDU_ENSURE( node.size() == 3 );
+    }
 
     bool operator==(const player& other) const {
         return alive == other.alive && resources == other.resources;

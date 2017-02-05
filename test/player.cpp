@@ -10,6 +10,8 @@
 # include "config.h"
 #endif
 
+#include <sstream>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -49,8 +51,10 @@ TEST_CASE( "operator==" ) {
 TEST_CASE( "operator<<" ) {
 
     player p;
+    p.resources.gold() += 5;
     std::ostringstream oss;
     oss << p;
-    REQUIRE( oss.str() == "(player alive (resource +0 +0))" );
-
+    REQUIRE( oss.str() == "(player alive (resource +5 +0))" );
+    player q(sexp::parse(oss.str()).at(0));
+    REQUIRE( p == q );
 }
