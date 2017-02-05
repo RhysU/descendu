@@ -10,7 +10,9 @@
 #define DESCENDU_TILE_HPP
 
 #include "consumable.hpp"
+#include "ensure.hpp"
 #include "optional.hpp"
+#include "sexp.hpp"
 
 namespace descendu {
 
@@ -23,6 +25,39 @@ struct tile
     consumable<int, 1> cannon;
     consumable<int,99> ammo;
     consumable<int, 1> harvester;
+
+    tile() {}
+
+    // Parsing up front followed by well-formed verification afterwards
+    tile(const sexp::node& node)
+        : owner    (node.at(1).size() > 1
+                    ? static_cast<int>(node.at(1).at(1))
+                    : std::experimental::optional<int>())
+        , height   (node.at(2).at(1))
+        , walkers  (node.at(3).at(1))
+        , barracks (node.at(4).at(1))
+        , cannon   (node.at(5).at(1))
+        , ammo     (node.at(6).at(1))
+        , harvester(node.at(7).at(1))
+    {
+        DESCENDU_ENSURE(node.type == sexp::node_type::list);
+        DESCENDU_ENSURE(node.at(0).string == "tile");
+        DESCENDU_ENSURE(node.at(1).at(0).string == "owner");
+        DESCENDU_ENSURE(node.at(1).size() <= 2);
+        DESCENDU_ENSURE(node.at(2).at(0).string == "height");
+        DESCENDU_ENSURE(node.at(2).size() == 2);
+        DESCENDU_ENSURE(node.at(3).at(0).string == "walkers");
+        DESCENDU_ENSURE(node.at(3).size() == 2);
+        DESCENDU_ENSURE(node.at(4).at(0).string == "barracks");
+        DESCENDU_ENSURE(node.at(4).size() == 2);
+        DESCENDU_ENSURE(node.at(5).at(0).string == "cannon");
+        DESCENDU_ENSURE(node.at(5).size() == 2);
+        DESCENDU_ENSURE(node.at(6).at(0).string == "ammo");
+        DESCENDU_ENSURE(node.at(6).size() == 2);
+        DESCENDU_ENSURE(node.at(7).at(0).string == "harvester");
+        DESCENDU_ENSURE(node.at(7).size() == 2);
+        DESCENDU_ENSURE(node.size() == 8);
+    }
 
     bool operator==(const tile& o) const {
         return owner     == o.owner

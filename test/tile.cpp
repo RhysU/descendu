@@ -36,7 +36,7 @@ TEST_CASE( "initialize" ) {
 
 TEST_CASE( "operator<<" ) {
 
-	const auto expected = "(tile"
+	const std::string expected = "(tile"
       " (owner)"
 	  " (height (consumable 99 0 0))"
 	  " (walkers (consumable 16 0 0))"
@@ -51,5 +51,6 @@ TEST_CASE( "operator<<" ) {
     oss << t;
     REQUIRE( oss.str() == expected );
 
-
+    tile s(sexp::parse(expected).at(0));
+    REQUIRE( t == s );
 }
