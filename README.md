@@ -41,22 +41,49 @@ Visualization
  * Might be able to embed that SVG within an autoreloading web page
    (or some other 'live' viewer)
 
- ```
-graph G {
-    h00 -- he
-    h00 -- hne
-    h00 -- hnw
-    h00 -- hw
-    h00 -- hsw
-    h00 -- hse
+```
+strict graph G {
+    graph [layout=neato overlap=true]
+    node [shape=hexagon height=0.2 width=0.2 fontsize=10]
 
-    he -- hne
-    he -- hse
+    hn  [fillcolor=red style=filled width=0.2 height=0.2]
 
-    hw -- hnw
-    hw -- hsw
+    # Group1
+    h00  --  hen
+    h00  --  hes
+    h00  --  hn
+    h00  --  hs
+    h00  --  hwn
+    h00  --  hws
+    hen  --  hes
+    hn   --  hen
+    hn   --  hwn
+    hs   --  hes
+    hs   --  hws
+    hwn  --  hws
 
-    hne -- hnw
-    hse -- hsw
+    # Group2
+    ah00  --  ahen
+    ah00  --  ahes
+    ah00  --  ahn
+    ah00  --  ahs
+    ah00  --  ahwn
+    ah00  --  ahws
+    ahen  --  ahes
+    ahn   --  ahen
+    ahn   --  ahwn
+    ahs   --  ahes
+    ahs   --  ahws
+    ahwn  --  ahws
+
+    # Aux
+    hen    --  henes  --  hes
+    hwn    --  hwnws  --  hws
+    hws    --  hwss   --  hs
+    hwnws  --  foo    --  hws
+    foo    --  hwss
+
+    # Linkage
+    hes -- ahwn
 }
 ```
