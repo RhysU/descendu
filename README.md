@@ -9,8 +9,7 @@ Work remaining
 
 In no particular order:
 
- * Convert serialized data into some sort of  dump for visualization/debug
-   (http://www.redblobgames.com/grids/hexagons/implementation.html#layout)
+ * Convert serialized data into some sort of dump for visualization/debug
  * Tweak BFS into something a-star-ish
  * Determination of whether or not a particular player has pieces remaining
  * Destruction of a hex due to its height being reduced by one (e.g. mining)
@@ -32,3 +31,32 @@ In no particular order:
  * Hashing functions could use some love.
  * Nicer backtraces? https://github.com/bombela/backward-cpp
  * Monkey around a bit and determine next steps
+
+Visualization
+-------------
+
+ * Graphviz undirected neato layout seems to do something sane (see below)
+ * Should be able to use height to scale size
+ * Should be able to output to SVG with minor piping work
+ * Might be able to embed that SVG within an autoreloading web page
+   (or some other 'live' viewer)
+
+ ```
+graph G {
+    h00 -- he
+    h00 -- hne
+    h00 -- hnw
+    h00 -- hw
+    h00 -- hsw
+    h00 -- hse
+
+    he -- hne
+    he -- hse
+
+    hw -- hnw
+    hw -- hsw
+
+    hne -- hnw
+    hse -- hsw
+}
+```
