@@ -283,3 +283,27 @@ TEST_CASE( "operator<<" ) {
     }
 
 }
+
+TEST_CASE( "layout" ) {
+
+    const hex<int,spec::absolute> h {3, 4};
+    const layout<double>::point_type size   {10.0, 15.0};
+    const layout<double>::point_type origin {35.0, 71.0};
+
+    SECTION( "flat" ) {
+        const layout<double> l(orientation<double>::flat, size, origin);
+        const auto& to   = l.to_pixel(h);
+        const auto& from = l.from_pixel(to);
+        const auto& round = from.round<int>();
+        REQUIRE( h == round );
+    }
+
+    SECTION( "pointy" ) {
+        const layout<double> l(orientation<double>::pointy, size, origin);
+        const auto& to   = l.to_pixel(h);
+        const auto& from = l.from_pixel(to);
+        const auto& round = from.round<int>();
+        REQUIRE( h == round );
+    }
+
+}

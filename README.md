@@ -9,7 +9,6 @@ Work remaining
 
 In no particular order:
 
- * Test just ported orientation/layout logic
  * Convert serialized data into some sort of dump for visualization/debug
  * Tweak BFS into something a-star-ish
  * Determination of whether or not a particular player has pieces remaining

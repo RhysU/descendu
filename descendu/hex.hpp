@@ -12,6 +12,7 @@
 #include <array>
 #include <cmath>
 #include <cstdlib>
+#include <type_traits>
 
 #include "d.hpp"
 
@@ -99,6 +100,20 @@ public:
         }
     }
 
+    // Member primarily for nice h.round<int>() syntax
+    template<typename U>
+    constexpr hex<U,S> round() const {
+        const double nq = std::round(q()), dq = std::abs(nq - q());
+        const double nr = std::round(r()), dr = std::abs(nr - r());
+        const double ns = std::round(s()), ds = std::abs(ns - s());
+        if (dq > dr && dq > ds) {
+            return hex<U,S>(-nr-ns, nr);
+        } else if (dr > ds) {
+            return hex<U,S>(nq, -nq-ns);
+        } else {
+            return hex<U,S>(nq, nr);
+        }
+    }
 };
 
 // Sugar to ease range-based for over neighboring hexes
@@ -129,6 +144,8 @@ OutputStream& operator<<(OutputStream& os, const hex<T,S>& h) {
 template<typename T>
 class orientation
 {
+    static_assert(std::is_floating_point<T>::value, "expected floating point");
+
     orientation(
         const std::array<T,4>& f,
         const std::array<T,4>& b,
@@ -164,6 +181,8 @@ orientation<T> orientation<T>::flat(
 template<typename T>
 struct layout
 {
+    static_assert(std::is_floating_point<T>::value, "expected floating point");
+
     typedef d<T,2,spec::absolute> point_type;
 
     const orientation<T> orient;
@@ -178,14 +197,16 @@ struct layout
     {}
 
     template<typename U>
-    point_type to_pixel(const hex<U,spec::absolute> h) {
-        const T x = (orient.f[0] * h.q() + orient.f[1] * h.r()) * size[0];
-        const T y = (orient.f[2] * h.q() + orient.f[3] * h.r()) * size[1];
-        return {x + origin[0], y + origin[y]};
+    constexpr point_type to_pixel(const hex<U,spec::absolute> h) const {
+        const point_type p {
+            (orient.f[0] * h.q() + orient.f[1] * h.r()) * size[0] + origin[0],
+            (orient.f[2] * h.q() + orient.f[3] * h.r()) * size[1] + origin[1]
+        };
+        return p;
     }
 
-// TODO Use hex_round
-    const hex<T,spec::absolute> from_pixel(const point_type& p) {
+    // Use hex<T,S>::round<U>() for any final coercion to integer-valued types
+    constexpr hex<T,spec::absolute> from_pixel(const point_type& p) const {
         const point_type pt { (p[0] - origin[0]) / size[0],
                               (p[1] - origin[1]) / size[1] };
         const T q = orient.b[0] * pt[0] + orient.b[1] * pt[1];
