@@ -9,6 +9,7 @@ pkginclude_HEADERS  = descendu/consumable.hpp
 pkginclude_HEADERS += descendu/current_function.hpp
 pkginclude_HEADERS += descendu/d.hpp
 pkginclude_HEADERS += descendu/ensure.hpp
+pkginclude_HEADERS += descendu/graphviz.hpp
 pkginclude_HEADERS += descendu/hex.hpp
 pkginclude_HEADERS += descendu/hexmap.hpp
 pkginclude_HEADERS += descendu/optional.hpp

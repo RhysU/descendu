@@ -12,6 +12,9 @@
 
 #include <sstream>
 
+#include <descendu/graphviz.hpp>
+#include <descendu/hexmap.hpp>
+#include <descendu/tile.hpp>
 #include <descendu/world.hpp>
 
 using namespace descendu;
