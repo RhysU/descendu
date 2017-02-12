@@ -179,16 +179,17 @@ struct layout
 
     template<typename U>
     point_type to_pixel(const hex<U,spec::absolute> h) {
-        const double x = (orient.f[0] * h.q() + orient.f[1] * h.r()) * size[0];
-        const double y = (orient.f[2] * h.q() + orient.f[3] * h.r()) * size[1];
+        const T x = (orient.f[0] * h.q() + orient.f[1] * h.r()) * size[0];
+        const T y = (orient.f[2] * h.q() + orient.f[3] * h.r()) * size[1];
         return {x + origin[0], y + origin[y]};
     }
 
+// TODO Use hex_round
     const hex<T,spec::absolute> from_pixel(const point_type& p) {
         const point_type pt { (p[0] - origin[0]) / size[0],
                               (p[1] - origin[1]) / size[1] };
-        const double q = orient.b[0] * pt[0] + orient.b[1] * pt[1];
-        const double r = orient.b[2] * pt[0] + orient.b[3] * pt[1];
+        const T q = orient.b[0] * pt[0] + orient.b[1] * pt[1];
+        const T r = orient.b[2] * pt[0] + orient.b[3] * pt[1];
         return {q, r};
     }
 };
