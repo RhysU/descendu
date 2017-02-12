@@ -164,16 +164,33 @@ orientation<T> orientation<T>::flat(
 template<typename T>
 struct layout
 {
+    typedef d<T,2,spec::absolute> point_type;
+
     const orientation<T> orient;
-    const d<T,2,spec::relative> size;
-    const d<T,2,spec::absolute> origin;
+    const point_type size;
+    const point_type origin;
 
     layout(
         const orientation<T>& orient,
-        const d<T,2,spec::relative>& size,
-        const d<T,2,spec::absolute>& origin)
+        const point_type& size,
+        const point_type& origin)
     : orient(orient), size(size), origin(origin)
     {}
+
+    template<typename U>
+    point_type to_pixel(const hex<U,spec::absolute> h) {
+        const double x = (orient.f[0] * h.q() + orient.f[1] * h.r()) * size[0];
+        const double y = (orient.f[2] * h.q() + orient.f[3] * h.r()) * size[1];
+        return {x + origin[0], y + origin[y]};
+    }
+
+    const hex<T,spec::absolute> from_pixel(const point_type& p) {
+        const point_type pt { (p[0] - origin[0]) / size[0],
+                              (p[1] - origin[1]) / size[1] };
+        const double q = orient.b[0] * pt[0] + orient.b[1] * pt[1];
+        const double r = orient.b[2] * pt[0] + orient.b[3] * pt[1];
+        return {q, r};
+    }
 };
 
 } // namespace
