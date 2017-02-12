@@ -11,6 +11,7 @@
 
 #include <iostream>
 
+#include "hex.hpp"
 #include "world.hpp"
 
 namespace descendu {
@@ -25,11 +26,22 @@ std::ostream& id(const T& t, std::ostream& os) {
 
 std::ostream& copy(const world& w, std::ostream& os) {
     os << "strict graph G {\n"
-       << "graph [layout=neato overlap=scale]\n"
+       << "graph [center=true layout=neato overlap=scale]\n"
        << "node [shape=hexagon fontsize=8]\n";
+
+    const layout<double>::point_type size   {1.0, 1.0};
+    const layout<double>::point_type origin {0.0, 0.0};
+    const layout<double> lay(orientation<double>::flat, size, origin);
+
     for (const auto& it : w.map) {
         const auto& center = it.first;
-        id(center, os) << '\n';
+        const auto& pos = lay.to_pixel(center);
+        id(center, os)
+            << " [pos=\""
+            << pos[0]
+            << ','
+            << pos[1]
+            << "\"]\n";  // TODO label=
         for (const auto& adjacent : neighbors(center)) {
             if (w.map.lookup(adjacent)) {
                 id(center, os);
@@ -39,6 +51,7 @@ std::ostream& copy(const world& w, std::ostream& os) {
             }
         }
     }
+
     os << "}\n";
     return os;
 }
