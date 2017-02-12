@@ -20,6 +20,7 @@
 using namespace descendu;
 
 int main(const int argc, const char * argv[]) {
-    // TODO
+    world w;
+    graphviz::copy(w, std::cout);
     return 0;
 }

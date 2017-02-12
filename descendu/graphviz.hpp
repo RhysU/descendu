@@ -9,13 +9,24 @@
 #ifndef DESCENDU_GRAPHVIZ_HPP
 #define DESCENDU_GRAPHVIZ_HPP
 
-#include <sstream>
+#include <iostream>
 
 #include "world.hpp"
 
 namespace descendu {
 
-// TODO
+namespace graphviz {
+
+std::ostream& copy(const world& w, std::ostream& os) {
+    os << "strict graph G {\n"
+       << "graph [layout=neato overlap=scale]\n"
+       << "node [shape=hexagon fontsize=8]\n";
+    // Content here
+    os << "}\n";
+    return os;
+}
+
+} // namespace
 
 } // namespace
 
