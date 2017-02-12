@@ -21,6 +21,18 @@ using namespace descendu;
 
 int main(const int argc, const char * argv[]) {
     world w;
+
+    // Center
+    w.map.conjure({0, 0});
+
+    // Neighbors
+    w.map.conjure({ 1, +0});
+    w.map.conjure({ 1, -1});
+    w.map.conjure({ 0, -1});
+    w.map.conjure({-1, +0});
+    w.map.conjure({-1, +1});
+    w.map.conjure({ 0, +1});
+
     graphviz::copy(w, std::cout);
     return 0;
 }

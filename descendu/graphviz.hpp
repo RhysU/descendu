@@ -17,11 +17,28 @@ namespace descendu {
 
 namespace graphviz {
 
+template<typename T>
+std::ostream& id(const T& t, std::ostream& os) {
+    os << '"' << t << '"';
+    return os;
+}
+
 std::ostream& copy(const world& w, std::ostream& os) {
     os << "strict graph G {\n"
        << "graph [layout=neato overlap=scale]\n"
        << "node [shape=hexagon fontsize=8]\n";
-    // Content here
+    for (const auto& it : w.map) {
+        const auto& center = it.first;
+        id(center, os) << '\n';
+        for (const auto& adjacent : neighbors(center)) {
+            if (w.map.lookup(adjacent)) {
+                id(center, os);
+                os << " -- ";
+                id(adjacent, os);
+                os << '\n';
+            }
+        }
+    }
     os << "}\n";
     return os;
 }
