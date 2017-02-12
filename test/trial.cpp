@@ -10,7 +10,10 @@
 # include "config.h"
 #endif
 
-#include <sstream>
+#include <chrono>
+#include <functional>
+#include <iostream>
+#include <random>
 
 #include <descendu/graphviz.hpp>
 #include <descendu/hex.hpp>
@@ -20,6 +23,8 @@
 using namespace descendu;
 
 int main(const int argc, const char * argv[]) {
+
+
     world w;
 
     // Center
@@ -32,6 +37,16 @@ int main(const int argc, const char * argv[]) {
     w.map.conjure({-1, +0});
     w.map.conjure({-1, +1});
     w.map.conjure({ 0, +1});
+
+    // Random  // Later, adjust height on re-visit
+    const auto seed = std::chrono::system_clock::now()
+            .time_since_epoch().count();
+    auto d10 = std::bind(
+            std::uniform_int_distribution<>{1,10},
+            std::default_random_engine{seed});
+    for (int i = 0; i < 25; ++i) {
+        w.map.conjure({d10(), d10()});
+    }
 
     graphviz::copy(w, std::cout);
     return 0;
