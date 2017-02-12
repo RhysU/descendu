@@ -26,8 +26,9 @@ std::ostream& id(const T& t, std::ostream& os) {
 
 std::ostream& copy(const world& w, std::ostream& os) {
     os << "strict graph G {\n"
+       << "edge  [color=grey]\n"
        << "graph [center=true layout=neato overlap=scale]\n"
-       << "node [shape=hexagon fontsize=8]\n";
+       << "node  [shape=hexagon fontsize=8]\n";
 
     const layout<double>::point_type size   {1.0, 1.0};
     const layout<double>::point_type origin {0.0, 0.0};
