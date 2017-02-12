@@ -9,6 +9,8 @@
 #ifndef DESCENDU_HEX_HPP
 #define DESCENDU_HEX_HPP
 
+#include <array>
+#include <cmath>
 #include <cstdlib>
 
 #include "d.hpp"
@@ -122,6 +124,57 @@ OutputStream& operator<<(OutputStream& os, const hex<T,S>& h) {
     os << "(hex " << d<T,3,S>{h.q(), h.r(), h.s()} << ")";
     return os;
 }
+
+// Based upon http://www.redblobgames.com/grids/hexagons/
+template<typename T>
+class orientation
+{
+    orientation(
+        const std::array<T,4>& f,
+        const std::array<T,4>& b,
+        T start_angle)
+    : f(f), b(b), start_angle(start_angle)
+    {}
+
+public:
+
+    const std::array<T,4> f;
+    const std::array<T,4> b;
+    const T start_angle;
+
+    static orientation pointy;
+    static orientation flat;
+};
+
+template<typename T>
+orientation<T> orientation<T>::pointy(
+    {std::sqrt(T(3)),        std::sqrt(T(3)) / T(2), T(0), T(3) / T(2)},
+    {std::sqrt(T(3)) / T(3), T(-1) / T(3),           T(0), T(2) / T(3)},
+    T(1) / T(2)
+);
+
+template<typename T>
+orientation<T> orientation<T>::flat(
+    {T(3) / T(2), T(0), std::sqrt(T(3)) / T(2), std::sqrt(T(3))       },
+    {T(2) / T(3), T(0),           T(-1) / T(3), std::sqrt(T(3)) / T(3)},
+    T(0)
+);
+
+// Based upon http://www.redblobgames.com/grids/hexagons/
+template<typename T>
+struct layout
+{
+    const orientation<T> orient;
+    const d<T,2,spec::relative> size;
+    const d<T,2,spec::absolute> origin;
+
+    layout(
+        const orientation<T>& orient,
+        const d<T,2,spec::relative>& size,
+        const d<T,2,spec::absolute>& origin)
+    : orient(orient), size(size), origin(origin)
+    {}
+};
 
 } // namespace
 
