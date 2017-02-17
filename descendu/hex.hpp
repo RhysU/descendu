@@ -55,6 +55,8 @@ public:
     constexpr T r() const { return this->operator[](1); }
     constexpr T s() const { return - (q() + r()); }
 
+    constexpr d<T,3,S> triplet() const { return d<T,3,S>{ q(), r(), s() }; }
+
     constexpr bool operator==(const hex& o) const { return base() == o.base(); }
     constexpr bool operator!=(const hex& o) const { return base() != o.base(); }
 
@@ -136,7 +138,7 @@ constexpr std::array<hex<T,S>,6> diagonals(const hex<T,S>& h) {
 
 template<class OutputStream, typename T, spec S>
 OutputStream& operator<<(OutputStream& os, const hex<T,S>& h) {
-    os << "(hex " << d<T,3,S>{h.q(), h.r(), h.s()} << ")";
+    os << "(hex " << h.triplet() << ")";
     return os;
 }
 
