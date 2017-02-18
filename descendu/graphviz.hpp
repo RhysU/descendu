@@ -49,6 +49,7 @@ std::ostream& copy(const world& w, std::ostream& os) {
 
         // Output edges to any neighbors
         // 'strict graph' avoids having to handle duplicates
+        // TODO Cut this in half using only 3 of 6 neighbors?
         for (const auto& adjacent : neighbors(center)) {
             if (w.map.lookup(adjacent)) {
                 id(os, center);
