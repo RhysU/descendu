@@ -41,11 +41,11 @@ int main(const int argc, const char * argv[]) {
     // Random  // Later, adjust height on re-visit
     const auto seed = std::chrono::system_clock::now()
             .time_since_epoch().count();
-    auto d10 = std::bind(
-            std::uniform_int_distribution<>{1,10},
+    auto d8 = std::bind(
+            std::uniform_int_distribution<>{1,8},
             std::default_random_engine{seed});
-    for (int i = 0; i < 25; ++i) {
-        w.map.conjure({d10(), d10()});
+    for (int i = 0; i < 50; ++i) {
+        w.map.conjure({d8(), d8()});
     }
 
     graphviz::copy(w, std::cout);
