@@ -54,9 +54,9 @@ OutputStream& operator<<(OutputStream& os, const node_type<T,U>& n) {
     os << id(n.t)
        << " [label=\"";
     components(os, n.t.triplet(), ", ");
-    os << "\" point=\"";
+    os << "\" pos=\"";
     components(os, n.lay.to_pixel(n.t), ',');
-    os << "!\"]";
+    os << "\" pin=true]";
     return os;
 }
 
@@ -65,10 +65,10 @@ OutputStream& operator<<(OutputStream& os, const node_type<T,U>& n) {
 std::ostream& copy(const world& w, std::ostream& os) {
     os << "strict graph G {\n"
        << "edge  [color=grey]\n"
-       << "graph [center=true layout=neato overlap=scalexy]\n"
+       << "graph [center=true layout=neato overlap=compress]\n"
        << "node  [shape=hexagon fontsize=8]\n";
 
-    const layout<double>::point_type size   {1.0, 1.0};
+    const layout<double>::point_type size   {0.5, 0.5};
     const layout<double>::point_type origin {0.0, 0.0};
     const layout<double> lay(orientation<double>::flat, size, origin);
 
