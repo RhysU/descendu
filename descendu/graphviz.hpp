@@ -18,46 +18,9 @@ namespace graphviz {
 
 namespace {
 
-// Wraps to output node ids
-template <typename T>
-struct id_type {
-    id_type(const T& t) : t(t) {}
-    const T& t;
-};
-
-template <typename T>
-id_type<T> id(const T& t) {
-    return id_type<T>(t);
-}
-
 template <class OutputStream, typename T>
-OutputStream& operator<<(OutputStream& os, const id_type<T>& i) {
-    os << '"' << i.t << '"';
-    return os;
-}
-
-// Wraps to output node definition
-template <typename T, typename U>
-struct node_type {
-    node_type(const T& t, const layout<U>& lay) : t(t), lay(lay) {}
-    const T& t;
-    const layout<U>& lay;
-};
-
-template <typename T, typename U>
-node_type<T,U> node(const T& t, const layout<U>& lay) {
-    return node_type<T,U>(t, lay);
-}
-
-template <class OutputStream, typename T, typename U>
-OutputStream& operator<<(OutputStream& os, const node_type<T,U>& n) {
-    os << id(n.t)
-       << " [label=\"";
-    components(os, n.t.triplet(), ", ");
-    os << "\" pos=\"";
-    components(os, n.lay.to_pixel(n.t), ',');
-    os << "\" pin=true]";
-    return os;
+void id(OutputStream& os, const T& t) {
+    os << '"' << t << '"';
 }
 
 } // end anonymous
@@ -74,10 +37,24 @@ std::ostream& copy(const world& w, std::ostream& os) {
 
     for (const auto& it : w.map) {
         const auto& center = it.first;
-        os << node(center, lay) << '\n';
+
+        // Output node
+        id(os, center);
+        os << " [label=\"";
+        components(os, center.triplet(), ", ");
+        os << "\" pos=\"";
+        components(os, lay.to_pixel(center), ',');
+        os << "\" pin=true]"
+           << '\n';
+
+        // Output edges to any neighbors
+        // 'strict graph' avoids having to handle duplicates
         for (const auto& adjacent : neighbors(center)) {
             if (w.map.lookup(adjacent)) {
-                os << id(center) << " -- " << id(adjacent) << '\n';
+                id(os, center);
+                os << " -- ";
+                id(os, adjacent);
+                os << '\n';
             }
         }
     }
