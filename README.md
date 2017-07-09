@@ -9,6 +9,7 @@ Work remaining
 
 In no particular order:
 
+ * Upgrade Catch to latest version, involving some breakage fix
  * Convert serialized data into some sort of dump for visualization/debug
      * Sort out graphviz representation for tile height
      * Sort out representation for various tile elements
