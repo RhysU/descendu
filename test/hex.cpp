@@ -193,6 +193,18 @@ TEST_CASE( "neighbor" ) {
             // NOP: Just confirming it compiles
         }
     }
+
+    SECTION( "neighbors_half" ) {
+        const hex<int,spec::absolute> a {+0, +0};
+        auto adjacent = neighbors_half(a);
+        REQUIRE(( adjacent[0] == a.neighbor(0) ));
+        REQUIRE(( adjacent[1] == a.neighbor(1) ));
+        REQUIRE(( adjacent[2] == a.neighbor(2) ));
+
+        for (const auto& n : neighbors_half(a)) {
+            // NOP: Just confirming it compiles
+        }
+    }
 }
 
 TEST_CASE( "diagonal" ) {
@@ -250,6 +262,18 @@ TEST_CASE( "diagonal" ) {
         REQUIRE(( nearby[5] == a.diagonal(5) ));
 
         for (const auto& d : diagonals(a)) {
+            // NOP: Just confirming it compiles
+        }
+    }
+
+    SECTION( "diagonals_half" ) {
+        const hex<int,spec::absolute> a {+0, +0};
+        auto nearby = diagonals_half(a);
+        REQUIRE(( nearby[0] == a.diagonal(0) ));
+        REQUIRE(( nearby[1] == a.diagonal(1) ));
+        REQUIRE(( nearby[2] == a.diagonal(2) ));
+
+        for (const auto& d : diagonals_half(a)) {
             // NOP: Just confirming it compiles
         }
     }

@@ -127,12 +127,28 @@ constexpr std::array<hex<T,S>,6> neighbors(const hex<T,S>& h) {
     }};
 }
 
+// Sugar to ease range-based for over half of all neighboring hexes
+template <typename T, spec S>
+constexpr std::array<hex<T,S>,3> neighbors_half(const hex<T,S>& h) {
+    return {{
+        h.neighbor(0), h.neighbor(1), h.neighbor(2)
+    }};
+}
+
 // Sugar to ease range-based for over nearby diagonal hexes
 template <typename T, spec S>
 constexpr std::array<hex<T,S>,6> diagonals(const hex<T,S>& h) {
     return {{
         h.diagonal(0), h.diagonal(1), h.diagonal(2),
         h.diagonal(3), h.diagonal(4), h.diagonal(5)
+    }};
+}
+
+// Sugar to ease range-based for over half of all nearby diagonal hexes
+template <typename T, spec S>
+constexpr std::array<hex<T,S>,3> diagonals_half(const hex<T,S>& h) {
+    return {{
+        h.diagonal(0), h.diagonal(1), h.diagonal(2)
     }};
 }
 
