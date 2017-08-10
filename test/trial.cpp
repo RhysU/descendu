@@ -29,7 +29,7 @@ int main(const int argc, const char * argv[])
     // Center
     w.map.conjure({0, 0});
 
-    // Neighbors
+    // Adjacent neighbors
     w.map.conjure({ 1, +0});
     w.map.conjure({ 1, -1});
     w.map.conjure({ 0, -1});
@@ -37,14 +37,17 @@ int main(const int argc, const char * argv[])
     w.map.conjure({-1, +1});
     w.map.conjure({ 0, +1});
 
-    // Random  // Later, adjust height on re-visit
+    // Random locations and heights
     const auto seed = std::chrono::system_clock::now()
             .time_since_epoch().count();
     auto d8 = std::bind(
             std::uniform_int_distribution<>{1,8},
             std::default_random_engine{seed});
+    auto d6 = std::bind(
+            std::uniform_int_distribution<>{1,6},
+            std::default_random_engine{seed});
     for (int i = 0; i < 50; ++i) {
-        w.map.conjure({d8(), d8()});
+        w.map.conjure({d8(), d8()}).height.increase(d6());
     }
 
     graphviz::copy(w, std::cout);

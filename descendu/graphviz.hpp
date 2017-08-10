@@ -29,23 +29,25 @@ std::ostream& copy(const world& w, std::ostream& os) {
     os << "strict graph G {\n"
        << "edge  [color=grey]\n"
        << "graph [center=true layout=neato overlap=compress]\n"
-       << "node  [shape=hexagon fontsize=8]\n";
+       << "node  [fontsize=8]\n";
 
-    const layout<double>::point_type size   {0.5, 0.5};
+    const layout<double>::point_type size   {0.6, 0.6};
     const layout<double>::point_type origin {0.0, 0.0};
     const layout<double> lay(orientation<double>::flat, size, origin);
 
     for (const auto& it : w.map) {
         const auto& center = it.first;
 
-        // Output node
+        // Output node with more sides indicating more remaining height.
+        // Regular triangles avoided as they are too large in vanilla dot.
         id(os, center);
         os << " [label=\"";
         components(os, center.triplet(), ", ");
         os << "\" pos=\"";
         components(os, lay.to_pixel(center), ',');
-        os << "\" pin=true]"
-           << '\n';
+        os << "\" pin=true shape=polygon regular=1 sides="
+           << (4 + it.second.height.remaining())
+           << "]\n";
 
         // Output edges to any neighbors
         // 'strict graph' avoids having to handle duplicates
