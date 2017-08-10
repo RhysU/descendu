@@ -26,7 +26,7 @@ void id(OutputStream& os, const T& t) {
 } // end anonymous
 
 std::ostream& copy(const world& w, std::ostream& os) {
-    os << "strict graph G {\n"
+    os << "graph G {\n"
        << "edge  [color=grey]\n"
        << "graph [center=true layout=neato overlap=compress]\n"
        << "node  [fontsize=8]\n";
@@ -49,10 +49,8 @@ std::ostream& copy(const world& w, std::ostream& os) {
            << (4 + it.second.height.remaining())
            << "]\n";
 
-        // Output edges to any neighbors
-        // 'strict graph' avoids having to handle duplicates
-        // TODO Cut this in half using only 3 of 6 neighbors?
-        for (const auto& adjacent : neighbors(center)) {
+        // Output edges to half of all neighbors (with remaining by symmetry)
+        for (const auto& adjacent : neighbors_half(center)) {
             if (w.map.lookup(adjacent)) {
                 id(os, center);
                 os << " -- ";
