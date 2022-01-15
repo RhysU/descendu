@@ -1,8 +1,8 @@
 descendu
 ========
 
-In-progress, slow-moving draft of a lousy game inspired by Greed Corp: [![Build
-Status](https://travis-ci.org/RhysU/descendu.svg?branch=master)](https://travis-ci.org/RhysU/descendu)
+In-progress, slow-moving draft of a lousy game inspired by Greed Corp
+[![Build Status](https://travis-ci.com/RhysU/descendu.svg?branch=master)](https://travis-ci.com/github/RhysU/descendu)
 
 Work remaining
 --------------
